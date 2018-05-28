@@ -11,7 +11,8 @@ const getMonth = () => {
 }
 
 const formatNumber = (num) => {
-  return parseFloat(num).toFixed(2);
+  let result = num != null ? parseFloat(num).toFixed(2) : 0;
+  return result;
 }
 
 class App extends Component {  
@@ -19,8 +20,6 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentItem: '',
-      username: '',
       items: [],
       user: null,
       amount: 0,
@@ -30,6 +29,7 @@ class App extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.removeItem = this.removeItem.bind(this);
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
   }
@@ -42,8 +42,8 @@ class App extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    const itemsRef = firebase.database().ref('items');
-    const totalAmountRef = firebase.database().ref('totalAmount');
+    const itemsRef = firebase.database().ref(`users/${this.state.user.uid}/items`);
+    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/totalAmount`);
     let currentTotal = 0;
     const item = {
       amount: formatNumber(this.state.amount),
@@ -55,7 +55,9 @@ class App extends Component {
     }
     itemsRef.push(item);
     totalAmountRef.on('value', (snapshot)=>{
-      currentTotal = snapshot.val().totalAmount;
+      if (snapshot.val() != null) {
+        currentTotal = snapshot.val().totalAmount;
+      }
     })
     totalAmountRef.update({
       totalAmount: currentTotal + parseFloat(this.state.amount)
@@ -72,8 +74,9 @@ class App extends Component {
     auth.signInWithRedirect(provider)
       .then((result)=>{
         const user = result.user;
+        console.log(user);
         this.setState({
-          user
+          user: user
         });
       });
   }
@@ -90,8 +93,8 @@ class App extends Component {
   }
 
   removeItem(itemID, itemAmt){
-    const itemRef = firebase.database().ref(`/items/${itemID}`);
-    const totalAmountRef = firebase.database().ref('totalAmount');
+    const itemRef = firebase.database().ref(`users/${this.state.user.uid}/items/${itemID}`);
+    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/totalAmount`);
     let currentTotal = 0;
     totalAmountRef.on('value', (snapshot)=>{
       currentTotal = snapshot.val().totalAmount;
@@ -108,32 +111,38 @@ class App extends Component {
         this.setState({
           user
         })
+        const itemsRef = firebase.database().ref(`/users/${this.state.user.uid}/items`);
+        itemsRef.on('value', (snapshot)=> {
+          let items = snapshot.val();
+          let newState = [];
+          for (let item in items){
+            newState.push({
+              id: item,
+              amount: items[item].amount,
+              category: items[item].category,
+              remarks: items[item].remarks,
+              date: items[item].date
+            });
+          }
+          this.setState({
+            items: newState
+          })
+        })
+        const totalAmountRef = firebase.database().ref(`/users/${this.state.user.uid}/totalAmount`);
+        totalAmountRef.on('value', (snapshot)=>{
+          if (snapshot.val()!=null){
+            this.setState({
+              totalAmount: formatNumber(snapshot.val().totalAmount)
+            }) 
+          }
+             
+        })
+      } else {
+        this.setState({
+          user: null
+        })   
       }
-    })
-
-
-    const itemsRef = firebase.database().ref('items');
-    itemsRef.on('value', (snapshot)=> {
-      let items = snapshot.val();
-      let newState = [];
-      for (let item in items){
-        newState.push({
-          id: item,
-          amount: items[item].amount,
-          category: items[item].category,
-          remarks: items[item].remarks,
-          date: items[item].date
-        });
-      }
-      this.setState({
-        items: newState
-      })
-    })
-    const totalAmountRef = firebase.database().ref('totalAmount');
-    totalAmountRef.on('value', (snapshot)=>{
-      this.setState({
-        totalAmount: formatNumber(snapshot.val().totalAmount)
-      })    
+      
     })
   
   }
@@ -166,7 +175,7 @@ class App extends Component {
             }
            
         </nav>
-          <Route exact path="/" render={(props)=>(<Home test="hi" user={this.state.user} onSubmit={this.handleSubmit} onChange={this.handleChange} items={this.state.items} totalAmount={this.state.totalAmount} amount={this.state.amount} category={this.state.category} remarks={this.state.remarks} {...props} />)} />
+          <Route exact path="/" render={(props)=>(<Home test="hi" user={this.state.user} onSubmit={this.handleSubmit} onChange={this.handleChange} removeItem={this.removeItem} items={this.state.items} totalAmount={this.state.totalAmount} amount={this.state.amount} category={this.state.category} remarks={this.state.remarks} {...props} />)} />
           
           <Route path="/history" render={(props)=>(<History test="hi" user={this.state.user} {...props} />)} />
       </div>
