@@ -194,17 +194,19 @@ class App extends Component {
               <section>
                 <div class="container">
                   <div class="row">
-                    <h4>Total expense: S${this.state.totalAmount}</h4>
+                    <div class="col">
+                      <h4>Total expense: S${this.state.totalAmount}</h4>
+                    </div>
                   </div>
                 </div>  
               </section>
               
-              <section className='display-item'>
-                <div className='container'>
-                  <ul>
+              <section class='display-item'>
+                <div class='container'>
+                  <ul class="display-list">
                   {this.state.items.map((item)=>{
                     return (
-                      <li key={item.id} class="item">
+                      <li key={item.id} class="item" data-category={item.category}>
                         <h3>S${formatNumber(item.amount)}</h3>
                         <p>{item.category} ({item.remarks})</p>
                         <p>{item.date}</p>
