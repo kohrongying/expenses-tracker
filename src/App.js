@@ -2,9 +2,20 @@ import React, { Component } from 'react';
 import './App.css';
 import firebase, { auth, provider } from './firebase.js';
 
+const getMonth = () => {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return monthNames[(new Date().getMonth())];
+}
+
+const formatNumber = (num) => {
+  return parseFloat(num).toFixed(2);
+}
+
 class App extends Component {
-  constructor(){
-    super();
+
+  
+  constructor(props){
+    super(props);
 
     this.state = {
       currentItem: '',
@@ -12,8 +23,9 @@ class App extends Component {
       items: [],
       user: null,
       amount: 0,
-      category: '',
-      totalAmount: 0
+      category: 'Food',
+      totalAmount: 0,
+      remarks: ''
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,9 +45,12 @@ class App extends Component {
     const totalAmountRef = firebase.database().ref('totalAmount');
     let currentTotal = 0;
     const item = {
-      amount: this.state.amount,
+      amount: formatNumber(this.state.amount),
       category: this.state.category,
-      date: new Date().toDateString()
+      date: new Date().toDateString(),
+      month: getMonth(),
+      year: new Date().getFullYear(),
+      remarks: this.state.remarks
     }
     itemsRef.push(item);
     totalAmountRef.on('value', (snapshot)=>{
@@ -46,7 +61,8 @@ class App extends Component {
     })
     this.setState({
       amount:0,
-      category: ''
+      category: 'Food',
+      remarks: ''
     })
 
   }
@@ -104,6 +120,7 @@ class App extends Component {
           id: item,
           amount: items[item].amount,
           category: items[item].category,
+          remarks: items[item].remarks,
           date: items[item].date
         });
       }
@@ -114,7 +131,7 @@ class App extends Component {
     const totalAmountRef = firebase.database().ref('totalAmount');
     totalAmountRef.on('value', (snapshot)=>{
       this.setState({
-        totalAmount: snapshot.val().totalAmount
+        totalAmount: formatNumber(snapshot.val().totalAmount)
       })    
     })
   
@@ -154,7 +171,17 @@ class App extends Component {
                         <input type="text" class="form-control" name="amount" placeholder="How much?" onChange={this.handleChange} value={this.state.amount} />
                       </div>
                       <div class="col">
-                        <input type="text" class="form-control" name="category" placeholder="Category" onChange={this.handleChange} value={this.state.category} />
+                        <div class="form-group">
+                          <select class="form-control" id="category-type" name="category" onChange={this.handleChange} value={this.state.category}>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Movie">Movie</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <input type="text" class="form-control" name="remarks" placeholder="Remarks" onChange={this.handleChange} value={this.state.remarks} />
                       </div>
                       <div class="col">
                         <button type="submit" class="btn btn-primary save-item-btn">Save</button>
@@ -178,8 +205,8 @@ class App extends Component {
                   {this.state.items.map((item)=>{
                     return (
                       <li key={item.id} class="item">
-                        <h3>S${item.amount}</h3>
-                        <p>{item.category}</p>
+                        <h3>S${formatNumber(item.amount)}</h3>
+                        <p>{item.category} ({item.remarks})</p>
                         <p>{item.date}</p>
                         <button class="btn btn-primary" onClick={() => this.removeItem(item.id, item.amount)}>Remove Item</button>
                       </li>
