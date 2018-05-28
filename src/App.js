@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import firebase, { auth, provider } from './firebase.js';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import History from './History'
+import Home from './Home'
 
 const getMonth = () => {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -11,9 +14,7 @@ const formatNumber = (num) => {
   return parseFloat(num).toFixed(2);
 }
 
-class App extends Component {
-
-  
+class App extends Component {  
   constructor(props){
     super(props);
 
@@ -139,94 +140,37 @@ class App extends Component {
 
   render() {
     return (
+      <Router>
       <div className="App">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <a class="navbar-brand">Expense Tracker</a>
           
-
-            <ul class="navbar-nav ml-auto">
-          
             {this.state.user ?
+              <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link" onClick={this.logout}>Log Out</a>
-              </li>
+                  <Link to='/' className="nav-link">Home</Link>
+                </li>
+                <li class="nav-item">
+                  <Link to='/history' className="nav-link">History</Link>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" onClick={this.logout}>Log Out</a>
+                </li>
+              </ul>
               :
-              <li class="nav-item">
-                <a class="nav-link" onClick={this.login}>Log In</a>
-              </li>
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link" onClick={this.login}>Log In</a>
+                </li> 
+              </ul>
             }
-            </ul>
-          
+           
         </nav>
-
-         {this.state.user ?
-
-            <div>
-              
-              <section>
-                <div className='container'>
-                  <form class="add-item-form" onSubmit={this.handleSubmit}>
-                    <div class="form-row" >
-                      <div class="col">
-                        <input type="text" class="form-control" name="amount" placeholder="How much?" onChange={this.handleChange} value={this.state.amount} />
-                      </div>
-                      <div class="col">
-                        <div class="form-group">
-                          <select class="form-control" id="category-type" name="category" onChange={this.handleChange} value={this.state.category}>
-                            <option value="Food">Food</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Movie">Movie</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <input type="text" class="form-control" name="remarks" placeholder="Remarks" onChange={this.handleChange} value={this.state.remarks} />
-                      </div>
-                      <div class="col">
-                        <button type="submit" class="btn btn-primary save-item-btn">Save</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </section>
-
-              <section>
-                <div class="container">
-                  <div class="row">
-                    <div class="col">
-                      <h4>Total expense: S${this.state.totalAmount}</h4>
-                    </div>
-                  </div>
-                </div>  
-              </section>
-              
-              <section class='display-item'>
-                <div class='container'>
-                  <ul class="display-list">
-                  {this.state.items.map((item)=>{
-                    return (
-                      <li key={item.id} class="item" data-category={item.category}>
-                        <h3>S${formatNumber(item.amount)}</h3>
-                        <p>{item.category} ({item.remarks})</p>
-                        <p>{item.date}</p>
-                        <button class="btn btn-primary" onClick={() => this.removeItem(item.id, item.amount)}>Remove Item</button>
-                      </li>
-                      )
-                  })}
-                  </ul>
-                </div>
-              </section>
-             
-            </div>
-            :
-            <div className='wrapper'>
-              <p>You must be logged in to see your expenses.</p>
-            </div>
-          }
-
+          <Route exact path="/" render={(props)=>(<Home test="hi" user={this.state.user} onSubmit={this.handleSubmit} onChange={this.handleChange} items={this.state.items} totalAmount={this.state.totalAmount} amount={this.state.amount} category={this.state.category} remarks={this.state.remarks} {...props} />)} />
+          
+          <Route path="/history" render={(props)=>(<History test="hi" user={this.state.user} {...props} />)} />
       </div>
-      
+      </Router>
     );
   }
 }
