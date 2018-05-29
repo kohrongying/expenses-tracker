@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 
+const getMonthYear = () => {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return `${monthNames[(new Date().getMonth())]} ${new Date().getFullYear()}`;
+}
+
 export default class Home extends Component {
 	render(){
 		return (
@@ -38,7 +43,7 @@ export default class Home extends Component {
 	                <div class="container">
 	                  <div class="row">
 	                    <div class="col">
-	                      <h4>Total expense: S${this.props.totalAmount}</h4>
+	                      <h4>Total expense for {getMonthYear()}: S${this.props.totalAmount}</h4>
 	                    </div>
 	                  </div>
 	                </div>  

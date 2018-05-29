@@ -42,15 +42,17 @@ class App extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    const itemsRef = firebase.database().ref(`users/${this.state.user.uid}/items`);
-    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/totalAmount`);
+    let year = new Date().getFullYear();
+    let month = getMonth();
+    const itemsRef = firebase.database().ref(`users/${this.state.user.uid}/${year}/${month}/items`);
+    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/${year}/${month}/totalAmount`);
     let currentTotal = 0;
     const item = {
       amount: formatNumber(this.state.amount),
       category: this.state.category,
       date: new Date().toDateString(),
-      month: getMonth(),
-      year: new Date().getFullYear(),
+      month: month,
+      year: year,
       remarks: this.state.remarks
     }
     itemsRef.push(item);
@@ -93,8 +95,10 @@ class App extends Component {
   }
 
   removeItem(itemID, itemAmt){
-    const itemRef = firebase.database().ref(`users/${this.state.user.uid}/items/${itemID}`);
-    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/totalAmount`);
+    let year = new Date().getFullYear();
+    let month = getMonth();
+    const itemRef = firebase.database().ref(`users/${this.state.user.uid}/${year}/${month}/items/${itemID}`);
+    const totalAmountRef = firebase.database().ref(`users/${this.state.user.uid}/${year}/${month}/totalAmount`);
     let currentTotal = 0;
     totalAmountRef.on('value', (snapshot)=>{
       currentTotal = snapshot.val().totalAmount;
@@ -111,7 +115,9 @@ class App extends Component {
         this.setState({
           user
         })
-        const itemsRef = firebase.database().ref(`/users/${this.state.user.uid}/items`);
+        let year = new Date().getFullYear();
+        let month = getMonth();
+        const itemsRef = firebase.database().ref(`/users/${this.state.user.uid}/${year}/${month}/items`);
         itemsRef.on('value', (snapshot)=> {
           let items = snapshot.val();
           let newState = [];
@@ -128,7 +134,7 @@ class App extends Component {
             items: newState
           })
         })
-        const totalAmountRef = firebase.database().ref(`/users/${this.state.user.uid}/totalAmount`);
+        const totalAmountRef = firebase.database().ref(`/users/${this.state.user.uid}/${year}/${month}/totalAmount`);
         totalAmountRef.on('value', (snapshot)=>{
           if (snapshot.val()!=null){
             this.setState({
