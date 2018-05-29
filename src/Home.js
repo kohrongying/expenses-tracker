@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import del_icon from './x-circle.svg';
 
 const getMonthYear = () => {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -11,8 +12,15 @@ export default class Home extends Component {
 			<div>
 				{this.props.user ?
 				<div>
+
+				  <section class="banner">
+				  	<div class="container d-flex flex-column align-items-center">
+				  		<h5>{getMonthYear()}</h5>
+				  		<h2>S${this.props.totalAmount}</h2>
+				  	</div>
+			  	  </section>
 	              <section>
-	                <div className='container'>
+	                <div class='container'>
 	                  <form class="add-item-form" onSubmit={this.props.onSubmit}>
 	                    <div class="form-row" >
 	                      <div class="col">
@@ -38,27 +46,27 @@ export default class Home extends Component {
 	                  </form>
 	                </div>
 	              </section>
-
-	              <section>
-	                <div class="container">
-	                  <div class="row">
-	                    <div class="col">
-	                      <h4>Total expense for {getMonthYear()}: S${this.props.totalAmount}</h4>
-	                    </div>
-	                  </div>
-	                </div>  
-	              </section>
 	              
 	              <section class='display-item'>
 	                <div class='container'>
 	                  <ul class="display-list">
 	                  {this.props.items.map((item)=>{
 	                    return (
-	                      <li key={item.id} class="item" data-category={item.category}>
-	                        <h3>S${item.amount}</h3>
-	                        <p>{item.category} ({item.remarks})</p>
-	                        <p>{item.date}</p>
-	                        <button class="btn btn-primary" onClick={() => this.props.removeItem(item.id, item.amount)}>Remove Item</button>
+	                      <li key={item.id} class="item" >
+	                      	<div class="row">
+	                      		<div class="category-box d-flex align-items-center justify-content-center" data-category={item.category}>
+									<strong>{item.category}</strong>
+	                      		</div>
+	                      		<div class="col info-box d-flex flex-column align-items-center justify-content-center">
+		                      		
+									<h3>{item.remarks}</h3>
+									<p><i>{item.date}</i></p>
+	                      		</div>
+	                      		<div class="col amount-box d-flex align-items-center justify-content-end">
+									<h3>S${item.amount}</h3>
+	                      		</div>
+	                      		<div class="del-item-btn" onClick={() => this.props.removeItem(item.id, item.amount)}><img src={del_icon} alt="delete icon"/></div>
+	                      	</div>
 	                      </li>
 	                      )
 	                  })}

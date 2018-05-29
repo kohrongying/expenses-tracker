@@ -1,43 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
 :root {
   --purple: #7d83ff;
+  --lightgrey: #f0f0f0;
+  --red: #fb3640;
+  --grey: #353434;
 }
 
+h1,h2,h3,h4,h5,h6,p,div {
+  color: var(--grey);
+  font-family: 'Nunito';
+}
+
+nav {
+  background-color: var(--purple);
+  color: white;
+}
+
+section.banner {
+  background-color: var(--purple);
+  padding-top: 80px;
+  padding-bottom: 30px;
+  color: white;
+}
 
 ul.display-list {
   padding-left: 0;
   text-align: left;
+  list-style: none;
+}
+
+ul.display-list > li.item > .row {
+  margin-left: 0;
+  margin-right: 0;
+  position: relative;
 }
 
 .item {
-  background: lightblue;
-  width: 30%;
+  background: var(--lightgrey);
   padding: 20px;
-  margin: 10px;
-  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
-.item[data-category="Food"] {
+.del-item-btn {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.category-box{
+  width: 125px;
+  height: 125px;
+}
+.category-box[data-category="Food"] {
   background-color: pink;
 }
 
-.item[data-category="Transport"] {
+.category-box[data-category="Transport"] {
   background-color: lightskyblue;
 }
 
-.item[data-category="Movie"] {
+.category-box[data-category="Movie"] {
   background-color: lavender;
 }
 
-.item[data-category="Other"] {
+.category-box[data-category="Other"] {
   background-color: turquoise;
 }
 
+@media only screen and (min-width: 768px) and (orientation: portrait) {
+  .del-item-btn {
+    visibility: hidden;
+    background-color: var(--red);
+  }
+  .item:hover > .row > .del-item-btn {
+      visibility: visible;
+  }
+}
 @media only screen and (max-width: 767px) and (orientation: portrait) {
   .item {
-    width: calc(50% - 10px);
     margin: 5px;
     padding: 8px;
+  }
+
+  .category-box{
+    width: 80px;
+    height: 80px;
   }
 
   h3 {
@@ -49,8 +101,9 @@ ul.display-list {
     margin-bottom: 4px;
   }
 
-  .btn {
-    font-size: 0.8rem;
+  .del-item-btn {
+    right: -10px;
+    top: -10px;
   }
 }
 
