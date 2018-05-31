@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import firebase, { auth, provider } from './firebase.js';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import History from './History'
-import Home from './Home'
+import History from './components/History'
+import Home from './components/Home'
 
 const getMonth = () => {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -157,29 +157,29 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <a class="navbar-brand">Expense Tracker</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <nav className="navbar navbar-expand-lg navbar-light">
+          <a className="navbar-brand">Expense Tracker</a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
             {this.state.user ?
-              <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
+              <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
                   <Link to='/' className="nav-link">Home</Link>
                 </li>
-                <li class="nav-item">
+                <li className="nav-item">
                   <Link to='/history' className="nav-link">History</Link>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" onClick={this.logout}>Log Out</a>
+                <li className="nav-item">
+                  <a className="nav-link" onClick={this.logout}>Log Out</a>
                 </li>
               </ul>
               :
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link" onClick={this.login}>Log In</a>
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <a className="nav-link" onClick={this.login}>Log In</a>
                 </li> 
               </ul>
             }
