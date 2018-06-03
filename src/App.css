@@ -12,15 +12,26 @@ h1,h2,h3,h4,h5,h6,p,div {
   font-family: 'Nunito';
 }
 
+.row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
 nav {
   background-color: var(--purple);
-  color: white;
+}
+
+.navbar-brand, .nav-link {
+  color: white!important;
 }
 
 section.banner {
   background-color: var(--purple);
   padding-top: 80px;
   padding-bottom: 30px;
+}
+
+section.banner h2, section.banner h5 {
   color: white;
 }
 
@@ -72,6 +83,10 @@ ul.display-list > li.item > .row {
   background-color: turquoise;
 }
 
+.year-title {
+  padding-top: 25px;
+}
+
 @media only screen and (min-width: 768px) and (orientation: portrait) {
   .del-item-btn {
     visibility: hidden;
@@ -87,17 +102,22 @@ ul.display-list > li.item > .row {
     padding: 8px;
   }
 
+  .col {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
   .category-box{
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 
   h3 {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     margin-bottom: 4px;
   }
 

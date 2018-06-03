@@ -186,9 +186,17 @@ class App extends Component {
           </div>
            
         </nav>
-          <Route exact path="/" render={(props)=>(<Home test="hi" user={this.state.user} onSubmit={this.handleSubmit} onChange={this.handleChange} removeItem={this.removeItem} items={this.state.items} totalAmount={this.state.totalAmount} amount={this.state.amount} category={this.state.category} remarks={this.state.remarks} {...props} />)} />
+          <Route exact path="/" render={(props)=>(<Home user={this.state.user} 
+                                                        onSubmit={this.handleSubmit} 
+                                                        onChange={this.handleChange} 
+                                                        removeItem={this.removeItem} 
+                                                        items={this.state.items} 
+                                                        totalAmount={this.state.totalAmount} 
+                                                        amount={this.state.amount} 
+                                                        category={this.state.category} 
+                                                        remarks={this.state.remarks} {...props} />)} />
           
-          <Route path="/history" render={(props)=>(<History test="hi" user={this.state.user} {...props} />)} />
+          <Route path="/history" render={(props)=>(<History user={this.state.user} {...props} />)} />
       </div>
       </Router>
     );
