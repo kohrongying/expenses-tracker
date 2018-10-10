@@ -112,9 +112,7 @@ class App extends Component {
   componentDidMount(){
     auth.onAuthStateChanged((user)=>{
       if (user) {
-        this.setState({
-          user
-        })
+        this.setState({ user})
         let year = new Date().getFullYear();
         let month = getMonth();
         const itemsRef = firebase.database().ref(`/users/${this.state.user.uid}/${year}/${month}/items`);
@@ -131,7 +129,7 @@ class App extends Component {
             });
           }
           this.setState({
-            items: newState
+            items: newState.reverse()
           })
         })
         const totalAmountRef = firebase.database().ref(`/users/${this.state.user.uid}/${year}/${month}/totalAmount`);
@@ -143,6 +141,7 @@ class App extends Component {
           }
              
         })
+
       } else {
         this.setState({
           user: null
