@@ -7,7 +7,7 @@ const AddExpenseForm = (props) => {
 	          <form className="add-item-form" onSubmit={props.onSubmit}>
 	            <div className="form-row" >
 	              <div className="col">
-	                <input type="text" className="form-control" name="amount" placeholder="How much?" onChange={props.onChange} value={props.amount} />
+	                <input type="number" className="form-control" name="amount" placeholder="How much?" onChange={props.onChange} value={props.amount} />
 	              </div>
 	              <div className="col">
 	                <div className="form-group">

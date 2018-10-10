@@ -47,6 +47,10 @@ ul.display-list > li.item > .row {
   position: relative;
 }
 
+ul.display-list h3 {
+  margin-bottom: 0;  
+}
+
 .item {
   background: var(--lightgrey);
   padding: 20px;

@@ -1,6 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ### todo:
+- [x] Latest entry at the top
+- [x] Sort by months
 - [ ] Group by month
 - [ ] Add filter
 - [ ] Add data viz - graph 

@@ -10,27 +10,32 @@ export default class History extends Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			thisYear: [] 
+			thisYear: [],
+			year: new Date().getFullYear()
 		}
 	}
 
+	
 	componentDidMount(){
+		
 		if (this.props.user) {
-			let year = new Date().getFullYear();
-			const yearRef = firebase.database().ref(`users/${this.props.user.uid}/${year}`);
+			const yearRef = firebase.database().ref(`users/${this.props.user.uid}/${this.state.year}`);
     		yearRef.on('value', (snapshot)=> {
-	          let months = snapshot.val();
-	          let newMonth = []
-	          for (let month in months) {
-	          	newMonth.push({
-	          		id: month,
-	          		totalAmount: formatNumber(months[month].totalAmount.totalAmount)
-	          	})
-	          }
-	          this.setState({
-	          	thisYear: newMonth
-	          })
-	        })
+          let months = snapshot.val();
+          const orderedMonths = {};
+          const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  			  Object.keys(months).sort((a,b) => { return allMonths.indexOf(a) > allMonths.indexOf(b) }).forEach(function(key) {
+					  orderedMonths[key] = months[key];
+					});
+          let thisYear = []
+          for (let month in orderedMonths) {
+          	thisYear.push({
+          		id: month,
+          		totalAmount: formatNumber(months[month].totalAmount.totalAmount)
+          	})
+          }
+          this.setState({ thisYear })
+        })
 		}
 	}
 	render() {
@@ -47,8 +52,8 @@ export default class History extends Component {
 
 				  	<section>
 				  		<div className="container">
-				  			<div className="row">
-						  		<h3 className="year-title">2018</h3>
+				  			<div className="row d-flex justify-content-center">
+						  		<h3 className="year-title">{this.state.year}</h3>
 						  	</div>
 						  	<ul className="display-list">
 						  		{this.state.thisYear.map((month) => {
