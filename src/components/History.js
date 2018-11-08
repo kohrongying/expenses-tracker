@@ -19,23 +19,25 @@ export default class History extends Component {
 	componentDidMount(){
 		
 		if (this.props.user) {
-			const yearRef = firebase.database().ref(`users/${this.props.user.uid}/${this.state.year}`);
-    		yearRef.on('value', (snapshot)=> {
-          let months = snapshot.val();
-          const orderedMonths = {};
-          const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  			  Object.keys(months).sort((a,b) => { return allMonths.indexOf(a) > allMonths.indexOf(b) }).forEach(function(key) {
-					  orderedMonths[key] = months[key];
+			firebase
+				.database()
+				.ref(`users/${this.props.user.uid}/${this.state.year}`)
+    			.on('value', (snapshot)=> {
+					let months = snapshot.val();
+					const orderedMonths = {};
+					const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+					Object.keys(months).sort((a,b) => { return allMonths.indexOf(a) - allMonths.indexOf(b) }).forEach(function(key) {
+						orderedMonths[key] = months[key];
 					});
-          let thisYear = []
-          for (let month in orderedMonths) {
-          	thisYear.push({
-          		id: month,
-          		totalAmount: formatNumber(months[month].totalAmount.totalAmount)
-          	})
-          }
-          this.setState({ thisYear })
-        })
+					let thisYear = []
+					for (let month in orderedMonths) {
+						thisYear.push({
+							id: month,
+							totalAmount: formatNumber(months[month].totalAmount.totalAmount)
+						})
+					}
+          			this.setState({ thisYear })
+        		})
 		}
 	}
 	render() {
