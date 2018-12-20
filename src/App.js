@@ -82,7 +82,7 @@ class App extends Component {
         {this.state.user ? (
           <div>
             <Route exact path="/" render={(props)=>(<Home uid={this.state.user.uid} {...props} />)} />
-            <Route path="/history" render={(props)=>(<History user={this.state.user} {...props} />)} />
+            <Route path="/history" render={(props)=>(<History uid={this.state.user.uid} {...props} />)} />
           </div>
         ): null }
       </div>

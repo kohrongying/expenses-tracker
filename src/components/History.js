@@ -15,13 +15,11 @@ export default class History extends Component {
 		}
 	}
 
-	
 	componentDidMount(){
-		
-		if (this.props.user) {
+		if (this.props.uid) {
 			firebase
 				.database()
-				.ref(`users/${this.props.user.uid}/${this.state.year}`)
+				.ref(`users/${this.props.uid}/${this.state.year}`)
     			.on('value', (snapshot)=> {
 					let months = snapshot.val();
 					const orderedMonths = {};
@@ -36,14 +34,14 @@ export default class History extends Component {
 							totalAmount: formatNumber(months[month].totalAmount.totalAmount)
 						})
 					}
-          			this.setState({ thisYear })
-        		})
+          this.setState({ thisYear })
+        })
 		}
 	}
 	render() {
 		return (
 			<div>
-				{this.props.user ?
+				{this.props.uid ?
 
 				<div>
 					<section className="banner">
