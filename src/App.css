@@ -116,8 +116,8 @@ ul.display-list h3 {
     height: 60px;
   }
 
-  h3 {
-    font-size: 1rem;
+  div,h3 {
+    font-size: 0.8rem;
   }
 
   p {
