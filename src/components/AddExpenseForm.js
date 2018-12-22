@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import firebase from '../firebase.js';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 const getMonth = () => {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -11,24 +14,66 @@ const formatNumber = (num) => {
   return result;
 }
 
+const categories = [
+  {
+    value: "Food",
+    label: "Food"
+  },
+  {
+    value: "Transport",
+    label: "Transport"
+  },
+  {
+    value: "Movie",
+    label: "Movie"
+  },
+  {
+    value: "Other",
+    label: "Other"
+  }
+]
+
+const paymentTypes = [
+  {
+    value: "Cash",
+    label: "Cash"
+  },
+  {
+    value: "Credit Card",
+    label: "Credit Card"
+  }
+]
+
+const styles = {
+  textField: {
+    width: '100%',
+  },
+  button: {
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+  }
+}
+
 export default class AddExpenseForm extends Component {
 	constructor(props) {
 		super(props)
     this.state = {
       amount: 0,
-      category: 'Food',
+      category: '',
       totalAmount: 0,
-      remarks: ''
+      remarks: '',
+      paymentType: ''
 		} 
 		this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 	}
-	
-	handleChange(e){
+
+  handleChange = name => event => {
     this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
+      [name]: event.target.value,
+    });
+  };
 
   handleSubmit(e){
     e.preventDefault();
@@ -43,7 +88,8 @@ export default class AddExpenseForm extends Component {
       date: new Date().toDateString(),
       month: month,
       year: year,
-      remarks: this.state.remarks
+      remarks: this.state.remarks,
+      paymentType: this.state.paymentType
     }
     itemsRef.push(item);
     totalAmountRef.once('value', (snapshot)=>{
@@ -56,8 +102,7 @@ export default class AddExpenseForm extends Component {
     })
     this.setState({
       amount:0,
-      category: "Food",
-      remarks: ''
+      remarks: '',
     })
 
 	}
@@ -67,30 +112,82 @@ export default class AddExpenseForm extends Component {
 			<section>
         <div className='container'>
           <form className="add-item-form" onSubmit={this.handleSubmit}>
-            <div className="form-row" >
-              <div className="col">
-                <input type="number" className="form-control" name="amount" placeholder="How much?" onChange={this.handleChange} value={this.state.amount} />
-              </div>
-              <div className="col">
-                <div className="form-group">
-                  <select className="form-control" id="category-type" name="category" onChange={this.handleChange} value={this.state.category}>
-                    <option value="Food">Food</option>
-                    <option value="Transport">Transport</option>
-                    <option value="Movie">Movie</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col">
-                <input type="text" className="form-control" name="remarks" placeholder="Remarks" onChange={this.handleChange} value={this.state.remarks} />
-              </div>
-              <div className="col">
-                <button type="submit" className="btn btn-primary save-item-btn">Save</button>
-              </div>
+
+          <div className="row">
+            <div className="col">
+              <TextField
+                id="outlined-number"
+                label="Amount"
+                value={this.state.amount}
+                onChange={this.handleChange('amount')}
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                variant="outlined"
+                style={styles.textField}
+              />
             </div>
+            <div className="col">
+              <TextField
+                id="standard-select-category"
+                select
+                label="Category"
+                value={this.state.category}
+                onChange={this.handleChange('category')}
+                margin="normal"
+                style={styles.textField}
+              >
+                {categories.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <TextField
+                id="standard-name"
+                label="Remarks"
+                value={this.state.remarks}
+                onChange={this.handleChange('remarks')}
+                margin="normal"
+                style={styles.textField}
+              />
+            </div>
+            
+            <div className="col">
+              <TextField
+                id="standard-select-currency"
+                select
+                label="Payment Type"
+                value={this.state.paymentType}
+                onChange={this.handleChange('paymentType')}
+                margin="normal"
+                style={styles.textField}
+              >
+                {paymentTypes.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+          </div>
+          
+          <div className="row" >
+            <Button type="submit" variant="contained" color="primary" style={styles.button}>
+              Save
+            </Button>
+          </div>
           </form>
         </div>
 	    </section>
 		)
 	}
 }
+
