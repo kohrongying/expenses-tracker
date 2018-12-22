@@ -46,7 +46,7 @@ export default class AddExpenseForm extends Component {
       remarks: this.state.remarks
     }
     itemsRef.push(item);
-    totalAmountRef.on('value', (snapshot)=>{
+    totalAmountRef.once('value', (snapshot)=>{
       if (snapshot.val() != null) {
         currentTotal = snapshot.val().totalAmount;
       }
@@ -65,31 +65,31 @@ export default class AddExpenseForm extends Component {
 	render() {
 		return (
 			<section>
-	        <div className='container'>
-	          <form className="add-item-form" onSubmit={this.handleSubmit}>
-	            <div className="form-row" >
-	              <div className="col">
-	                <input type="number" className="form-control" name="amount" placeholder="How much?" onChange={this.handleChange} value={this.state.amount} />
-	              </div>
-	              <div className="col">
-	                <div className="form-group">
-	                  <select className="form-control" id="category-type" name="category" onChange={this.handleChange} value={this.state.category}>
-	                    <option value="Food">Food</option>
-	                    <option value="Transport">Transport</option>
-	                    <option value="Movie">Movie</option>
-	                    <option value="Other">Other</option>
-	                  </select>
-	                </div>
-	              </div>
-	              <div className="col">
-	                <input type="text" className="form-control" name="remarks" placeholder="Remarks" onChange={this.handleChange} value={this.state.remarks} />
-	              </div>
-	              <div className="col">
-	                <button type="submit" className="btn btn-primary save-item-btn">Save</button>
-	              </div>
-	            </div>
-	          </form>
-	        </div>
+        <div className='container'>
+          <form className="add-item-form" onSubmit={this.handleSubmit}>
+            <div className="form-row" >
+              <div className="col">
+                <input type="number" className="form-control" name="amount" placeholder="How much?" onChange={this.handleChange} value={this.state.amount} />
+              </div>
+              <div className="col">
+                <div className="form-group">
+                  <select className="form-control" id="category-type" name="category" onChange={this.handleChange} value={this.state.category}>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Movie">Movie</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div className="col">
+                <input type="text" className="form-control" name="remarks" placeholder="Remarks" onChange={this.handleChange} value={this.state.remarks} />
+              </div>
+              <div className="col">
+                <button type="submit" className="btn btn-primary save-item-btn">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
 	    </section>
 		)
 	}

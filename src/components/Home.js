@@ -105,14 +105,9 @@ export default class Home extends Component {
               })}
               </ul>
             </div>
-              </section>
-                
-	              {/* <DisplayExpenseList
-	              	items={this.props.items}
-	              	removeItem={this.props.removeItem}
-	              /> */}
+          </section>
 	             
-	            </div>
+        </div>
 				:
 				<p>You must be logged in.</p>
 				}
