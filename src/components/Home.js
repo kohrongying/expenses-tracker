@@ -43,7 +43,8 @@ export default class Home extends Component {
             amount: items[item].amount,
             category: items[item].category,
             remarks: items[item].remarks,
-            date: items[item].date
+            date: items[item].date,
+            paymentType: items[item].paymentType ? items[item].paymentType : "Cash"
           });
         }
         this.setState({
