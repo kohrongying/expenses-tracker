@@ -1,11 +1,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ### todo:
-- [x] Latest entry at the top
-- [x] Sort by months
-- [ ] Group by month
-- [ ] Add filter
-- [ ] Add data viz - graph 
+- [x] Expenses - add payment form
+- [ ] Home - group by card or cash 
+- [ ] History - show breakdown of expenses, savings and investments
+- [ ] History - show graph of expenses (across month, across categories)
+
+Monthly Constants 
+- [ ] Settings - Add / Edit Salary Credit
+- [ ] Settings - Add / Edit Investments 
 
 Tutorial: https://css-tricks.com/intro-firebase-react/
  
