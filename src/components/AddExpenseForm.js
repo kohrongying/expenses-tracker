@@ -3,16 +3,10 @@ import firebase from '../firebase.js';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import { formatNumber, getMonth } from '../helpers/common'
 
-const getMonth = () => {
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  return monthNames[(new Date().getMonth())];
-}
-
-const formatNumber = (num) => {
-  let result = num != null ? parseFloat(num).toFixed(2) : 0;
-  return result;
-}
+const year = new Date().getFullYear();
+const month = getMonth();
 
 const categories = [
   {
@@ -77,8 +71,6 @@ export default class AddExpenseForm extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    let year = new Date().getFullYear();
-    let month = getMonth();
     const itemsRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/items`);
     const totalAmountRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/totalAmount`);
     let currentTotal = 0;
@@ -104,7 +96,6 @@ export default class AddExpenseForm extends Component {
       amount:0,
       remarks: '',
     })
-
 	}
 	
 	render() {
@@ -190,4 +181,3 @@ export default class AddExpenseForm extends Component {
 		)
 	}
 }
-

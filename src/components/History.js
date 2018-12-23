@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../firebase.js';
 import Banner from './Banner';
-
-const formatNumber = (num) => {
-  let result = num != null ? parseFloat(num).toFixed(2) : 0;
-  return result;
-}
+import { formatNumber } from '../helpers/common'
 
 export default class History extends Component {
 	constructor(props){

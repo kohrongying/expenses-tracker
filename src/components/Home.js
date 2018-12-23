@@ -7,21 +7,10 @@ import Chip from '@material-ui/core/Chip';
 import { CreditCard, Money } from '@material-ui/icons';
 import green from '@material-ui/core/colors/green';
 import Banner from './Banner';
+import { getMonth, formatNumber, getMonthYear } from '../helpers/common'
 
-const getMonth = () => {
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  return monthNames[(new Date().getMonth())];
-}
-
-const formatNumber = (num) => {
-  let result = num != null ? parseFloat(num).toFixed(2) : 0;
-  return result;
-}
-
-const getMonthYear = () => {
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  return `${monthNames[(new Date().getMonth())]} ${new Date().getFullYear()}`;
-}
+const year = new Date().getFullYear();
+const month = getMonth();
 
 export default class Home extends Component {
 	constructor(props) {
@@ -37,8 +26,7 @@ export default class Home extends Component {
 
   componentDidMount() {
     if (this.props.uid) {
-      let year = new Date().getFullYear();
-      let month = getMonth();
+      
       const itemsRef = firebase.database().ref(`/users/${this.props.uid}/${year}/${month}/items`);
       itemsRef.on('value', (snapshot)=> {
         let items = snapshot.val();
@@ -78,9 +66,14 @@ export default class Home extends Component {
     }
   }
 
+  componentWillUnmount() {
+    firebase.database().ref(`/users/${this.props.uid}/${year}/${month}/totalAmount`)
+      .off()
+    firebase.database().ref(`/users/${this.props.uid}/${year}/${month}/items`)
+      .off()
+  }
+
   removeItem(itemID, itemAmt){
-    let year = new Date().getFullYear();
-    let month = getMonth();
     const itemRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/items/${itemID}`);
     const totalAmountRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/totalAmount`);
     let currentTotal = 0;
