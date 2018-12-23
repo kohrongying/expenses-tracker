@@ -51,7 +51,7 @@ class App extends Component {
       <Router>
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light">
-          <a className="navbar-brand">Expense Tracker</a>
+          <a href="/" className="navbar-brand">Expense Tracker</a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -69,13 +69,13 @@ class App extends Component {
                   <Link to='/income' className="nav-link">Income</Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={this.logout}>Log Out</a>
+                  <a href="/" className="nav-link" onClick={this.logout}>Log Out</a>
                 </li>
               </ul>
               :
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <a className="nav-link" onClick={this.login}>Log In</a>
+                  <a href="/" className="nav-link" onClick={this.login}>Log In</a>
                 </li> 
               </ul>
             }
