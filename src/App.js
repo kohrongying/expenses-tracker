@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 import { auth, provider } from './firebase.js';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import History from './components/History'
-import Home from './components/Home'
+import History from './components/History';
+import Home from './components/Home';
+import Income from './components/Income';
 
 class App extends Component {  
   constructor(props){
@@ -65,6 +66,9 @@ class App extends Component {
                   <Link to='/history' className="nav-link">History</Link>
                 </li>
                 <li className="nav-item">
+                  <Link to='/income' className="nav-link">Income</Link>
+                </li>
+                <li className="nav-item">
                   <a className="nav-link" onClick={this.logout}>Log Out</a>
                 </li>
               </ul>
@@ -83,6 +87,7 @@ class App extends Component {
           <div>
             <Route exact path="/" render={(props)=>(<Home uid={this.state.user.uid} {...props} />)} />
             <Route path="/history" render={(props)=>(<History uid={this.state.user.uid} {...props} />)} />
+            <Route path="/income" render={(props)=>(<Income uid={this.state.user.uid} {...props} />)} />
           </div>
         ): null }
       </div>
