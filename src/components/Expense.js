@@ -1,28 +1,60 @@
-import React from 'react'
-import del_icon from '../svg/x-circle.svg';
-import { CreditCard, Money } from '@material-ui/icons'
+import React from 'react';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FoodIcon from '@material-ui/icons/Fastfood';
+import TransportIcon from '@material-ui/icons/Train';
+import MovieIcon from '@material-ui/icons/Movie';
+import OtherIcon from '@material-ui/icons/MoreHoriz';
+import { pink, blue, purple, amber } from '@material-ui/core/colors';
+
 const Expense = (props) => {
 	return (
-    <li key={props.item.id} className="item" >
-      <div className="row">
-
-        <div className="category-box d-flex align-items-center justify-content-center" data-category={props.item.category}>
-          <strong>{props.item.category}</strong>
-        </div>
-
-        <div className="col-6 info-box d-flex flex-column align-items-center justify-content-center">
-          <h3>{props.item.remarks}</h3>
-          <p><i>{props.item.date}</i></p>
-        </div>
-        
-        <div className="col amount-box d-flex align-items-center justify-content-end">
-          {props.item.paymentType == "Cash" ? <Money style={{marginRight:10}} /> : <CreditCard style={{marginRight:10}}/>}
-          <h3>S${props.item.amount}{" "}</h3>
-        </div>
-        
-        <div className="del-item-btn" onClick={() => props.removeItem(props.item.id, props.item.amount)}><img src={del_icon} alt="delete icon"/></div>
-      </div>
-    </li>
+    <List>
+      <ListItem>
+        <ListItemAvatar>
+          {props.item.category === "Food" ? (
+            <Avatar style={{backgroundColor: pink[300]}}>
+              <FoodIcon />
+            </Avatar>
+          ) : (
+            props.item.category === "Transport" ? (
+              <Avatar style={{backgroundColor: blue[300]}}>
+                <TransportIcon />
+              </Avatar>
+            ) : (
+              props.item.category === "Movie" ? (
+                <Avatar style={{backgroundColor: purple[300]}}>
+                  <MovieIcon />
+                </Avatar>
+              ) : (
+                <Avatar style={{backgroundColor: amber[500]}}>
+                  <OtherIcon />
+                </Avatar>
+              
+              )
+            )
+          )}
+          
+        </ListItemAvatar>
+        <ListItemText
+          primary={`$${props.item.amount}`}
+          secondary={`${props.item.remarks} (${props.item.paymentType})`}
+        />
+        <ListItemSecondaryAction>
+          <IconButton aria-label="Delete">
+            <DeleteIcon 
+              onClick={() => props.removeItem(props.item.id, props.item.amount)}
+            />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>      
+    </List>
   )
 }
 
