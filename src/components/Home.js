@@ -6,6 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import { CreditCard, Money } from '@material-ui/icons';
 import green from '@material-ui/core/colors/green';
+import Banner from './Banner';
 
 const getMonth = () => {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -96,13 +97,11 @@ export default class Home extends Component {
 		return (
 			<div>
 				{this.props.uid ?
-				<div>
-          <section className="banner">
-				  	<div className="container d-flex flex-column align-items-center">
-				  		<h5>{getMonthYear()}</h5>
-				  		<h2>S${this.state.totalAmount}</h2>
-				  	</div>
-          </section>
+				
+        <div>
+          <Banner 
+            title={getMonthYear()} 
+            secondaryText={`S$${this.state.totalAmount}`} />
 
           <AddExpenseForm uid={this.props.uid} />
 	        

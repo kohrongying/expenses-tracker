@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../firebase.js';
+import Banner from './Banner';
 
 const formatNumber = (num) => {
   let result = num != null ? parseFloat(num).toFixed(2) : 0;
@@ -44,11 +45,7 @@ export default class History extends Component {
 				{this.props.uid ?
 
 				<div>
-					<section className="banner">
-					  	<div className="container d-flex flex-column align-items-center">
-					  		<h5>History</h5>
-					  	</div>
-				  	</section>
+					<Banner title="History" />
 
 				  	<section>
 				  		<div className="container">
