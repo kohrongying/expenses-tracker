@@ -2,12 +2,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### todo:
 - [x] Expenses - add payment form
-- [ ] Home - group by card or cash 
+- [x] Material UI - Lists for expense list
+- [x] Home - group by card or cash 
+- [x] Material UI - Chip for card/cash
+- [ ] Material UI - Expansion Panel for History
 - [ ] History - show breakdown of expenses, savings and investments
 - [ ] History - show graph of expenses (across month, across categories)
+- [x] Income - add montly and extra income 
 
 Monthly Constants 
-- [ ] Settings - Add / Edit Salary Credit
 - [ ] Settings - Add / Edit Investments 
 
 Tutorial: https://css-tricks.com/intro-firebase-react/
