@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import History from './components/History';
 import Home from './components/Home';
 import Income from './components/Income';
+import Investment from './components/Investment';
 
 class App extends Component {  
   constructor(props){
@@ -69,6 +70,9 @@ class App extends Component {
                   <Link to='/income' className="nav-link">Income</Link>
                 </li>
                 <li className="nav-item">
+                  <Link to='/investment' className="nav-link">Investment</Link>
+                </li>
+                <li className="nav-item">
                   <a href="/" className="nav-link" onClick={this.logout}>Log Out</a>
                 </li>
               </ul>
@@ -88,6 +92,7 @@ class App extends Component {
             <Route exact path="/" render={(props)=>(<Home uid={this.state.user.uid} {...props} />)} />
             <Route path="/history" render={(props)=>(<History uid={this.state.user.uid} {...props} />)} />
             <Route path="/income" render={(props)=>(<Income uid={this.state.user.uid} {...props} />)} />
+            <Route path="/investment" render={(props)=>(<Investment uid={this.state.user.uid} {...props} />)} />          
           </div>
         ): null }
       </div>
