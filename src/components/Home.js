@@ -43,9 +43,9 @@ export default class Home extends Component {
             paymentType: items[item].paymentType ? items[item].paymentType : "Cash"
           });
           if (items[item].paymentType === "Credit Card") {
-            cardExpense += parseInt(items[item].amount) 
+            cardExpense += parseFloat(items[item].amount) 
           } else {
-            cashExpense += parseInt(items[item].amount)
+            cashExpense += parseFloat(items[item].amount)
           }
         }
         this.setState({

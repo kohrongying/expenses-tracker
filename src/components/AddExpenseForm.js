@@ -53,7 +53,7 @@ export default class AddExpenseForm extends Component {
 	constructor(props) {
 		super(props)
     this.state = {
-      amount: 0,
+      amount: '',
       category: '',
       totalAmount: 0,
       remarks: '',
@@ -93,7 +93,7 @@ export default class AddExpenseForm extends Component {
       totalAmount: currentTotal + parseFloat(this.state.amount)
     })
     this.setState({
-      amount:0,
+      amount: '',
       remarks: '',
     })
 	}
