@@ -1,3 +1,5 @@
+[Site](http://imma-save-more-money.netlify.com/) is live! You can track your expenses, income (and soon investments!) here :) 
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ### todo:
@@ -8,20 +10,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [ ] Material UI - Expansion Panel for History
 - [ ] History - show breakdown of expenses, savings and investments
 - [ ] History - show graph of expenses (across month, across categories)
-- [x] Income - add montly and extra income 
-
-Monthly Constants 
-- [ ] Settings - Add / Edit Investments 
+- [x] Income - add monthly and extra income 
+- [ ] Investments - add monthly and extra investments 
 
 Tutorial: https://css-tricks.com/intro-firebase-react/
  
-### To run: `npm start` or `yarn start`.
+### To deploy: 
+git push to master and it will trigger a build on netlify 
+Deploys to netlify automatically.
 
-### To test: `npm test`
-
-### To build: `npm run build` or `yarn build`
-Builds the app for production to the `build` folder.
-
-### To deploy: `netlify deploy`
-Deploys to [http://imma-save-more-money.netlify.com/](http://imma-save-more-money.netlify.com/)
+### Updates to UI 
+![Pic1](img1.png)
 
