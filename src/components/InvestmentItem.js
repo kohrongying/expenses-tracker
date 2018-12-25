@@ -7,21 +7,21 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
-import IncomeIcon from '@material-ui/icons/AttachMoney';
-import { teal} from '@material-ui/core/colors';
+import InvestmentIcon from '@material-ui/icons/AccountBalance';
+import { teal } from '@material-ui/core/colors';
 
-const IncomeItem = (props) => {
+const InvestmentItem = (props) => {
 	return (
     <List>
       <ListItem>
         <ListItemAvatar>
           <Avatar style={{backgroundColor: teal[400]}}>
-              <IncomeIcon />
+              <InvestmentIcon />
           </Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={`$${props.item.amount}`}
-          secondary={props.item.incomeSource}
+          secondary={props.item.investment}
         />
         <ListItemSecondaryAction>
           <IconButton aria-label="Delete">
@@ -35,4 +35,4 @@ const IncomeItem = (props) => {
   )
 }
 
-export default IncomeItem;
+export default InvestmentItem;
