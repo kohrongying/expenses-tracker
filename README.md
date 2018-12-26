@@ -11,7 +11,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [ ] History - show breakdown of expenses, savings and investments
 - [ ] History - show graph of expenses (across month, across categories)
 - [x] Income - add monthly and extra income 
-- [ ] Investments - add monthly and extra investments 
+- [x] Investments - add monthly and extra investments 
 
 Tutorial: https://css-tricks.com/intro-firebase-react/
  

@@ -25,6 +25,10 @@ nav {
   color: white!important;
 }
 
+.nav-link:hover {
+  cursor: pointer;
+}
+
 section.banner {
   background-color: var(--purple);
   padding-top: 80px;
