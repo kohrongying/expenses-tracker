@@ -4,12 +4,9 @@ import Banner from './Banner';
 import { formatNumber } from '../helpers/common'
 
 export default class History extends Component {
-	constructor(props){
-		super(props)
-		this.state = {
-			thisYear: [],
-			year: new Date().getFullYear()
-		}
+	state = {
+		thisYear: [],
+		year: new Date().getFullYear()
 	}
 
 	componentDidMount(){
