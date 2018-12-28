@@ -162,7 +162,7 @@ export default class Income extends Component {
           <section style={styles.salarySection} className="salary-section">
             <div className="container">
               <div className="row d-flex flex-row justify-content-between align-items-center">
-                <h5>Extra Income ({getMonth()})</h5>
+                <h5>Total Income ({getMonth()})</h5>
                 <IconButton onClick={this.handleClickOpenExtra} aria-label="Add">
                   <AddIcon />
                 </IconButton>
