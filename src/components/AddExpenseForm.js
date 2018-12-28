@@ -3,7 +3,7 @@ import firebase from '../firebase.js';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { formatNumber, getMonth } from '../helpers/common'
+import { getMonth } from '../helpers/common'
 
 const year = new Date().getFullYear();
 const month = getMonth();
@@ -53,7 +53,6 @@ export default class AddExpenseForm extends Component {
   state = {
     amount: '',
     category: '',
-    totalAmount: 0,
     remarks: '',
     paymentType: ''
   } 
@@ -66,27 +65,25 @@ export default class AddExpenseForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const itemsRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/items`);
-    const totalAmountRef = firebase.database().ref(`users/${this.props.uid}/${year}/${month}/totalAmount`);
-    let currentTotal = 0;
     const item = {
-      amount: formatNumber(this.state.amount),
+      amount: parseFloat(this.state.amount),
       category: this.state.category,
       date: new Date().toDateString(),
-      month: month,
-      year: year,
       remarks: this.state.remarks,
       paymentType: this.state.paymentType
     }
-    itemsRef.push(item);
-    totalAmountRef.once('value', (snapshot)=>{
-      if (snapshot.val() != null) {
-        currentTotal = snapshot.val().totalAmount;
-      }
-    })
-    totalAmountRef.update({
-      totalAmount: currentTotal + parseFloat(this.state.amount)
-    })
+    firebase
+      .database()
+      .ref(`users/${this.props.uid}/${year}/${month}/items`)
+      .push(item);
+    
+    firebase
+      .database()
+      .ref(`users/${this.props.uid}/${year}/${month}`)  
+      .update({
+        totalAmount: parseFloat(this.props.totalAmount) + parseFloat(this.state.amount)
+      })
+    
     this.setState({
       amount: '',
       remarks: '',
