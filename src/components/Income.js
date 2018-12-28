@@ -90,7 +90,7 @@ export default class Income extends Component {
     e.preventDefault();
     if (this.state.amount > 0){
       firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-        .push({ amount: this.state.amount, incomeSource: this.state.incomeSource })
+        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource })
     }
     
     this.setState({
@@ -105,7 +105,7 @@ export default class Income extends Component {
 
     if (this.state.amount > 0){
       firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-        .push({ amount: this.state.amount, incomeSource: this.state.incomeSource })
+        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource })
     }
       
     this.setState({
