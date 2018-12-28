@@ -90,7 +90,7 @@ export default class Income extends Component {
     e.preventDefault();
     if (this.state.amount > 0){
       firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-        .push({ amount: this.state.amount, incomeSource: this.state.incomeSource })
+        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource })
     }
     
     this.setState({
@@ -105,7 +105,7 @@ export default class Income extends Component {
 
     if (this.state.amount > 0){
       firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-        .push({ amount: this.state.amount, incomeSource: this.state.incomeSource })
+        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource })
     }
       
     this.setState({
@@ -162,7 +162,7 @@ export default class Income extends Component {
           <section style={styles.salarySection} className="salary-section">
             <div className="container">
               <div className="row d-flex flex-row justify-content-between align-items-center">
-                <h5>Extra Income ({getMonth()})</h5>
+                <h5>Total Income ({getMonth()})</h5>
                 <IconButton onClick={this.handleClickOpenExtra} aria-label="Add">
                   <AddIcon />
                 </IconButton>

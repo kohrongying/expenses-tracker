@@ -8,16 +8,11 @@ import Income from './components/Income';
 import Investment from './components/Investment';
 
 class App extends Component {  
-  constructor(props){
-    super(props);
-    this.state = {
-      user: null
-    }
-    this.logout = this.logout.bind(this);
-    this.login = this.login.bind(this);
+  state = {
+    user: null
   }
 
-  login(){
+  login = () => {
     auth.signInWithRedirect(provider)
       .then((result)=>{
         const user = result.user;
@@ -28,7 +23,7 @@ class App extends Component {
       });
   }
 
-  logout(){
+  logout = () => {
     auth.signOut()
       .then(()=>{
         this.setState({

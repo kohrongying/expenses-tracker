@@ -8,7 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IncomeIcon from '@material-ui/icons/AttachMoney';
-import { teal} from '@material-ui/core/colors';
+import { teal } from '@material-ui/core/colors';
+import { formatNumber } from '../helpers/common'
 
 const IncomeItem = (props) => {
 	return (
@@ -20,7 +21,7 @@ const IncomeItem = (props) => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary={`$${props.item.amount}`}
+          primary={`S$${formatNumber(props.item.amount)}`}
           secondary={props.item.incomeSource}
         />
         <ListItemSecondaryAction>
