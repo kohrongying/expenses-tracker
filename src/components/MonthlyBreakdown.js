@@ -20,18 +20,26 @@ export default class MonthlyBreakdown extends Component {
     super(props)
     this.state = {
       month: props.match.params.month, 
-      year: props.match.params.year
+      year: props.match.params.year,
+      expenses: 0,
+      expensesBreakdown: {
+        'Food': 0, "Transport": 0, "Movie": 0, "Others": 0
+      },
+      investment: 0,
+      savings: 0,
+      income: 0
     }
   }
 
   componentDidMount() {
-    this.getMonthData(this.props.uid, this.state.year, this.state.month)
+    this.getMonthData()
+    this.getExpensesBreakdown()
   }
   
-  getMonthData = (uid, year, month) => {
+  getMonthData = () => {
     firebase
       .database()
-      .ref(`users/${uid}/${year}/${month}`)
+      .ref(`users/${this.props.uid}/${this.state.year}/${this.state.month}`)
       .once('value')
       .then(snapshot => {
         const monthItem = snapshot.val()
@@ -51,6 +59,23 @@ export default class MonthlyBreakdown extends Component {
     return total
   }
 
+  getExpensesBreakdown = () => {
+    firebase
+      .database()
+      .ref(`users/${this.props.uid}/${this.state.year}/${this.state.month}/items`)
+      .once('value')
+      .then(snapshot => {
+        const items = snapshot.val()
+        let expensesBreakdown = {
+          'Food': 0, "Transport": 0, "Movie": 0, "Others": 0
+        }
+        for (let item in items){
+          expensesBreakdown[items[item].category] += items[item].amount
+        }
+        this.setState({ expensesBreakdown })
+      })
+  }
+
 
   render(){
     const pieLabels = ['Expenses','Investment','Savings']
@@ -63,7 +88,7 @@ export default class MonthlyBreakdown extends Component {
         hoverBackgroundColor: [cyan[600], teal[600], indigo[600]]
       }]
     };
-
+    const exp = this.state.expensesBreakdown
     const barData = {
       labels: ['Food', 'Transport', 'Movie', 'Others'],
       datasets: [
@@ -72,7 +97,7 @@ export default class MonthlyBreakdown extends Component {
           backgroundColor: red[200],
           borderWidth: 1,
           hoverBackgroundColor: red[400],
-          data: [65, 59, 80, 81]
+          data: [exp["Food"], exp["Transport"], exp["Movie"], exp["Others"]]
         }
       ]
     };
