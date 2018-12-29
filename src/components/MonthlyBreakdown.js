@@ -70,7 +70,7 @@ export default class MonthlyBreakdown extends Component {
           'Food': 0, "Transport": 0, "Movie": 0, "Others": 0
         }
         for (let item in items){
-          expensesBreakdown[items[item].category] += items[item].amount
+          expensesBreakdown[items[item].category] += parseFloat(items[item].amount)
         }
         this.setState({ expensesBreakdown })
       })
@@ -118,8 +118,8 @@ export default class MonthlyBreakdown extends Component {
                 return (
                   <Card key={index} style={styles.card}>
                     <CardContent>
-                      <h6>{item}</h6>
-                      <h5>S${pieDataSet[index]}</h5>
+                      <p>{item}</p>
+                      <h6>S${pieDataSet[index]}</h6>
                     </CardContent>
                   </Card>
                 )
