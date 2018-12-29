@@ -6,6 +6,7 @@ import History from './components/History';
 import Home from './components/Home';
 import Income from './components/Income';
 import Investment from './components/Investment';
+import MonthlyBreakdown from './components/MonthlyBreakdown';
 
 class App extends Component {  
   state = {
@@ -87,7 +88,8 @@ class App extends Component {
             <Route exact path="/" render={(props)=>(<Home uid={this.state.user.uid} {...props} />)} />
             <Route path="/history" render={(props)=>(<History uid={this.state.user.uid} {...props} />)} />
             <Route path="/income" render={(props)=>(<Income uid={this.state.user.uid} {...props} />)} />
-            <Route path="/investment" render={(props)=>(<Investment uid={this.state.user.uid} {...props} />)} />          
+            <Route path="/investment" render={(props)=>(<Investment uid={this.state.user.uid} {...props} />)} />   
+            <Route path="/:year/:month" render={(props)=>(<MonthlyBreakdown uid={this.state.user.uid} {...props} />)} />       
           </div>
         ): null }
       </div>
