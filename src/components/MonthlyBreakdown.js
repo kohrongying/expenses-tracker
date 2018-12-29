@@ -24,7 +24,7 @@ export default class MonthlyBreakdown extends Component {
       year: props.match.params.year,
       expenses: 0,
       expensesBreakdown: {
-        'Food': 0, "Transport": 0, "Movie": 0, "Others": 0
+        'Food': 0, "Transport": 0, "Movie": 0, "Other": 0
       },
       investment: 0,
       savings: 0,
@@ -60,7 +60,7 @@ export default class MonthlyBreakdown extends Component {
       .then(snapshot => {
         const items = snapshot.val()
         let expensesBreakdown = {
-          'Food': 0, "Transport": 0, "Movie": 0, "Others": 0
+          'Food': 0, "Transport": 0, "Movie": 0, "Other": 0
         }
         for (let item in items){
           expensesBreakdown[items[item].category] += parseFloat(items[item].amount)
