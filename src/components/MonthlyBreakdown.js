@@ -5,6 +5,7 @@ import { cyan, teal, indigo, red } from '@material-ui/core/colors';
 import { Pie, Bar } from 'react-chartjs-2';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import { getTotalFromItems } from '../helpers/common';
 
 const styles = {
   paper: {
@@ -43,22 +44,14 @@ export default class MonthlyBreakdown extends Component {
       .once('value')
       .then(snapshot => {
         const monthItem = snapshot.val()
-        const income = this.getTotalFromItems(monthItem.income)
-        const investment = this.getTotalFromItems(monthItem.investment)
+        const income = getTotalFromItems(monthItem.income)
+        const investment = getTotalFromItems(monthItem.investment)
         const expenses = monthItem.totalAmount
         const savings = income - investment - expenses
         this.setState({ expenses, investment, savings, income })
       })
   }
   
-  getTotalFromItems = (items) => {
-    let total = 0
-    for (let item in items) {
-      total += items[item].amount
-    }
-    return total
-  }
-
   getExpensesBreakdown = () => {
     firebase
       .database()
@@ -75,7 +68,6 @@ export default class MonthlyBreakdown extends Component {
         this.setState({ expensesBreakdown })
       })
   }
-
 
   render(){
     const pieLabels = ['Expenses','Investment','Savings']

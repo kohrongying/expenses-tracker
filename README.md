@@ -7,9 +7,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [x] Material UI - Lists for expense list
 - [x] Home - group by card or cash 
 - [x] Material UI - Chip for card/cash
-- [ ] Material UI - Expansion Panel for History
-- [ ] History - show breakdown of expenses, savings and investments
-- [ ] History - show graph of expenses (across month, across categories)
+- [x] Material UI - Expansion Panel for History
+- [x] By Month - show detailed breakdown of expenses, savings and investments (pie chart) of each month
+- [x] By Month - show bar graph of expenses by category
+- [x] By Year - show graph of expenses across months (and categories)
 - [x] Income - add monthly and extra income 
 - [x] Investments - add monthly and extra investments 
 
