@@ -9,6 +9,9 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+
+const year = new Date().getFullYear();
 
 const styles = {
 	expenses: {
@@ -64,7 +67,7 @@ const MonthItem = (props) => {
       </div>
         
       </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      <ExpansionPanelDetails style={{flexDirection: 'column'}}>
         <Table>
           <TableBody>
           {rows.map((row,id) => {
@@ -79,6 +82,9 @@ const MonthItem = (props) => {
           })} 
           </TableBody>
         </Table>
+        <Button style={{marginTop: 10}} href={`/${year}/${month.id}`}>
+          View More
+        </Button>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   )
