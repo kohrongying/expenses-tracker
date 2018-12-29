@@ -12,6 +12,7 @@ import TransportIcon from '@material-ui/icons/Train';
 import MovieIcon from '@material-ui/icons/Movie';
 import OtherIcon from '@material-ui/icons/MoreHoriz';
 import { pink, blue, purple, amber } from '@material-ui/core/colors';
+import { formatNumber } from '../helpers/common'
 
 const Expense = (props) => {
 	return (
@@ -43,7 +44,7 @@ const Expense = (props) => {
           
         </ListItemAvatar>
         <ListItemText
-          primary={`$${props.item.amount}`}
+          primary={`S$${formatNumber(props.item.amount)}`}
           secondary={`${props.item.remarks} (${props.item.paymentType})`}
         />
         <ListItemSecondaryAction>

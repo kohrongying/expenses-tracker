@@ -17,7 +17,8 @@ export default class Investment extends Component {
   state = {
     items: [],
     investment: "",
-    amount: ""
+    amount: "",
+    open: false
   }
   componentDidMount(){
     firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
@@ -59,7 +60,7 @@ export default class Investment extends Component {
     e.preventDefault();
     if (this.state.amount > 0){
       firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
-        .push({ amount: this.state.amount, investment: this.state.investment })
+        .push({ amount: parseFloat(this.state.amount), investment: this.state.investment })
     }
     
     this.setState({
