@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import firebase from '../firebase.js';
 import Banner from './Banner';
 import MonthItem from './MonthItem';
-import { getMonth } from '../helpers/common';
+import { getMonth, getTotalFromItems } from '../helpers/common';
+import { Bar } from 'react-chartjs-2';
+import { deepPurple, lightBlue } from '@material-ui/core/colors';
 
 const year = new Date().getFullYear();
 const month = getMonth()
+const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 export default class History extends Component {
 	state = {
@@ -13,7 +16,10 @@ export default class History extends Component {
 		year: year,
 		expanded: null,
 		monthlyIncome: 0,
-		monthlyInvestment: 0
+		monthlyInvestment: 0,
+		monthLabels: [],
+		barData: [],
+		lineData: []
 	}
 	
   handleChange = panel => (event, expanded) => {
@@ -33,36 +39,37 @@ export default class History extends Component {
     		.once('value', (snapshot)=> {
 					let months = snapshot.val();
 					const orderedMonths = {};
-					const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+					
 					Object.keys(months).sort((a,b) => { return allMonths.indexOf(a) - allMonths.indexOf(b) }).forEach(function(key) {
 						orderedMonths[key] = months[key];
 					});
 					let thisYear = []
+					let monthLabels = []
+					let barData = []
+					let lineData = []
 					for (let month in orderedMonths) {
-						let totalIncome = this.getTotalFromItems(months[month].income)
-						let totalInvestment = this.getTotalFromItems(months[month].investment)
+						let totalIncome = getTotalFromItems(months[month].income)
+						let totalInvestment = getTotalFromItems(months[month].investment)
 						let totalExpenses = months[month].totalAmount
+						let totalSavings = totalIncome - totalExpenses - totalInvestment
 						thisYear.push({
 							id: month,
 							totalExpenses: totalExpenses,
 							totalIncome: totalIncome,
 							totalInvestment: totalInvestment,
-							totalSavings: totalIncome - totalExpenses - totalInvestment
+							totalSavings: totalSavings
 						})
+						monthLabels.push(month)
+						barData.push(totalSavings)
+						lineData.push(totalExpenses)
 					}
-          this.setState({ thisYear })
+          this.setState({ thisYear, monthLabels, barData, lineData })
         })
 		}
 		
 	}
 
-	getTotalFromItems = (items) => {
-		let total = 0
-		for (let item in items) {
-			total += items[item].amount
-		}
-		return total
-	}
+	
 
   saveMonthlyIncome = () => {
     firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
@@ -103,6 +110,79 @@ export default class History extends Component {
   }
 
 	render() {
+		const data = {
+			datasets: [{
+					label: 'Expenses',
+					type:'line',
+					data: this.state.lineData,
+					fill: false,
+					borderColor: deepPurple[400],
+					backgroundColor: deepPurple[400],
+					pointBorderColor: deepPurple[400],
+					pointBackgroundColor: deepPurple[400],
+					pointHoverBackgroundColor: deepPurple[500],
+					pointHoverBorderColor: deepPurple[500],
+					yAxisID: 'y-axis-2'
+				},{
+					type: 'bar',
+					label: 'Savings',
+					data: this.state.barData,
+					fill: false,
+					backgroundColor: lightBlue[200],
+					borderColor: lightBlue[200],
+					hoverBackgroundColor: lightBlue[300],
+					hoverBorderColor: lightBlue[300],
+					yAxisID: 'y-axis-1'
+				}]
+		};
+		const options = {
+			responsive: true,
+			tooltips: {
+				mode: 'label'
+			},
+			elements: {
+				line: {
+					fill: false
+				}
+			},
+			scales: {
+				xAxes: [
+					{
+						display: true,
+						gridLines: {
+							display: false
+						},
+						labels: this.state.monthLabels,
+					}
+				],
+				yAxes: [
+					{
+						type: 'linear',
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+						gridLines: {
+							display: false
+						},
+						labels: {
+							show: true
+						}
+					},
+					{
+						type: 'linear',
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+						gridLines: {
+							display: false
+						},
+						labels: {
+							show: true
+						}
+					}
+				]
+			}
+		};
 		return (
 			<div>
 				{this.props.uid ?
@@ -111,8 +191,9 @@ export default class History extends Component {
 					<Banner title="History" secondaryText={this.state.year} />
 
 				  	<section>
-				  		<div className="container">
-				  			
+				  		<div className="container" style={{marginTop: '10px', marginBottom: '10px'}}>
+								<Bar data={data} options={options}/>
+								
 						  	<div style={{paddingTop: '10px', paddingBottom: '10px'}}>
 						  		{this.state.thisYear.map((month, i) => {
 										let panel = `panel${i}`

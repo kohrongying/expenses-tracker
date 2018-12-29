@@ -12,3 +12,11 @@ export const formatNumber = (num) => {
 export const getMonthYear = () => {
   return `${monthNames[(new Date().getMonth())]} ${new Date().getFullYear()}`;
 }
+
+export const getTotalFromItems = (items) => {
+  let total = 0
+  for (let item in items) {
+    total += items[item].amount
+  }
+  return total
+}
