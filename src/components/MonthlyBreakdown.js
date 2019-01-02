@@ -82,14 +82,14 @@ export default class MonthlyBreakdown extends Component {
     };
     const exp = this.state.expensesBreakdown
     const barData = {
-      labels: ['Food', 'Transport', 'Movie', 'Others'],
+      labels: ['Food', 'Transport', 'Movie', 'Other'],
       datasets: [
         {
           label: 'Expenses',
           backgroundColor: red[200],
           borderWidth: 1,
           hoverBackgroundColor: red[400],
-          data: [exp["Food"], exp["Transport"], exp["Movie"], exp["Others"]]
+          data: [exp["Food"], exp["Transport"], exp["Movie"], exp["Other"]]
         }
       ]
     };
@@ -125,7 +125,15 @@ export default class MonthlyBreakdown extends Component {
               width={100}
               height={250}
               options={{
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                  yAxes: [{
+                    display: true,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                  }]
+                }
               }}
             />
           </div>
