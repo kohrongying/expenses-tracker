@@ -1,21 +1,22 @@
 import firebase from 'firebase';
 
+const env = process.env
 const prodConfig = {
-    apiKey: "AIzaSyA13YWJu9WAgRU4R-j3tZC3H3azfu_Dqnw",
-    authDomain: "expenses-tracker-11e62.firebaseapp.com",
-    databaseURL: "https://expenses-tracker-11e62.firebaseio.com",
-    projectId: "expenses-tracker-11e62",
-    storageBucket: "expenses-tracker-11e62.appspot.com",
-    messagingSenderId: "107052167269"
+    apiKey: env.PROD_API_KEY,
+    authDomain: env.PROD_AUTH_DOMAIN,
+    databaseURL: env.PROD_DATABASE_URL,
+    projectId: env.PROD_PROJECT_ID,
+    storageBucket: env.PROD_STORAGE_BUCKET,
+    messagingSenderId: env.PROD_MESSAGING_SENDER_ID
 };
 
 var devConfig = {
-    apiKey: "AIzaSyCzOE9yP4_3Q6qRK3KlM_-yq8dWkPx7ZyI",
-    authDomain: "expenses-tracker-staging.firebaseapp.com",
-    databaseURL: "https://expenses-tracker-staging.firebaseio.com",
-    projectId: "expenses-tracker-staging",
-    storageBucket: "expenses-tracker-staging.appspot.com",
-    messagingSenderId: "402057216109"
+    apiKey: env.REACT_APP_STAGING_API_KEY,
+    authDomain: env.REACT_APP_STAGING_AUTH_DOMAIN,
+    databaseURL: env.REACT_APP_STAGING_DATABASE_URL,
+    projectId: env.REACT_APP_STAGING_PROJECT_ID,
+    storageBucket: env.REACT_APP_STAGING_STORAGE_BUCKET,
+    messagingSenderId: env.REACT_APP_STAGING_MESSAGING_SENDER_ID
 };
 
 const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
