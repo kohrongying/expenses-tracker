@@ -2,12 +2,12 @@ import firebase from 'firebase';
 
 const env = process.env
 const prodConfig = {
-    apiKey: env.PROD_API_KEY,
-    authDomain: env.PROD_AUTH_DOMAIN,
-    databaseURL: env.PROD_DATABASE_URL,
-    projectId: env.PROD_PROJECT_ID,
-    storageBucket: env.PROD_STORAGE_BUCKET,
-    messagingSenderId: env.PROD_MESSAGING_SENDER_ID
+    apiKey: env.REACT_APP_PROD_API_KEY,
+    authDomain: env.REACT_APP_PROD_AUTH_DOMAIN,
+    databaseURL: env.REACT_APP_PROD_DATABASE_URL,
+    projectId: env.REACT_APP_PROD_PROJECT_ID,
+    storageBucket: env.REACT_APP_PROD_STORAGE_BUCKET,
+    messagingSenderId: env.REACT_APP_PROD_MESSAGING_SENDER_ID
 };
 
 var devConfig = {
