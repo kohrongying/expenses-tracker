@@ -28,17 +28,6 @@ const categories = [
   }
 ];
 
-const paymentTypes = [
-  {
-    value: "Cash",
-    label: "Cash"
-  },
-  {
-    value: "Credit Card",
-    label: "Credit Card"
-  }
-];
-
 const styles = {
   textField: {
     width: "100%",
@@ -53,20 +42,17 @@ const styles = {
 export default class AddExpenseForm extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
-    totalAmount: PropTypes.number.isRequired,
+    totalAmount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }
 
   state = {
     amount: "",
     category: "",
     remarks: "",
-    paymentType: ""
   }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+    this.setState({ [name]: event.target.value });
   };
 
   handleSubmit = (e) => {
@@ -76,7 +62,6 @@ export default class AddExpenseForm extends Component {
       category: this.state.category,
       date: new Date().toDateString(),
       remarks: this.state.remarks,
-      paymentType: this.state.paymentType
     };
     firebase
       .database()
@@ -143,24 +128,6 @@ export default class AddExpenseForm extends Component {
                   margin="normal"
                   style={styles.textField}
                 />
-              </div>
-
-              <div className="col">
-                <TextField
-                  id="standard-select-currency"
-                  select
-                  label="Payment Type"
-                  value={this.state.paymentType}
-                  onChange={this.handleChange("paymentType")}
-                  margin="normal"
-                  style={styles.textField}
-                >
-                  {paymentTypes.map(option => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
               </div>
             </div>
 

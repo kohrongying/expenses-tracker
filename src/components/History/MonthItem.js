@@ -91,10 +91,10 @@ const MonthItem = (props) => {
 };
 
 MonthItem.propTypes = {
-  month: PropTypes.string.isRequired,
+  month: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
-  panel: PropTypes.object.isRequired,
-  expanded: PropTypes.object.isRequired,
+  panel: PropTypes.string.isRequired,
+  expanded: PropTypes.string,
 };
 
 export default MonthItem;

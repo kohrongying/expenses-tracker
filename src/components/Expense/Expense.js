@@ -46,13 +46,10 @@ const Expense = (props) => {
         </ListItemAvatar>
         <ListItemText
           primary={`S$${formatNumber(props.item.amount)}`}
-          secondary={`${props.item.remarks} (${props.item.paymentType})`}
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Delete">
-            <DeleteIcon
-              onClick={() => props.removeItem(props.item.id, props.item.amount)}
-            />
+          <IconButton aria-label="Delete" onClick={props.removeItem(props.item.id, props.item.amount)}>
+            <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

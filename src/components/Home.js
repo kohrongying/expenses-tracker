@@ -3,10 +3,6 @@ import PropTypes from "prop-types";
 import AddExpenseForm from "./Expense/AddExpenseForm";
 import Expense from "./Expense/Expense";
 import firebase from "../firebase.js";
-import Avatar from "@material-ui/core/Avatar";
-import Chip from "@material-ui/core/Chip";
-import { CreditCard, Money } from "@material-ui/icons";
-import green from "@material-ui/core/colors/green";
 import Banner from "./UI/Banner";
 import { getMonth, formatNumber, getMonthYear } from "../helpers/common";
 
@@ -21,8 +17,6 @@ export default class Home extends Component {
   state = {
     items: [],
     totalAmount: 0,
-    cashExpense: "$0",
-    cardExpense: "$0"
   }
 
   componentDidMount() {
@@ -35,8 +29,6 @@ export default class Home extends Component {
           if (snapshot.val() !== null){
             let items = snapshot.val().items;
             let newState = [];
-            let cashExpense = 0;
-            let cardExpense = 0;
             for (let item in items){
               newState.push({
                 id: item,
@@ -44,19 +36,11 @@ export default class Home extends Component {
                 category: items[item].category,
                 remarks: items[item].remarks,
                 date: items[item].date,
-                paymentType: items[item].paymentType ? items[item].paymentType : "Cash"
               });
-              if (items[item].paymentType === "Credit Card") {
-                cardExpense += parseFloat(items[item].amount);
-              } else {
-                cashExpense += parseFloat(items[item].amount);
-              }
             }
 
             this.setState({
               items: newState.reverse(),
-              cashExpense: formatNumber(cashExpense),
-              cardExpense: formatNumber(cardExpense),
               totalAmount: formatNumber(snapshot.val().totalAmount)
             });
           }
@@ -71,7 +55,7 @@ export default class Home extends Component {
       .off();
   }
 
-  removeItem(itemID, itemAmt){
+  removeItem = (itemID, itemAmt) => () => {
     firebase
       .database()
       .ref(`users/${this.props.uid}/${year}/${month}`)
@@ -92,17 +76,6 @@ export default class Home extends Component {
               secondaryText={`S$${this.state.totalAmount}`} />
 
             <AddExpenseForm uid={this.props.uid} totalAmount={this.state.totalAmount} />
-
-            <div className="container d-flex justify-content-around">
-              <Chip
-                avatar={<Avatar style={{ backgroundColor: green[500], color: "white" }}><CreditCard /></Avatar>}
-                label={`$${this.state.cardExpense}`}
-              />
-              <Chip
-                avatar={<Avatar style={{ backgroundColor: green[500], color: "white" }}><Money /></Avatar>}
-                label={`$${this.state.cashExpense}`}
-              />
-            </div>
 
             <section className='display-item'>
               <div className='container'>

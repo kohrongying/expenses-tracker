@@ -14,6 +14,6 @@ const Banner = (props) => (
 
 Banner.propTypes = {
   title: PropTypes.string.isRequired,
-  secondaryText: PropTypes.string,
+  secondaryText: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 export default Banner;
