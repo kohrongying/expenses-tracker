@@ -2,21 +2,21 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 
 export const getMonth = () => {
   return monthNames[(new Date().getMonth())];
-}
+};
 
 export const formatNumber = (num) => {
-  let result = num != null ? parseFloat(num).toFixed(2) : 0;
+  let result = num !== null ? parseFloat(num).toFixed(2) : 0;
   return result;
-}
+};
 
 export const getMonthYear = () => {
   return `${monthNames[(new Date().getMonth())]} ${new Date().getFullYear()}`;
-}
+};
 
 export const getTotalFromItems = (items) => {
-  let total = 0
+  let total = 0;
   for (let item in items) {
-    total += items[item].amount
+    total += items[item].amount;
   }
-  return total
-}
+  return total;
+};
