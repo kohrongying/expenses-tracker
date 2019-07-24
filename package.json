@@ -21,10 +21,10 @@
     "fix": "node_modules/.bin/eslint 'src/**/*.js' --fix"
   },
   "devDependencies": {
-    "firebase": "^6.3.1",
-    "babel-eslint": "^9.0.0",
-    "eslint": "^6.1.0",
-    "eslint-plugin-react": "^7.12.4"
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "firebase": "^6.3.1"
   },
   "browserslist": [
     ">0.2%",
