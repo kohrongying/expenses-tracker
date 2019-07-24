@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import firebase from "../../firebase.js";
+import firebase from "firebase/app";
+import "firebase/database";
 import Banner from "../UI/Banner";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import AddInvestmentForm from "./AddInvestmentForm";
 import InvestmentItem from "./InvestmentItem";
+import { connect } from "react-redux";
 
 const styles = {
   invSection: {
@@ -14,7 +16,7 @@ const styles = {
   }
 };
 
-export default class Investment extends Component {
+class Investment extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
   }
@@ -121,3 +123,7 @@ export default class Investment extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({ uid: state.user.uid });
+
+export default connect(mapStateToProps)(Investment);

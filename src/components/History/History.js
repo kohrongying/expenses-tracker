@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import firebase from "../../firebase.js";
+import firebase from "firebase/app";
+import "firebase/database";
 import Banner from "../UI/Banner";
 import MonthItem from "./MonthItem";
 import { getMonth, getTotalFromItems } from "../../helpers/common";
 import { Bar } from "react-chartjs-2";
 import { deepPurple, lightBlue } from "@material-ui/core/colors";
+import { connect } from "react-redux";
 
 const year = new Date().getFullYear();
 const month = getMonth();
 const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default class History extends Component {
+class History extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
   };
@@ -44,7 +46,6 @@ export default class History extends Component {
         .once("value", (snapshot)=> {
           let months = snapshot.val();
           const orderedMonths = {};
-
           Object.keys(months).sort((a,b) => { return allMonths.indexOf(a) - allMonths.indexOf(b); }).forEach(function(key) {
             orderedMonths[key] = months[key];
           });
@@ -223,3 +224,7 @@ export default class History extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({ uid: state.user.uid });
+
+export default connect(mapStateToProps)(History);

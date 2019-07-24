@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AddExpenseForm from "./Expense/AddExpenseForm";
 import Expense from "./Expense/Expense";
-import firebase from "../firebase.js";
+import firebase from "firebase/app";
+import "firebase/database";
 import Banner from "./UI/Banner";
 import { getMonth, formatNumber, getMonthYear } from "../helpers/common";
+import { connect } from "react-redux";
 
 const year = new Date().getFullYear();
 const month = getMonth();
 
-export default class Home extends Component {
+class Home extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
   }
@@ -101,3 +103,7 @@ export default class Home extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({ uid: state.user.uid });
+
+export default connect(mapStateToProps)(Home);

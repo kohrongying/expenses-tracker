@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import firebase from "../../firebase.js";
+import firebase from "firebase/app";
+import "firebase/database";
 import Banner from "../UI/Banner";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import AddIncomeForm from "./AddIncomeForm";
 import { getMonth } from "../../helpers/common";
 import IncomeItem from "./IncomeItem";
+import { connect } from "react-redux";
 
 const year = new Date().getFullYear();
 const month = getMonth();
@@ -18,7 +20,7 @@ const styles = {
   }
 };
 
-export default class Income extends Component {
+class Income extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
   }
@@ -197,3 +199,7 @@ export default class Income extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({ uid: state.user.uid });
+
+export default connect(mapStateToProps)(Income);
