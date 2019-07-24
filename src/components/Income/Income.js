@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import firebase from '../firebase.js';
-import Banner from './Banner';
+import firebase from '../../firebase.js';
+import Banner from '../Banner';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import AddIncomeForm from './AddIncomeForm';
-import { getMonth } from '../helpers/common'
+import { getMonth } from '../../helpers/common'
 import IncomeItem from './IncomeItem';
 
 const year = new Date().getFullYear();
@@ -58,10 +58,7 @@ export default class Income extends Component {
   }
 
   componentWillUnmount(){
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-      .off()
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-      .off()
+    firebase.database().ref().off();
   }
 
   handleClickOpen = () => {
@@ -115,11 +112,11 @@ export default class Income extends Component {
     })
   }
 
-  removeMonthlyItem = (id) => {
+  removeMonthlyItem = (id) => () => {
     firebase.database().ref(`users/${this.props.uid}/monthlyIncome/${id}`).remove()
   }
 
-  removeItem = (id) => {
+  removeItem = (id) => () => {
     firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove()
   }
 

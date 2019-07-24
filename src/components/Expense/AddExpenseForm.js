@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import firebase from '../firebase.js';
+import firebase from '../../firebase.js';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import { getMonth } from '../helpers/common'
+import { getMonth } from '../../helpers/common'
 
 const year = new Date().getFullYear();
 const month = getMonth();

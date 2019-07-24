@@ -12,7 +12,7 @@ import TransportIcon from '@material-ui/icons/Train';
 import MovieIcon from '@material-ui/icons/Movie';
 import OtherIcon from '@material-ui/icons/MoreHoriz';
 import { pink, blue, purple, amber } from '@material-ui/core/colors';
-import { formatNumber } from '../helpers/common'
+import { formatNumber } from '../../helpers/common'
 
 const Expense = (props) => {
 	return (

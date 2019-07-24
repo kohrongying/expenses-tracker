@@ -9,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IncomeIcon from '@material-ui/icons/AttachMoney';
 import { teal } from '@material-ui/core/colors';
-import { formatNumber } from '../helpers/common'
+import { formatNumber } from '../../helpers/common'
 
 const IncomeItem = (props) => {
 	return (
@@ -25,10 +25,9 @@ const IncomeItem = (props) => {
           secondary={props.item.incomeSource}
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Delete">
-            <DeleteIcon 
-              onClick={() => props.removeItem(props.item.id)}
-            />
+          <IconButton aria-label="Delete" onClick={props.removeItem(props.item.id)}
+>
+            <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>      

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatNumber } from '../helpers/common'
+import { formatNumber } from '../../helpers/common'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';

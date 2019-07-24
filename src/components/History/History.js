@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import firebase from '../firebase.js';
-import Banner from './Banner';
+import firebase from '../../firebase.js';
+import Banner from '../Banner';
 import MonthItem from './MonthItem';
-import { getMonth, getTotalFromItems } from '../helpers/common';
+import { getMonth, getTotalFromItems } from '../../helpers/common';
 import { Bar } from 'react-chartjs-2';
 import { deepPurple, lightBlue } from '@material-ui/core/colors';
 

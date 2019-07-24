@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import './App.css';
 import { auth, provider } from './firebase.js';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import History from './components/History';
+import History from './components/History/History';
 import Home from './components/Home';
-import Income from './components/Income';
-import Investment from './components/Investment';
-import MonthlyBreakdown from './components/MonthlyBreakdown';
+import Income from './components/Income/Income';
+import Investment from './components/Investment/Investment';
+import MonthlyBreakdown from './components/History/MonthlyBreakdown';
 
 class App extends Component {  
   state = {

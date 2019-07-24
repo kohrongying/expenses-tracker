@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import Banner from './Banner';
-import firebase from '../firebase.js';
+import Banner from '../Banner';
+import firebase from '../../firebase.js';
 import { cyan, teal, indigo, red } from '@material-ui/core/colors';
 import { Pie, Bar } from 'react-chartjs-2';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { getTotalFromItems } from '../helpers/common';
+import { getTotalFromItems } from '../../helpers/common';
 
 const styles = {
   paper: {

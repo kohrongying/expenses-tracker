@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AddExpenseForm from '../components/AddExpenseForm';
-import Expense from '../components/Expense';
+import AddExpenseForm from './Expense/AddExpenseForm';
+import Expense from './Expense/Expense';
 import firebase from '../firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';

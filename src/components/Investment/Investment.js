@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import firebase from '../firebase.js';
-import Banner from './Banner';
+import firebase from '../../firebase.js';
+import Banner from '../Banner';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import AddInvestmentForm from './AddInvestmentForm';
@@ -37,8 +37,7 @@ export default class Investment extends Component {
   }
 
   componentWillUnmount(){
-    firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
-      .off()
+    firebase.database().ref().off();
   }
 
 
@@ -70,7 +69,7 @@ export default class Investment extends Component {
     })
   }
 
-  removeItem = (id) => {
+  removeItem = (id) => () => {
     firebase.database().ref(`users/${this.props.uid}/monthlyInvestments/${id}`).remove()
   }
 
