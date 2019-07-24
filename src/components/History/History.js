@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "../../firebase.js";
-import Banner from "../Banner";
+import Banner from "../UI/Banner";
 import MonthItem from "./MonthItem";
 import { getMonth, getTotalFromItems } from "../../helpers/common";
 import { Bar } from "react-chartjs-2";

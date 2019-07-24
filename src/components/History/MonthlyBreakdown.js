@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Banner from "../Banner";
+import Banner from "../UI/Banner";
 import firebase from "../../firebase.js";
 import { cyan, teal, indigo, red } from "@material-ui/core/colors";
 import { Pie, Bar } from "react-chartjs-2";

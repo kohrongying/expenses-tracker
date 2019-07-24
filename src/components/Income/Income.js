@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "../../firebase.js";
-import Banner from "../Banner";
+import Banner from "../UI/Banner";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import AddIncomeForm from "./AddIncomeForm";

@@ -7,7 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 import { CreditCard, Money } from "@material-ui/icons";
 import green from "@material-ui/core/colors/green";
-import Banner from "./Banner";
+import Banner from "./UI/Banner";
 import { getMonth, formatNumber, getMonthYear } from "../helpers/common";
 
 const year = new Date().getFullYear();
