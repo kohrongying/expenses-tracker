@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Header from "../UI/Header";
-import AddExpenseForm from "./AddExpenseForm";
-import ExpenseItem from "./ExpenseItem";
 import firebase from "firebase/app";
 import "firebase/database";
-import { formatNumber, getMonthYear } from "../../helpers/common";
-import { Row, Col, Card, List, message } from "antd";
 import { connect } from "react-redux";
+import AddExpenseForm from "./AddExpenseForm";
+import ExpenseItem from "./ExpenseItem";
+import { List, message } from "antd";
 import Container from "../UI/Container";
+import Header from "../UI/Header";
+import MonthSum from "../UI/MonthSum";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -77,16 +77,10 @@ class Expense extends Component {
           <Container>
             <Header title="Expenses" />
 
-            <Card loading={this.state.loading}>
-              <Row type="flex" justify="space-around" align="middle">
-                <Col xs={12}>
-                  {getMonthYear()}
-                </Col>
-                <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
-                </Col>
-              </Row>
-            </Card>
+            <MonthSum
+              loading={this.state.loading}
+              totalAmount={this.state.totalAmount}
+            />
 
             <AddExpenseForm totalAmount={this.state.totalAmount}/>
 

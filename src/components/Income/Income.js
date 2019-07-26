@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import { Row, Col, Card, List, message } from "antd";
+import { List, message } from "antd";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
-import { formatNumber, getMonthYear } from "../../helpers/common";
 import IncomeItem from "./IncomeItem";
+import MonthSum from "../UI/MonthSum";
 import GeneralForm from "../UI/GeneralForm";
 
 const year = new Date().getFullYear();
@@ -106,16 +106,11 @@ class Income extends Component {
         {this.props.uid ?
           <Container>
             <Header title="Income" />
-            <Card loading={this.state.loading}>
-              <Row type="flex" justify="space-around" align="middle">
-                <Col xs={12}>
-                  {getMonthYear()}
-                </Col>
-                <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
-                </Col>
-              </Row>
-            </Card>
+
+            <MonthSum
+              loading={this.state.loading}
+              totalAmount={this.state.totalAmount}
+            />
 
             <GeneralForm
               title="Add Income"
