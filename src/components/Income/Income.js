@@ -2,23 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import Banner from "../UI/Banner";
-import AddIcon from "@material-ui/icons/Add";
-import IconButton from "@material-ui/core/IconButton";
-import AddIncomeForm from "./AddIncomeForm";
-import { getMonth } from "../../helpers/common";
-import IncomeItem from "./IncomeItem";
 import { connect } from "react-redux";
+import { Row, Col, Card, List, message } from "antd";
+import Container from "../UI/Container";
+import Header from "../UI/Header";
+import { formatNumber, getMonthYear } from "../../helpers/common";
+import IncomeItem from "./IncomeItem";
+import AddIncomeForm from "./AddIncomeForm";
 
 const year = new Date().getFullYear();
-const month = getMonth();
-
-const styles = {
-  salarySection: {
-    paddingTop: 10,
-    paddingBottom: 10
-  }
-};
+const month = new Date().getMonth();
 
 class Income extends Component {
   static propTypes = {
@@ -26,101 +19,54 @@ class Income extends Component {
   }
 
   state = {
-    open: false,
+    loading: true,
     amount: "",
     incomeSource: "",
-    monthlyItems: [],
     items: [],
-    openExtra: false,
+    totalAmount: 0
   }
 
-  componentDidMount(){
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-      .on("value", (snapshot)=> {
-        let items = snapshot.val();
-        let temp = [];
-        for (let item in items) {
-          temp.push({
-            id: item,
-            incomeSource: items[item].incomeSource,
-            amount: items[item].amount
-          });
-        }
-        this.setState({ monthlyItems: temp });
-      });
+  componentDidMount() {
+    if (this.props.uid) {
+      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
+        .on("value", (snapshot)=> {
 
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-      .on("value", (snapshot)=> {
-        let items = snapshot.val();
-        let temp = [];
-        for (let item in items) {
-          temp.push({
-            id: item,
-            incomeSource: items[item].incomeSource,
-            amount: items[item].amount
-          });
+          if (snapshot.exists()) {
+            let totalAmount = 0;
+            const items = snapshot.val();
+            const itemIds = Object.keys(snapshot.val());
+            const parsedItems = itemIds.map(id => {
+              const item = items[id];
+              item["id"] = id;
+              totalAmount += parseFloat(item.amount);
+              return item;
+            });
+            this.setState({ items: parsedItems, totalAmount, loading: false });
+          } else {
+            this.copyMonthlyIncome();
+          }
+        });
+
+    }
+  }
+
+  copyMonthlyIncome = () => {
+    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
+      .once("value")
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const incomeItems = snapshot.val();
+          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
+            .update(incomeItems);
+        } else {
+          this.setState({ loading: false });
         }
-        this.setState({ items: temp });
-      });
+      })
+      .catch(err => message.error(err));
   }
 
   componentWillUnmount(){
-    firebase.database().ref().off();
-  }
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleClickOpenExtra = () => {
-    this.setState({ openExtra: true });
-  };
-
-  handleCloseExtra = () => {
-    this.setState({ openExtra: false });
-  };
-
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
-
-  handleSubmitMonthlyIncome = (e) => {
-    e.preventDefault();
-    if (this.state.amount > 0){
-      firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource });
-    }
-
-    this.setState({
-      amount: "",
-      incomeSource: "",
-      open: false
-    });
-  }
-
-  handleSubmitExtraIncome = (e) => {
-    e.preventDefault();
-
-    if (this.state.amount > 0){
-      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource });
-    }
-
-    this.setState({
-      amount: "",
-      incomeSource: "",
-      openExtra: false
-    });
-  }
-
-  removeMonthlyItem = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome/${id}`).remove();
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`).off();
   }
 
   removeItem = (id) => () => {
@@ -131,67 +77,35 @@ class Income extends Component {
     return (
       <div>
         {this.props.uid ?
+          <Container>
+            <Header title="Income" />
+            <Card loading={this.state.loading}>
+              <Row type="flex" justify="space-around" align="middle">
+                <Col xs={12}>
+                  {getMonthYear()}
+                </Col>
+                <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
+                </Col>
+              </Row>
+            </Card>
 
-          <div>
-            <Banner title="Income" />
+            <AddIncomeForm />
 
-            <section style={styles.salarySection} className="salary-section">
-              <div className="container">
-                <div className="row d-flex flex-row justify-content-between align-items-center">
-                  <h5>Monthly Income</h5>
-                  <IconButton onClick={this.handleClickOpen} aria-label="Add">
-                    <AddIcon />
-                  </IconButton>
-                </div>
-
-                <AddIncomeForm
-                  open={this.state.open}
-                  handleClose={this.handleClose}
-                  title="Add Monthly Income"
-                  value={this.state.amount}
-                  source={this.state.incomeSource}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmitMonthlyIncome}
+            <List
+              itemLayout="horizontal"
+              loading={this.state.loading}
+              dataSource={this.state.items}
+              renderItem={item => (
+                <IncomeItem
+                  key="item"
+                  item={item}
+                  removeItem={this.removeItem}
                 />
+              )}
+            />
 
-                {this.state.monthlyItems.map((item, index) => {
-                  return (
-                    <IncomeItem key={index} item={item} removeItem={this.removeMonthlyItem} />
-                  );
-                })}
-
-              </div>
-            </section>
-
-            <section style={styles.salarySection} className="salary-section">
-              <div className="container">
-                <div className="row d-flex flex-row justify-content-between align-items-center">
-                  <h5>Total Income ({getMonth()})</h5>
-                  <IconButton onClick={this.handleClickOpenExtra} aria-label="Add">
-                    <AddIcon />
-                  </IconButton>
-                </div>
-
-                <AddIncomeForm
-                  open={this.state.openExtra}
-                  handleClose={this.handleCloseExtra}
-                  title="Add Additional Income"
-                  value={this.state.amount}
-                  source={this.state.incomeSource}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmitExtraIncome}
-                />
-
-                {this.state.items.map((item, index) => {
-                  return (
-                    <IncomeItem key={index} item={item} removeItem={this.removeItem} />
-                  );
-                })}
-
-              </div>
-            </section>
-
-          </div>
+          </Container>
           :
           <p>You must be logged in.</p>
         }
