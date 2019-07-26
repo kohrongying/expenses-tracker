@@ -8,6 +8,7 @@ import "firebase/database";
 import { formatNumber, getMonthYear } from "../../helpers/common";
 import { Row, Col, Card, List, message } from "antd";
 import { connect } from "react-redux";
+import Container from "../UI/Container";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -73,41 +74,36 @@ class Expense extends Component {
       <div>
         {this.props.uid ?
 
-          <React.Fragment>
-            <Row>
-              <Col xs={{ span: 20, offset: 2 }} lg={{ span: 10, offset: 4 }}>
-                <Header title="Expenses" />
+          <Container>
+            <Header title="Expenses" />
 
-                <Card loading={this.state.loading}>
-                  <Row type="flex" justify="space-around" align="middle">
-                    <Col xs={12}>
-                      {getMonthYear()}
-                    </Col>
-                    <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
-                    </Col>
-                  </Row>
-                </Card>
+            <Card loading={this.state.loading}>
+              <Row type="flex" justify="space-around" align="middle">
+                <Col xs={12}>
+                  {getMonthYear()}
+                </Col>
+                <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
+                </Col>
+              </Row>
+            </Card>
 
-                <AddExpenseForm totalAmount={this.state.totalAmount}/>
+            <AddExpenseForm totalAmount={this.state.totalAmount}/>
 
-                <List
-                  itemLayout="horizontal"
-                  loading={this.state.loading}
-                  dataSource={this.state.items}
-                  renderItem={item => (
-                    <ExpenseItem
-                      key="item"
-                      item={item}
-                      removeItem={this.removeItem}
-                    />
-                  )}
+            <List
+              itemLayout="horizontal"
+              loading={this.state.loading}
+              dataSource={this.state.items}
+              renderItem={item => (
+                <ExpenseItem
+                  key="item"
+                  item={item}
+                  removeItem={this.removeItem}
                 />
+              )}
+            />
 
-              </Col>
-            </Row>
-
-          </React.Fragment>
+          </Container>
           :
           <p>You must be logged in.</p>
         }
