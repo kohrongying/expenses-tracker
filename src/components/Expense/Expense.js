@@ -1,65 +1,121 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import IconButton from "@material-ui/core/IconButton";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FoodIcon from "@material-ui/icons/Fastfood";
-import TransportIcon from "@material-ui/icons/Train";
-import MovieIcon from "@material-ui/icons/Movie";
-import OtherIcon from "@material-ui/icons/MoreHoriz";
-import { pink, blue, purple, amber } from "@material-ui/core/colors";
-import { formatNumber } from "../../helpers/common";
+import Header from "../UI/Header";
+import AddExpenseForm from "./AddExpenseForm";
+import ExpenseItem from "./ExpenseItem";
+import firebase from "firebase/app";
+import "firebase/database";
+import { formatNumber, getMonthYear } from "../../helpers/common";
+import { Row, Col, Card, List, message } from "antd";
+import { connect } from "react-redux";
 
-const Expense = (props) => {
-  return (
-    <List>
-      <ListItem>
-        <ListItemAvatar>
-          {props.item.category === "Food" ? (
-            <Avatar style={{ backgroundColor: pink[300] }}>
-              <FoodIcon />
-            </Avatar>
-          ) : (
-            props.item.category === "Transport" ? (
-              <Avatar style={{ backgroundColor: blue[300] }}>
-                <TransportIcon />
-              </Avatar>
-            ) : (
-              props.item.category === "Movie" ? (
-                <Avatar style={{ backgroundColor: purple[300] }}>
-                  <MovieIcon />
-                </Avatar>
-              ) : (
-                <Avatar style={{ backgroundColor: amber[500] }}>
-                  <OtherIcon />
-                </Avatar>
+const year = new Date().getFullYear();
+const month = new Date().getMonth();
 
-              )
-            )
-          )}
+class Expense extends Component {
+  static propTypes = {
+    uid: PropTypes.string.isRequired,
+  }
 
-        </ListItemAvatar>
-        <ListItemText
-          primary={`S$${formatNumber(props.item.amount)}`}
-        />
-        <ListItemSecondaryAction>
-          <IconButton aria-label="Delete" onClick={props.removeItem(props.item.id, props.item.amount)}>
-            <DeleteIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    </List>
-  );
-};
+  state = {
+    items: [],
+    totalAmount: 0,
+    loading: true
+  }
 
-Expense.propTypes = {
-  item: PropTypes.object.isRequired,
-  removeItem: PropTypes.func.isRequired,
-};
+  componentDidMount() {
+    if (this.props.uid) {
+      firebase.database()
+        .ref(`/users/${this.props.uid}/${year}/${month}/items`)
+        .on("value", snapshot => {
+          if (snapshot.exists()) {
+            const items = snapshot.val();
+            const itemIDs = Object.keys(items);
+            let totalAmount = 0;
 
-export default Expense;
+            const parsedItems = itemIDs.map(id => {
+              const item = items[id];
+              totalAmount += parseFloat(item.amount);
+              item["id"] = id;
+              return item;
+            });
+
+            this.setState({
+              items: parsedItems.reverse(),
+              totalAmount,
+              loading: false,
+            });
+          } else {
+            this.setState({
+              loading: false,
+              items: [],
+              totalAmount: 0 });
+          }
+        });
+    }
+  }
+
+  componentWillUnmount() {
+    firebase.database().ref(`/users/${this.props.uid}/${year}/${month}/items`)
+      .off();
+  }
+
+  removeItem = (itemID) => () => {
+    firebase.database()
+      .ref(`users/${this.props.uid}/${year}/${month}/items/${itemID}`).remove()
+      .catch(err => {
+        message.error(err);
+      });
+  }
+
+  render(){
+    return (
+      <div>
+        {this.props.uid ?
+
+          <React.Fragment>
+            <Row>
+              <Col xs={{ span: 20, offset: 2 }} lg={{ span: 10, offset: 4 }}>
+                <Header title="Expenses" />
+
+                <Card loading={this.state.loading}>
+                  <Row type="flex" justify="space-around" align="middle">
+                    <Col xs={12}>
+                      {getMonthYear()}
+                    </Col>
+                    <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <h3 style={{ marginBottom: 0 }}>$ {formatNumber(this.state.totalAmount)}</h3>
+                    </Col>
+                  </Row>
+                </Card>
+
+                <AddExpenseForm totalAmount={this.state.totalAmount}/>
+
+                <List
+                  itemLayout="horizontal"
+                  loading={this.state.loading}
+                  dataSource={this.state.items}
+                  renderItem={item => (
+                    <ExpenseItem
+                      key="item"
+                      item={item}
+                      removeItem={this.removeItem}
+                    />
+                  )}
+                />
+
+              </Col>
+            </Row>
+
+          </React.Fragment>
+          :
+          <p>You must be logged in.</p>
+        }
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({ uid: state.user.uid });
+
+export default connect(mapStateToProps)(Expense);
