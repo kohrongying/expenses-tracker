@@ -8,7 +8,7 @@ import Container from "../UI/Container";
 import Header from "../UI/Header";
 import { formatNumber, getMonthYear } from "../../helpers/common";
 import IncomeItem from "./IncomeItem";
-import AddIncomeForm from "./AddIncomeForm";
+import GeneralForm from "../UI/GeneralForm";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -20,7 +20,7 @@ class Income extends Component {
 
   state = {
     loading: true,
-    amount: "",
+    amount: 0,
     incomeSource: "",
     items: [],
     totalAmount: 0
@@ -73,6 +73,33 @@ class Income extends Component {
     firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove();
   }
 
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  handleSelect = name => value => {
+    this.setState({ [name]: value });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const item = {
+      amount: parseFloat(this.state.amount),
+      date: Date.now(),
+      incomeSource: this.state.incomeSource,
+    };
+    firebase.database()
+      .ref(`users/${this.props.uid}/${year}/${month}/income`)
+      .push(item)
+      .then(() => {
+        this.setState({
+          amount: "",
+          incomeSource: "",
+        });
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <div>
@@ -90,7 +117,15 @@ class Income extends Component {
               </Row>
             </Card>
 
-            <AddIncomeForm />
+            <GeneralForm
+              title="Add Income"
+              handleSubmit={this.handleSubmit}
+              amount={this.state.amount}
+              handleAmountchange={this.handleSelect("amount")}
+              text={this.state.incomeSource}
+              placeholderText="Income Source"
+              handleTextChange={this.handleChange("incomeSource")}
+            />
 
             <List
               itemLayout="horizontal"
