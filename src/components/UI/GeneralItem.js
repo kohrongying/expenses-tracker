@@ -11,9 +11,12 @@ const GeneralItem = ({ item, removeItem }) => (
   >
     <List.Item.Meta
       avatar={<Avatar size="large" icon="dollar" />}
-      title={`S$ ${formatNumber(item.amount)}`}
-      description={item.source}
+      title={item.source}
+      style={{ alignItems: "center" }}
     />
+
+    <div>{`S$ ${formatNumber(item.amount)}`}</div>
+
   </List.Item>
 );
 

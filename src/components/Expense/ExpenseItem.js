@@ -26,9 +26,12 @@ const Expense = ({ item, removeItem }) => (
   >
     <List.Item.Meta
       avatar={ItemIcon(item.category)}
-      title={`S$ ${formatNumber(item.amount)}`}
-      description={item.remarks}
+      title={item.remarks ? item.remarks : item.category}
+      description={(new Date(item.date)).toDateString()}
     />
+    <div>
+      {`S$ ${formatNumber(item.amount)}`}
+    </div>
   </List.Item>
 );
 
