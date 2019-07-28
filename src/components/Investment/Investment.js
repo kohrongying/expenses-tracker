@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import InvestmentItem from "./InvestmentItem";
 import { List, message } from "antd";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import MonthSum from "../UI/MonthSum";
 import GeneralForm from "../UI/GeneralForm";
+import GeneralItem from "../UI/GeneralItem";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -83,7 +83,7 @@ class Investment extends Component {
     const item = {
       amount: this.state.amount,
       date: Date.now(),
-      investment: this.state.investment,
+      source: this.state.investment,
     };
     firebase.database()
       .ref(`users/${this.props.uid}/${year}/${month}/investments`)
@@ -124,7 +124,7 @@ class Investment extends Component {
               loading={this.state.loading}
               dataSource={this.state.items}
               renderItem={item => (
-                <InvestmentItem
+                <GeneralItem
                   key="item"
                   item={item}
                   removeItem={this.removeItem}

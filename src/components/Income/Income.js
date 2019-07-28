@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 import { List, message } from "antd";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
-import IncomeItem from "./IncomeItem";
 import MonthSum from "../UI/MonthSum";
 import GeneralForm from "../UI/GeneralForm";
+import GeneralItem from "../UI/GeneralItem";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -85,7 +85,7 @@ class Income extends Component {
     const item = {
       amount: this.state.amount,
       date: Date.now(),
-      incomeSource: this.state.incomeSource,
+      source: this.state.incomeSource,
     };
     firebase.database()
       .ref(`users/${this.props.uid}/${year}/${month}/income`)
@@ -126,7 +126,7 @@ class Income extends Component {
               loading={this.state.loading}
               dataSource={this.state.items}
               renderItem={item => (
-                <IncomeItem
+                <GeneralItem
                   key="item"
                   item={item}
                   removeItem={this.removeItem}
