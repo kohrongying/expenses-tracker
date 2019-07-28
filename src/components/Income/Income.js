@@ -34,7 +34,7 @@ class Income extends Component {
           if (snapshot.exists()) {
             let totalAmount = 0;
             const items = snapshot.val();
-            const itemIds = Object.keys(snapshot.val());
+            const itemIds = Object.keys(items);
             const parsedItems = itemIds.map(id => {
               const item = items[id];
               item["id"] = id;
@@ -46,7 +46,6 @@ class Income extends Component {
             this.copyMonthlyIncome();
           }
         });
-
     }
   }
 
@@ -78,13 +77,13 @@ class Income extends Component {
   };
 
   handleSelect = name => value => {
-    this.setState({ [name]: value });
+    this.setState({ [name]: parseFloat(value) });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     const item = {
-      amount: parseFloat(this.state.amount),
+      amount: this.state.amount,
       date: Date.now(),
       incomeSource: this.state.incomeSource,
     };
@@ -93,7 +92,7 @@ class Income extends Component {
       .push(item)
       .then(() => {
         this.setState({
-          amount: "",
+          amount: 0,
           incomeSource: "",
         });
       })

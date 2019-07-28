@@ -2,19 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import Banner from "../UI/Banner";
-import AddIcon from "@material-ui/icons/Add";
-import IconButton from "@material-ui/core/IconButton";
-import AddInvestmentForm from "./AddInvestmentForm";
-import InvestmentItem from "./InvestmentItem";
 import { connect } from "react-redux";
+import InvestmentItem from "./InvestmentItem";
+import { List, message } from "antd";
+import Container from "../UI/Container";
+import Header from "../UI/Header";
+import MonthSum from "../UI/MonthSum";
+import GeneralForm from "../UI/GeneralForm";
 
-const styles = {
-  invSection: {
-    paddingTop: 10,
-    paddingBottom: 10
-  }
-};
+const year = new Date().getFullYear();
+const month = new Date().getMonth();
 
 class Investment extends Component {
   static propTypes = {
@@ -22,100 +19,119 @@ class Investment extends Component {
   }
 
   state = {
-    items: [],
+    loading: true,
+    amount: 0,
     investment: "",
-    amount: "",
-    open: false
+    items: [],
+    totalAmount: 0,
   }
-  componentDidMount(){
+  componentDidMount() {
+    if (this.props.uid) {
+      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`)
+        .on("value", (snapshot)=> {
+          if (snapshot.exists()) {
+            let totalAmount = 0;
+            let items = snapshot.val();
+            const itemIds = Object.keys(items);
+            const parsedItems = itemIds.map(id => {
+              const item = items[id];
+              item["id"] = id;
+              totalAmount += parseFloat(item.amount);
+              return item;
+            });
+            this.setState({ items: parsedItems, totalAmount, loading: false });
+          } else {
+            this.copyMonthlyInvestment();
+          }
+        });
+    }
+  }
+
+  copyMonthlyInvestment = () => {
     firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
-      .on("value", (snapshot)=> {
-        let items = snapshot.val();
-        let temp = [];
-        for (let item in items) {
-          temp.push({
-            id: item,
-            investment: items[item].investment,
-            amount: items[item].amount
-          });
+      .once("value")
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const investmentItems = snapshot.val();
+          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`)
+            .update(investmentItems);
+        } else {
+          this.setState({ loading: false });
         }
-        this.setState({ items: temp });
-      });
+      })
+      .catch(err => message.error(err));
   }
 
   componentWillUnmount(){
-    firebase.database().ref().off();
-  }
-
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    if (this.state.amount > 0){
-      firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
-        .push({ amount: parseFloat(this.state.amount), investment: this.state.investment });
-    }
-
-    this.setState({
-      amount: "",
-      investment: "",
-      open: false
-    });
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`).off();
   }
 
   removeItem = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/monthlyInvestments/${id}`).remove();
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments/${id}`).remove();
+  }
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  handleSelect = name => value => {
+    this.setState({ [name]: parseFloat(value) });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const item = {
+      amount: this.state.amount,
+      date: Date.now(),
+      investment: this.state.investment,
+    };
+    firebase.database()
+      .ref(`users/${this.props.uid}/${year}/${month}/investments`)
+      .push(item)
+      .then(() => {
+        this.setState({
+          amount: 0,
+          investment: "",
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   render(){
     return (
       <div>
         {this.props.uid ?
+          <Container>
+            <Header title="Investment" />
 
-          <div>
-            <Banner title="Investment" />
+            <MonthSum
+              loading={this.state.loading}
+              totalAmount={this.state.totalAmount}
+            />
 
-            <section style={styles.invSection}>
-              <div className="container">
-                <div className="row d-flex flex-row justify-content-between align-items-center">
-                  <h5>Monthly Investment</h5>
-                  <IconButton onClick={this.handleClickOpen} aria-label="Add">
-                    <AddIcon />
-                  </IconButton>
-                </div>
+            <GeneralForm
+              title="Add Investment"
+              handleSubmit={this.handleSubmit}
+              amount={this.state.amount}
+              handleAmountchange={this.handleSelect("amount")}
+              text={this.state.investment}
+              placeholderText="Investment"
+              handleTextChange={this.handleChange("investment")}
+            />
 
-                <AddInvestmentForm
-                  open={this.state.open}
-                  handleClose={this.handleClose}
-                  title="Add Monthly Investment"
-                  value={this.state.amount}
-                  source={this.state.investment}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmit}
+            <List
+              itemLayout="horizontal"
+              loading={this.state.loading}
+              dataSource={this.state.items}
+              renderItem={item => (
+                <InvestmentItem
+                  key="item"
+                  item={item}
+                  removeItem={this.removeItem}
                 />
-
-                {this.state.items.map((item, index) => {
-                  return (
-                    <InvestmentItem key={index} item={item} removeItem={this.removeItem} />
-                  );
-                })}
-
-              </div>
-            </section>
-          </div>
+              )}
+            />
+          </Container>
           :
           <p>You must be logged in.</p>
         }
