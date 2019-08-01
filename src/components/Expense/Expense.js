@@ -7,7 +7,6 @@ import AddExpenseForm from "./AddExpenseForm";
 import ExpenseItem from "./ExpenseItem";
 import { List, message } from "antd";
 import Container from "../UI/Container";
-import Header from "../UI/Header";
 import MonthSum from "../UI/MonthSum";
 
 const year = new Date().getFullYear();
@@ -73,31 +72,32 @@ class Expense extends Component {
     return (
       <div>
         {this.props.uid ?
+          <React.Fragment>
 
-          <Container>
-            <Header title="Expenses" />
+            <Container>
+              <MonthSum
+                loading={this.state.loading}
+                totalAmount={this.state.totalAmount}
+                title="Expenses"
+              />
+            </Container>
 
-            <MonthSum
-              loading={this.state.loading}
-              totalAmount={this.state.totalAmount}
-            />
+            <AddExpenseForm />
 
-            <AddExpenseForm totalAmount={this.state.totalAmount}/>
-
-            <List
-              itemLayout="horizontal"
-              loading={this.state.loading}
-              dataSource={this.state.items}
-              renderItem={item => (
-                <ExpenseItem
-                  key="item"
-                  item={item}
-                  removeItem={this.removeItem}
-                />
-              )}
-            />
-
-          </Container>
+            <Container>
+              <List
+                loading={this.state.loading}
+                dataSource={this.state.items}
+                renderItem={item => (
+                  <ExpenseItem
+                    key="item"
+                    item={item}
+                    removeItem={this.removeItem}
+                  />
+                )}
+              />
+            </Container>
+          </React.Fragment>
           :
           <p>You must be logged in.</p>
         }

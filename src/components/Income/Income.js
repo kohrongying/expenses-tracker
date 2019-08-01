@@ -5,7 +5,6 @@ import "firebase/database";
 import { connect } from "react-redux";
 import { List, message } from "antd";
 import Container from "../UI/Container";
-import Header from "../UI/Header";
 import MonthSum from "../UI/MonthSum";
 import GeneralForm from "../UI/GeneralForm";
 import GeneralItem from "../UI/GeneralItem";
@@ -103,13 +102,15 @@ class Income extends Component {
     return (
       <div>
         {this.props.uid ?
-          <Container>
-            <Header title="Income" />
+          <React.Fragment>
 
-            <MonthSum
-              loading={this.state.loading}
-              totalAmount={this.state.totalAmount}
-            />
+            <Container>
+              <MonthSum
+                loading={this.state.loading}
+                totalAmount={this.state.totalAmount}
+                title="Income"
+              />
+            </Container>
 
             <GeneralForm
               title="Add Income"
@@ -121,20 +122,22 @@ class Income extends Component {
               handleTextChange={this.handleChange("incomeSource")}
             />
 
-            <List
-              itemLayout="horizontal"
-              loading={this.state.loading}
-              dataSource={this.state.items}
-              renderItem={item => (
-                <GeneralItem
-                  key="item"
-                  item={item}
-                  removeItem={this.removeItem}
-                />
-              )}
-            />
+            <Container>
+              <List
+                loading={this.state.loading}
+                dataSource={this.state.items}
+                renderItem={item => (
+                  <GeneralItem
+                    key="item"
+                    item={item}
+                    removeItem={this.removeItem}
+                  />
+                )}
+              />
+            </Container>
+          </React.Fragment>
 
-          </Container>
+
           :
           <p>You must be logged in.</p>
         }

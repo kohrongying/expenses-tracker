@@ -4,7 +4,11 @@ import { Row, Col } from "antd";
 
 const Container = (props) => (
   <Row>
-    <Col xs={{ span: 20, offset: 2 }} lg={{ span: 10, offset: 4 }}>
+    <Col
+      xs={{ span: 20, offset: 2 }}
+      lg={{ span: 16, offset: 4 }}
+      style={{ paddingTop: 20, paddingBottom: 20 }}
+    >
       {props.children}
     </Col>
   </Row>

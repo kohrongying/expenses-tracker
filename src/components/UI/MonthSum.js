@@ -1,26 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Row, Col, Card } from "antd";
+import { Card, Typography } from "antd";
 import { getMonthYear, formatNumber } from "../../helpers/common";
+const { Title } = Typography;
 
-const MonthSum = ({ loading, totalAmount }) => (
-  <Card loading={loading}>
-    <Row type="flex" justify="space-around" align="middle">
-      <Col xs={12}>
-        {getMonthYear()}
-      </Col>
-      <Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-        <h3 style={{ marginBottom: 0 }}>
-          $ {formatNumber(totalAmount)}
-        </h3>
-      </Col>
-    </Row>
+const MonthSum = ({ loading, totalAmount, title }) => (
+  <Card
+    loading={loading}
+    bordered={false}
+    bodyStyle={{
+      paddingBottom: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
+    }}
+  >
+    <p>{title} - {getMonthYear()}</p>
+    <Title style={{ fontSize: 50, margin: 0, }}>$ {formatNumber(totalAmount)}</Title>
   </Card>
+
 );
 
 MonthSum.propTypes = {
   loading: PropTypes.bool.isRequired,
   totalAmount: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default MonthSum;

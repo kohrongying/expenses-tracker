@@ -72,59 +72,80 @@ class AddExpenseForm extends Component {
 
   render() {
     return (
-      <Card style={{ marginTop: 20, marginBottom: 20, }}>
-        <Row>
-          <Col xs={20}>
-            <p>Add Expense</p>
-          </Col>
-          <Col xs={4} style={{ display: "flex", justifyContent: "flex-end", }}>
-            <Button type="primary" onClick={this.handleSubmit}>
+      <Row>
+        <Col
+          xs={{ span: 23, offset: 1 }}
+          lg={{ span: 22, offset: 2 }}
+        >
+
+          <Card
+            bordered={false}
+            bodyStyle={{
+              backgroundColor: "#B2EBF2",
+              borderTopLeftRadius: 75,
+              borderBottomLeftRadius: 75,
+            }}
+          >
+            <Row>
+              <Col
+                xs={{ span: 22, offset: 1 }}
+                lg={{ span: 18, offset: 2 }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", }}>
+                  <p>Add Expense</p>
+                  <Button onClick={this.handleSubmit}>
               Save
-            </Button>
-          </Col>
-        </Row>
+                  </Button>
+                </div>
 
-        <Row gutter={8}>
-          <Col xs={12}>
-            <InputNumber
-              value={this.state.amount}
-              style={{ width: "100%" }}
-              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              parser={value => value.replace(/\$\s?|(,*)/g, "")}
-              onChange={this.handleSelect("amount")}
-            />
-          </Col>
+                <Row gutter={8}>
+                  <Col xs={12}>
+                    <InputNumber
+                      value={this.state.amount}
+                      style={{ width: "100%" }}
+                      formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
+                      onChange={this.handleSelect("amount")}
+                    />
+                  </Col>
 
-          <Col xs={12}>
-            <Input
-              placeholder="Remarks"
-              value={this.state.remarks}
-              onChange={this.handleChange("remarks")}
-            />
-          </Col>
-        </Row>
+                  <Col xs={12}>
+                    <Input
+                      placeholder="Remarks"
+                      value={this.state.remarks}
+                      onChange={this.handleChange("remarks")}
+                    />
+                  </Col>
+                </Row>
 
-        <Row>
-          <Col xs={24}>
-            <Radio.Group
-              size="large"
-              style={{ width: "100%", marginTop: 10, }}
-              value={this.state.category}
-              onChange={this.handleChange("category")}
-            >
-              {categories.map(option => (
-                <Radio.Button
-                  key={option.value}
-                  value={option.value}
-                  style={{ width: "25%", textAlign: "center", }}
-                >
-                  <Icon style={{ fontSize: 18 }} type={option.icon} />
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </Col>
-        </Row>
-      </Card>
+                <Row>
+                  <Col xs={24}>
+                    <Radio.Group
+                      size="large"
+                      style={{ width: "100%", marginTop: 10, }}
+                      value={this.state.category}
+                      onChange={this.handleChange("category")}
+                    >
+                      {categories.map(option => (
+                        <Radio.Button
+                          key={option.value}
+                          value={option.value}
+                          style={{ width: "25%", textAlign: "center", }}
+                        >
+                          <Icon style={{ fontSize: 18 }} type={option.icon} />
+                        </Radio.Button>
+                      ))}
+                    </Radio.Group>
+                  </Col>
+                </Row>
+
+              </Col>
+            </Row>
+
+
+          </Card>
+        </Col>
+      </Row>
     );
   }
 }

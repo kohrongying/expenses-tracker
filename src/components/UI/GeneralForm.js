@@ -11,38 +11,57 @@ const GeneralForm = ({
   placeholderText,
   handleTextChange,
 }) => (
-  <Card style={{ marginTop: 20, marginBottom: 20, }}>
-    <Row>
-      <Col xs={20}>
-        <p>{title}</p>
-      </Col>
-      <Col xs={4} style={{ display: "flex", justifyContent: "flex-end", }}>
-        <Button type="primary" onClick={handleSubmit}>
-          Save
-        </Button>
-      </Col>
-    </Row>
+  <Row>
+    <Col
+      xs={{ span: 23, offset: 1 }}
+      lg={{ span: 22, offset: 2 }}
+    >
 
-    <Row gutter={8}>
-      <Col xs={12}>
-        <InputNumber
-          value={amount}
-          style={{ width: "100%" }}
-          formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={handleAmountchange}
-        />
-      </Col>
+      <Card
+        bordered={false}
+        bodyStyle={{
+          backgroundColor: "#B2EBF2",
+          borderTopLeftRadius: 75,
+          borderBottomLeftRadius: 75,
+        }}
+      >
+        <Row>
+          <Col
+            xs={{ span: 22, offset: 1 }}
+            lg={{ span: 18, offset: 2 }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", }}>
+              <p>{title}</p>
+              <Button onClick={handleSubmit}>
+                Save
+              </Button>
+            </div>
 
-      <Col xs={12}>
-        <Input
-          placeholder={placeholderText}
-          value={text}
-          onChange={handleTextChange}
-        />
-      </Col>
-    </Row>
-  </Card>
+            <Row gutter={8}>
+              <Col xs={12}>
+                <InputNumber
+                  value={amount}
+                  style={{ width: "100%" }}
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  parser={value => value.replace(/\$\s?|(,*)/g, "")}
+                  onChange={handleAmountchange}
+                />
+              </Col>
+
+              <Col xs={12}>
+                <Input
+                  placeholder={placeholderText}
+                  value={text}
+                  onChange={handleTextChange}
+                />
+              </Col>
+            </Row>
+
+          </Col>
+        </Row>
+      </Card>
+    </Col>
+  </Row>
 );
 
 GeneralForm.propTypes = {
