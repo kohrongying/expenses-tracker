@@ -11,7 +11,7 @@ const { Title } = Typography;
 
 const NAVBAR = [
   { url: "/expenses", label: "Expenses", icon: "dashboard" },
-  { url: "/history", label: "History", icon: "history" },
+  // { url: "/history", label: "History", icon: "history" },
   { url: "/income", label: "Income", icon: "dollar" },
   { url: "/investment", label: "Investment", icon: "bank" }
 ];
