@@ -2,23 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import Banner from "../UI/Banner";
-import AddIcon from "@material-ui/icons/Add";
-import IconButton from "@material-ui/core/IconButton";
-import AddIncomeForm from "./AddIncomeForm";
-import { getMonth } from "../../helpers/common";
-import IncomeItem from "./IncomeItem";
 import { connect } from "react-redux";
+import { List, message } from "antd";
+import Container from "../UI/Container";
+import MonthSum from "../UI/MonthSum";
+import GeneralForm from "../UI/GeneralForm";
+import GeneralItem from "../UI/GeneralItem";
 
 const year = new Date().getFullYear();
-const month = getMonth();
-
-const styles = {
-  salarySection: {
-    paddingTop: 10,
-    paddingBottom: 10
-  }
-};
+const month = new Date().getMonth();
 
 class Income extends Component {
   static propTypes = {
@@ -26,172 +18,126 @@ class Income extends Component {
   }
 
   state = {
-    open: false,
-    amount: "",
+    loading: true,
+    amount: 0,
     incomeSource: "",
-    monthlyItems: [],
     items: [],
-    openExtra: false,
+    totalAmount: 0
   }
 
-  componentDidMount(){
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-      .on("value", (snapshot)=> {
-        let items = snapshot.val();
-        let temp = [];
-        for (let item in items) {
-          temp.push({
-            id: item,
-            incomeSource: items[item].incomeSource,
-            amount: items[item].amount
-          });
-        }
-        this.setState({ monthlyItems: temp });
-      });
+  componentDidMount() {
+    if (this.props.uid) {
+      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
+        .on("value", (snapshot)=> {
 
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-      .on("value", (snapshot)=> {
-        let items = snapshot.val();
-        let temp = [];
-        for (let item in items) {
-          temp.push({
-            id: item,
-            incomeSource: items[item].incomeSource,
-            amount: items[item].amount
-          });
+          if (snapshot.exists()) {
+            let totalAmount = 0;
+            const items = snapshot.val();
+            const itemIds = Object.keys(items);
+            const parsedItems = itemIds.map(id => {
+              const item = items[id];
+              item["id"] = id;
+              totalAmount += parseFloat(item.amount);
+              return item;
+            });
+            this.setState({ items: parsedItems, totalAmount, loading: false });
+          } else {
+            this.copyMonthlyIncome();
+          }
+        });
+    }
+  }
+
+  copyMonthlyIncome = () => {
+    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
+      .once("value")
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const incomeItems = snapshot.val();
+          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
+            .update(incomeItems);
+        } else {
+          this.setState({ loading: false });
         }
-        this.setState({ items: temp });
-      });
+      })
+      .catch(err => message.error(err));
   }
 
   componentWillUnmount(){
-    firebase.database().ref().off();
-  }
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleClickOpenExtra = () => {
-    this.setState({ openExtra: true });
-  };
-
-  handleCloseExtra = () => {
-    this.setState({ openExtra: false });
-  };
-
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
-
-  handleSubmitMonthlyIncome = (e) => {
-    e.preventDefault();
-    if (this.state.amount > 0){
-      firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
-        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource });
-    }
-
-    this.setState({
-      amount: "",
-      incomeSource: "",
-      open: false
-    });
-  }
-
-  handleSubmitExtraIncome = (e) => {
-    e.preventDefault();
-
-    if (this.state.amount > 0){
-      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-        .push({ amount: parseFloat(this.state.amount), incomeSource: this.state.incomeSource });
-    }
-
-    this.setState({
-      amount: "",
-      incomeSource: "",
-      openExtra: false
-    });
-  }
-
-  removeMonthlyItem = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome/${id}`).remove();
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`).off();
   }
 
   removeItem = (id) => () => {
     firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove();
   }
 
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  handleSelect = name => value => {
+    this.setState({ [name]: parseFloat(value) });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const item = {
+      amount: this.state.amount,
+      date: Date.now(),
+      source: this.state.incomeSource,
+    };
+    firebase.database()
+      .ref(`users/${this.props.uid}/${year}/${month}/income`)
+      .push(item)
+      .then(() => {
+        this.setState({
+          amount: 0,
+          incomeSource: "",
+        });
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <div>
         {this.props.uid ?
+          <React.Fragment>
 
-          <div>
-            <Banner title="Income" />
+            <Container>
+              <MonthSum
+                loading={this.state.loading}
+                totalAmount={this.state.totalAmount}
+                title="Income"
+              />
+            </Container>
 
-            <section style={styles.salarySection} className="salary-section">
-              <div className="container">
-                <div className="row d-flex flex-row justify-content-between align-items-center">
-                  <h5>Monthly Income</h5>
-                  <IconButton onClick={this.handleClickOpen} aria-label="Add">
-                    <AddIcon />
-                  </IconButton>
-                </div>
+            <GeneralForm
+              title="Add Income"
+              handleSubmit={this.handleSubmit}
+              amount={this.state.amount}
+              handleAmountchange={this.handleSelect("amount")}
+              text={this.state.incomeSource}
+              placeholderText="Income Source"
+              handleTextChange={this.handleChange("incomeSource")}
+            />
 
-                <AddIncomeForm
-                  open={this.state.open}
-                  handleClose={this.handleClose}
-                  title="Add Monthly Income"
-                  value={this.state.amount}
-                  source={this.state.incomeSource}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmitMonthlyIncome}
-                />
+            <Container>
+              <List
+                loading={this.state.loading}
+                dataSource={this.state.items}
+                renderItem={item => (
+                  <GeneralItem
+                    key="item"
+                    item={item}
+                    removeItem={this.removeItem}
+                  />
+                )}
+              />
+            </Container>
+          </React.Fragment>
 
-                {this.state.monthlyItems.map((item, index) => {
-                  return (
-                    <IncomeItem key={index} item={item} removeItem={this.removeMonthlyItem} />
-                  );
-                })}
 
-              </div>
-            </section>
-
-            <section style={styles.salarySection} className="salary-section">
-              <div className="container">
-                <div className="row d-flex flex-row justify-content-between align-items-center">
-                  <h5>Total Income ({getMonth()})</h5>
-                  <IconButton onClick={this.handleClickOpenExtra} aria-label="Add">
-                    <AddIcon />
-                  </IconButton>
-                </div>
-
-                <AddIncomeForm
-                  open={this.state.openExtra}
-                  handleClose={this.handleCloseExtra}
-                  title="Add Additional Income"
-                  value={this.state.amount}
-                  source={this.state.incomeSource}
-                  handleChange={this.handleChange}
-                  handleSubmit={this.handleSubmitExtraIncome}
-                />
-
-                {this.state.items.map((item, index) => {
-                  return (
-                    <IncomeItem key={index} item={item} removeItem={this.removeItem} />
-                  );
-                })}
-
-              </div>
-            </section>
-
-          </div>
           :
           <p>You must be logged in.</p>
         }

@@ -57,6 +57,8 @@ module.exports = {
 
     // Consistent spacing inside braces (objects in objects)
     "object-curly-spacing": ["error", "always", { "objectsInObjects": false, "arraysInObjects": false }],
+
+    "no-console": ["error", { allow: ["warn", "error"] }]
   },
   "settings": {
     "react": {

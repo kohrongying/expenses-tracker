@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./App.css";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { Switch, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import History from "./components/History/History";
-import Home from "./components/Home";
+import Expense from "./components/Expense/Expense";
 import Income from "./components/Income/Income";
 import Investment from "./components/Investment/Investment";
 import MonthlyBreakdown from "./components/History/MonthlyBreakdown";
-import { connect } from "react-redux";
-import { login, logout } from "./actions";
 import PrivateRoute from "./components/Auth/PrivateRoute";
+import Home from "./Home";
+
+import { connect } from "react-redux";
+import { login } from "./actions";
 
 const env = process.env;
 const prodConfig = {
@@ -36,32 +37,15 @@ var devConfig = {
 const config = process.env.NODE_ENV === "production" ? prodConfig : devConfig;
 
 firebase.initializeApp(config);
-const provider = new firebase.auth.GoogleAuthProvider();
 
 class App extends Component {
 
   static propTypes = {
     login: PropTypes.func.isRequired,
-    logout: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
   }
 
   state = {
     loading: false,
-  }
-
-  login = () => {
-    firebase.auth().signInWithRedirect(provider)
-      .then((result)=>{
-        this.props.login(result.user.uid);
-      })
-      // eslint-disable-next-line no-console
-      .catch(err => console.log(err));
-  }
-
-  logout = () => {
-    firebase.auth().signOut()
-      .then(() => this.props.logout() );
   }
 
   componentDidMount(){
@@ -75,56 +59,17 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="App">
-          <nav className="navbar navbar-expand-lg navbar-light">
-            <a href="/" className="navbar-brand">Expense Tracker</a>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              {this.props.isAuthenticated ? (
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <Link to='/' className="nav-link">Home</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to='/history' className="nav-link">History</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to='/income' className="nav-link">Income</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to='/investment' className="nav-link">Investment</Link>
-                  </li>
-                  <li className="nav-item">
-                    <div className="nav-link" onClick={this.logout}>Log Out</div>
-                  </li>
-                </ul>
-              ) : (
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <div className="nav-link" onClick={this.login}>Log In</div>
-                  </li>
-                </ul>
-              )}
-            </div>
-
-          </nav>
-
-          <Switch>
-            <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute path="/history" component={History} />
-            <PrivateRoute path="/income" component={Income} />
-            <PrivateRoute path="/investment" component={Investment} />
-            <PrivateRoute path="/:year/:month" component={MonthlyBreakdown} />
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <PrivateRoute exact path="/expenses" component={Expense} />
+          <PrivateRoute path="/history" component={History} />
+          <PrivateRoute path="/income" component={Income} />
+          <PrivateRoute path="/investment" component={Investment} />
+          <PrivateRoute path="/:year/:month" component={MonthlyBreakdown} />
+        </Switch>
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = state => ({ isAuthenticated: state.user.isAuthenticated });
-
-export default connect(mapStateToProps, { login, logout })(App);
+export default connect(null, { login })(App);
