@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { login, logout } from "./actions";
-import { Typography, Row, Col, Icon, Card, Divider } from "antd";
+import { Typography, Row, Col, Icon, Card, Divider, Button } from "antd";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { withRouter } from "react-router-dom";
@@ -15,16 +15,6 @@ const NAVBAR = [
   { url: "/income", label: "Income", icon: "dollar" },
   { url: "/investment", label: "Investment", icon: "bank" }
 ];
-
-const styles = {
-  navButton: {
-    display: "flex",
-    flexDirection: "column",
-    background: "none",
-    padding: 20,
-    alignItems: "center"
-  }
-};
 
 const provider = new firebase.auth.GoogleAuthProvider();
 const { Meta } = Card;
@@ -59,13 +49,22 @@ class Home extends Component {
     return (
       <React.Fragment>
         <div className="App">
-          <Row gutter={16}>
+          <Row gutter={16} type="flex" align="middle">
             <Col offset={2}>
               <Title style={{ marginTop: 30 }} level={2}>Expense Tracker</Title>
             </Col>
+            {this.props.isAuthenticated ? (
+              <Col>
+                <Button onClick={this.logout}>Logout</Button>
+              </Col>
+            ) : (
+              <Col>
+                <Button onClick={this.login}>Login</Button>
+              </Col>
+            )}
           </Row>
 
-          {this.props.isAuthenticated ? (
+          {this.props.isAuthenticated && (
             <Row gutter={16} type="flex" justify="center">
               {NAVBAR.map(nav => (
                 <Col xs={5} key={nav.label}>
@@ -81,14 +80,6 @@ class Home extends Component {
                 </Col>
               ))}
             </Row>
-          ) : (
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <button style={styles.navButton}>
-                </button>
-                <div onClick={this.login}>Log In</div>
-              </li>
-            </ul>
           )}
 
           <Divider />
