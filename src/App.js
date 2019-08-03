@@ -66,6 +66,7 @@ class App extends Component {
           <PrivateRoute path="/income" component={Income} />
           <PrivateRoute path="/investment" component={Investment} />
           <PrivateRoute path="/:year/:month" component={MonthlyBreakdown} />
+          <Route path="/" component={Home} />
         </Switch>
       </React.Fragment>
     );
