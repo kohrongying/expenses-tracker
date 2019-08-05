@@ -12,22 +12,26 @@ const categories = [
   {
     value: "Food",
     label: "Food",
-    icon: "coffee",
+    icon: "rest",
+    color: "#ff85c0"
   },
   {
     value: "Transport",
     label: "Transport",
     icon: "car",
+    color: "#5cdbd3"
   },
   {
     value: "Movie",
     label: "Movie",
     icon: "play-square",
+    color: "#597ef7"
   },
   {
     value: "Other",
     label: "Other",
-    icon: "shopping"
+    icon: "shopping",
+    color: "#ffd666"
   }
 ];
 
@@ -132,7 +136,12 @@ class AddExpenseForm extends Component {
                           value={option.value}
                           style={{ width: "25%", textAlign: "center", }}
                         >
-                          <Icon style={{ fontSize: 18 }} type={option.icon} />
+                          <Icon
+                            style={{ fontSize: 18 }}
+                            type={option.icon}
+                            theme="twoTone"
+                            twoToneColor={option.color}
+                          />
                         </Radio.Button>
                       ))}
                     </Radio.Group>

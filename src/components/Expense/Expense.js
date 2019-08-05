@@ -8,6 +8,8 @@ import ExpenseItem from "./ExpenseItem";
 import { List, message } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
+import { withRouter } from "react-router-dom";
+import { Icon } from "antd";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -15,6 +17,7 @@ const month = new Date().getMonth();
 class Expense extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
   }
 
   state = {
@@ -68,6 +71,10 @@ class Expense extends Component {
       });
   }
 
+  navigateHome = () => {
+    this.props.history.push("/");
+  }
+
   render(){
     return (
       <div>
@@ -75,6 +82,11 @@ class Expense extends Component {
           <React.Fragment>
 
             <Container>
+              <Icon
+                type="arrow-left"
+                onClick={this.navigateHome}
+              />
+
               <MonthSum
                 loading={this.state.loading}
                 totalAmount={this.state.totalAmount}
@@ -108,4 +120,4 @@ class Expense extends Component {
 
 const mapStateToProps = state => ({ uid: state.user.uid });
 
-export default connect(mapStateToProps)(Expense);
+export default connect(mapStateToProps)(withRouter(Expense));

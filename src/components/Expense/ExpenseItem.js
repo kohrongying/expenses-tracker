@@ -6,15 +6,15 @@ import { List, Avatar, Icon } from "antd";
 const ItemIcon = (category) => {
   switch (category) {
   case "Food":
-    return <Avatar size="large" icon="coffee" />;
+    return <Avatar size="large" icon="rest" style={{ backgroundColor: "#ff85c0" }} />;
   case "Transport":
-    return <Avatar size="large" icon="car" />;
+    return <Avatar size="large" icon="car" style={{ backgroundColor: "#5cdbd3" }} />;
   case "Movie":
-    return <Avatar size="large" icon="play-square" />;
-  case "Others":
-    return <Avatar size="large" icon="shopping" />;
+    return <Avatar size="large" icon="play-square"style={{ backgroundColor: "#597ef7" }}  />;
+  case "Other":
+    return <Avatar size="large" icon="shopping" style={{ backgroundColor: "#ffd666" }} />;
   default:
-    return <Avatar size="large" icon="user" />;
+    return <Avatar size="large" icon="rest" style={{ backgroundColor: "#ff85c0" }} />;
   }
 };
 

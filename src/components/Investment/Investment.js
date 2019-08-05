@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import { List, message } from "antd";
+import { List, message, Icon } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import GeneralForm from "../UI/GeneralForm";
 import GeneralItem from "../UI/GeneralItem";
+import { withRouter } from "react-router-dom";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -15,6 +16,7 @@ const month = new Date().getMonth();
 class Investment extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
   }
 
   state = {
@@ -96,11 +98,19 @@ class Investment extends Component {
       .catch(err => console.error(err));
   }
 
+  navigateHome = () => {
+    this.props.history.push("/");
+  }
+
   render(){
     return (
       <div>
         {this.props.uid ?
           <React.Fragment>
+            <Icon
+              type="arrow-left"
+              onClick={this.navigateHome}
+            />
 
             <Container>
               <MonthSum
@@ -143,4 +153,4 @@ class Investment extends Component {
 
 const mapStateToProps = state => ({ uid: state.user.uid });
 
-export default connect(mapStateToProps)(Investment);
+export default connect(mapStateToProps)(withRouter(Investment));
