@@ -7,6 +7,7 @@ import History from "./components/History/History";
 import Expense from "./components/Expense/Expense";
 import Income from "./components/Income/Income";
 import Investment from "./components/Investment/Investment";
+import Profile from "./components/Profile/Profile";
 import MonthlyBreakdown from "./components/History/MonthlyBreakdown";
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import Home from "./Home";
@@ -65,6 +66,7 @@ class App extends Component {
           <PrivateRoute path="/history" component={History} />
           <PrivateRoute path="/income" component={Income} />
           <PrivateRoute path="/investment" component={Investment} />
+          <PrivateRoute path="/profile" component={Profile} />
           <PrivateRoute path="/:year/:month" component={MonthlyBreakdown} />
         </Switch>
       </React.Fragment>
