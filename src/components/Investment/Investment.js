@@ -103,51 +103,48 @@ class Investment extends Component {
   }
 
   render(){
-    return (
-      <div>
-        {this.props.uid ?
-          <React.Fragment>
+    return this.props.uid ?
+      <React.Fragment>
+        <div style={{ height: "76%", overflow: "auto" }}>
+          <Container>
             <Icon
               type="arrow-left"
               onClick={this.navigateHome}
             />
 
-            <Container>
-              <MonthSum
-                loading={this.state.loading}
-                totalAmount={this.state.totalAmount}
-                title="Investment"
-              />
-            </Container>
-
-            <GeneralForm
-              title="Add Investment"
-              handleSubmit={this.handleSubmit}
-              amount={this.state.amount}
-              handleAmountchange={this.handleSelect("amount")}
-              text={this.state.investment}
-              placeholderText="Investment"
-              handleTextChange={this.handleChange("investment")}
+            <MonthSum
+              loading={this.state.loading}
+              totalAmount={this.state.totalAmount}
+              title="Investment"
             />
-            <Container>
-              <List
-                loading={this.state.loading}
-                dataSource={this.state.items}
-                renderItem={item => (
-                  <GeneralItem
-                    key="item"
-                    item={item}
-                    removeItem={this.removeItem}
-                  />
-                )}
+          </Container>
+          <List
+            loading={this.state.loading}
+            dataSource={this.state.items}
+            renderItem={item => (
+              <GeneralItem
+                key="item"
+                item={item}
+                removeItem={this.removeItem}
               />
-            </Container>
-          </React.Fragment>
-          :
-          <p>You must be logged in.</p>
-        }
-      </div>
-    );
+            )}
+          />
+        </div>
+        <GeneralForm
+          title="Add Investment"
+          handleSubmit={this.handleSubmit}
+          amount={this.state.amount}
+          handleAmountchange={this.handleSelect("amount")}
+          text={this.state.investment}
+          placeholderText="Investment"
+          handleTextChange={this.handleChange("investment")}
+        />
+
+
+      </React.Fragment>
+      :
+      <p>You must be logged in.</p>;
+
   }
 }
 

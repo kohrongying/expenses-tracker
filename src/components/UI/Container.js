@@ -7,7 +7,7 @@ const Container = (props) => (
     <Col
       xs={{ span: 20, offset: 2 }}
       lg={{ span: 16, offset: 4 }}
-      style={{ paddingTop: 20, paddingBottom: 20 }}
+      style={{ paddingTop: 40, paddingBottom: 20 }}
     >
       {props.children}
     </Col>

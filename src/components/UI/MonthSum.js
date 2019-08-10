@@ -12,6 +12,7 @@ const MonthSum = ({ loading, totalAmount, title }) => (
       paddingBottom: 0,
       paddingLeft: 0,
       paddingRight: 0,
+      backgroundColor: "rgba(240, 240, 240, 0.7)",
     }}
   >
     <p>{title} - {getMonthYear()}</p>
