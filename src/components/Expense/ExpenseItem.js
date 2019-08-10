@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
-import { List, Avatar, Icon } from "antd";
+import { List, Avatar, Icon, Row, Col } from "antd";
 
 const ItemIcon = (category) => {
   switch (category) {
@@ -19,20 +19,27 @@ const ItemIcon = (category) => {
 };
 
 const Expense = ({ item, removeItem }) => (
-  <List.Item
-    actions={[
-      <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
-    ]}
-  >
-    <List.Item.Meta
-      avatar={ItemIcon(item.category)}
-      title={item.remarks ? item.remarks : item.category}
-      description={(new Date(item.date)).toDateString()}
-    />
-    <div>
-      {`S$ ${formatNumber(item.amount)}`}
-    </div>
-  </List.Item>
+  <Row style={{ backgroundColor: "white", marginBottom: 6 }}>
+    <Col
+      xs={{ span: 20, offset: 2 }}
+      lg={{ span: 16, offset: 4 }}
+    >
+      <List.Item
+        actions={[
+          <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
+        ]}
+      >
+        <List.Item.Meta
+          avatar={ItemIcon(item.category)}
+          title={item.remarks ? item.remarks : item.category}
+          description={(new Date(item.date)).toDateString()}
+        />
+        <div>
+          {`S$ ${formatNumber(item.amount)}`}
+        </div>
+      </List.Item>
+    </Col>
+  </Row>
 );
 
 Expense.propTypes = {

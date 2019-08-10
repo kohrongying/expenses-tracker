@@ -129,57 +129,68 @@ class Profile extends Component {
 
   render() {
     return (
-      <Container>
-        <Icon
-          type="arrow-left"
-          onClick={this.navigateHome}
-        />
-        <h3 style={{ paddingTop: 20 }}>Profile</h3>
+      <React.Fragment>
+        <Container>
+          <Icon
+            type="arrow-left"
+            onClick={this.navigateHome}
+          />
+          <h3 style={{ paddingTop: 20 }}>Profile</h3>
+          <Row type="flex" justify="center">
+            <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
+              <Icon type="user" style={{ fontSize: 60 }}  />
+            </Col>
+          </Row>
+        </Container>
 
-        <Row type="flex" justify="center">
-          <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
-            <Icon type="user" style={{ fontSize: 60 }}  />
+        <Row style={{ backgroundColor: "white" }}>
+          <Col
+            xs={{ span: 20, offset: 2 }}
+            lg={{ span: 16, offset: 4 }}
+          >
+
+
+            <Collapse
+              bordered={false}
+              expandIconPosition="right"
+            >
+              <Panel
+                header="Recurring Income"
+                key="1"
+                extra={<Icon type="plus" onClick={this.showModalIncome} />}
+              >
+                <List
+                  dataSource={this.state.income}
+                  renderItem={item => (
+                    <GeneralItem
+                      key="item"
+                      item={item}
+                      removeItem={this.removeIncome}
+                    />
+                  )}
+                />
+              </Panel>
+
+              <Panel
+                header="Recurring investments"
+                key="2"
+                extra={<Icon type="plus" onClick={this.showModalInvestment} />}
+              >
+                <List
+                  dataSource={this.state.investments}
+                  renderItem={item => (
+                    <GeneralItem
+                      key="item"
+                      item={item}
+                      removeItem={this.removeInvestment}
+                    />
+                  )}
+                />
+              </Panel>
+            </Collapse>
+
           </Col>
         </Row>
-
-        <Collapse
-          bordered={false}
-          expandIconPosition="right"
-        >
-          <Panel
-            header="Recurring Income"
-            key="1"
-            extra={<Icon type="plus" onClick={this.showModalIncome} />}
-          >
-            <List
-              dataSource={this.state.income}
-              renderItem={item => (
-                <GeneralItem
-                  key="item"
-                  item={item}
-                  removeItem={this.removeIncome}
-                />
-              )}
-            />
-          </Panel>
-
-          <Panel
-            header="Recurring investments"
-            key="2"
-            extra={<Icon type="plus" onClick={this.showModalInvestment} />}
-          >
-            <List
-              dataSource={this.state.investments}
-              renderItem={item => (
-                <GeneralItem
-                  key="item"
-                  item={item}
-                  removeItem={this.removeInvestment}
-                />
-              )}
-            />
-          </Panel>
-        </Collapse>
 
         <Modal
           title={this.state.modalTitle}
@@ -215,7 +226,7 @@ class Profile extends Component {
         <div style={{ display: "flex", justifyContent: "center", margin: 30 }}>
           <Button onClick={this.logout}>Logout</Button>
         </div>
-      </Container>
+      </React.Fragment>
     );
   }
 }

@@ -105,55 +105,50 @@ class Income extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.props.uid ?
-          <React.Fragment>
-
-            <Container>
-              <Icon
-                type="arrow-left"
-                onClick={this.navigateHome}
-              />
-
-              <MonthSum
-                loading={this.state.loading}
-                totalAmount={this.state.totalAmount}
-                title="Income"
-              />
-            </Container>
-
-            <GeneralForm
-              title="Add Income"
-              handleSubmit={this.handleSubmit}
-              amount={this.state.amount}
-              handleAmountchange={this.handleSelect("amount")}
-              text={this.state.incomeSource}
-              placeholderText="Income Source"
-              handleTextChange={this.handleChange("incomeSource")}
+    return this.props.uid ?
+      <React.Fragment>
+        <div style={{ height: "76%", overflow: "auto" }}>
+          <Container>
+            <Icon
+              type="arrow-left"
+              onClick={this.navigateHome}
             />
 
-            <Container>
-              <List
-                loading={this.state.loading}
-                dataSource={this.state.items}
-                renderItem={item => (
-                  <GeneralItem
-                    key="item"
-                    item={item}
-                    removeItem={this.removeItem}
-                  />
-                )}
+            <MonthSum
+              loading={this.state.loading}
+              totalAmount={this.state.totalAmount}
+              title="Income"
+            />
+
+          </Container>
+          <List
+            loading={this.state.loading}
+            dataSource={this.state.items}
+            renderItem={item => (
+              <GeneralItem
+                key="item"
+                item={item}
+                removeItem={this.removeItem}
               />
-            </Container>
-          </React.Fragment>
+            )}
+          />
+        </div>
+        <GeneralForm
+          title="Add Income"
+          handleSubmit={this.handleSubmit}
+          amount={this.state.amount}
+          handleAmountchange={this.handleSelect("amount")}
+          text={this.state.incomeSource}
+          placeholderText="Income Source"
+          handleTextChange={this.handleChange("incomeSource")}
+        />
 
 
-          :
-          <p>You must be logged in.</p>
-        }
-      </div>
-    );
+      </React.Fragment>
+
+
+      :
+      <p>You must be logged in.</p>;
   }
 }
 

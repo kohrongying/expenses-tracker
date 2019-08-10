@@ -6,9 +6,8 @@ import { Typography, Row, Col, Icon, Divider, Button } from "antd";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { withRouter } from "react-router-dom";
-import Container from "./components/UI/Container";
+import Container from "./components/UI/Container";import ExpensesSummary from "./components/History/ExpensesSummary";
 
-import AddExpenseForm from "./components/Expense/AddExpenseForm";
 const { Title } = Typography;
 
 const NAVBAR = [
@@ -45,26 +44,38 @@ class Home extends Component {
     return (
       <React.Fragment>
         <div className="App">
-          <Row gutter={16} type="flex" align="middle">
-            <Col offset={2}>
-              <Title style={{ marginTop: 30 }} level={2}>Expense Tracker</Title>
-            </Col>
-            {!this.props.isAuthenticated && (
-              <Col>
+          {!this.props.isAuthenticated && (
+            <Row gutter={16} type="flex" align="middle">
+              <Col offset={2}>
+                <Title style={{ marginTop: 30 }} level={2}>Expense Tracker</Title>
                 <Button onClick={this.login}>Login</Button>
               </Col>
-            )}
-          </Row>
+            </Row>
+          )}
 
           {this.props.isAuthenticated && (
             <React.Fragment>
+              <Row>
+                <Col
+                  xs={{ span: 20, offset: 2 }}
+                  lg={{ span: 16, offset: 4 }}
+                  style={{ paddingTop: 40, }}
+                >
+                  <Title style={{ fontSize: 25, marginBottom: 30, }}>Home</Title>
+                  <h6 style={{ marginBottom: 20, }}>Overview</h6>
+                </Col>
+              </Row>
+
+              <ExpensesSummary />
               <Container>
-                <Row gutter={8} type="flex" justify="center">
+
+                <h6 style={{ marginBottom: 0 }}>Quick Links &gt;</h6>
+                <Row gutter={16} type="flex" justify="center">
                   {NAVBAR.map(nav => (
-                    <Col xs={6} key={nav.label}>
+                    <Col xs={12} key={nav.label}>
                       <div
                         onClick={this.linkTo(nav.url)}
-                        style={{ padding: 5, borderRadius: 5, textAlign: "center", }}
+                        style={{ marginTop: 15, borderRadius: 15, backgroundColor:"white", padding: 15, textAlign: "center", }}
                       >
                         <Icon style={{ color: `${nav.color}`, fontSize: "25px" }} type={nav.icon} />
                         <div style={{ fontSize: 10 }}>{nav.label}</div>
@@ -75,7 +86,6 @@ class Home extends Component {
 
                 <Divider />
               </Container>
-              <AddExpenseForm />
             </React.Fragment>
           )}
 
