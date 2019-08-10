@@ -107,12 +107,13 @@ class Investment extends Component {
       <div>
         {this.props.uid ?
           <React.Fragment>
-            <Icon
-              type="arrow-left"
-              onClick={this.navigateHome}
-            />
 
             <Container>
+              <Icon
+                type="arrow-left"
+                onClick={this.navigateHome}
+              />
+
               <MonthSum
                 loading={this.state.loading}
                 totalAmount={this.state.totalAmount}
