@@ -1,8 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { InputNumber, Input, Button, Card, Row, Col } from "antd";
+import { InputNumber, Input, Button, Form, Icon } from "antd";
+import Container from "./Container";
+import Header from "./Header";
 
 const GeneralForm = ({
+  navigateHome,
   title,
   handleSubmit,
   amount,
@@ -11,63 +14,53 @@ const GeneralForm = ({
   placeholderText,
   handleTextChange,
 }) => (
-  <Row>
-    <Col
-      xs={{ span: 23, offset: 1 }}
-      lg={{ span: 22, offset: 2 }}
-    >
+  <Container>
+    <Icon
+      type="arrow-left"
+      onClick={navigateHome}
+      style={{ marginTop: 30, }}
+    />
+    <Header title={title} />
 
-      <Card
-        bordered={false}
-        bodyStyle={{
-          backgroundColor: "#B2EBF2",
-          borderTopLeftRadius: 75,
-          borderBottomLeftRadius: 75,
-        }}
-      >
-        <Row>
-          <Col
-            xs={{ span: 22, offset: 1 }}
-            lg={{ span: 18, offset: 2 }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", }}>
-              <p>{title}</p>
-              <Button onClick={handleSubmit}>
-                Save
-              </Button>
-            </div>
+    <Form onSubmit={handleSubmit}>
+      <Form.Item>
+        <InputNumber
+          value={amount}
+          style={{ width: "100%" }}
+          formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          parser={value => value.replace(/\$\s?|(,*)/g, "")}
+          onChange={handleAmountchange}
+        />
+      </Form.Item>
 
-            <Row gutter={8}>
-              <Col xs={12}>
-                <InputNumber
-                  value={amount}
-                  style={{ width: "100%" }}
-                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                  onChange={handleAmountchange}
-                />
-              </Col>
+      <Form.Item>
+        <Input
+          prefix={<Icon type="info-circle" />}
+          placeholder={placeholderText}
+          value={text}
+          onChange={handleTextChange}
+        />
+      </Form.Item>
 
-              <Col xs={12}>
-                <Input
-                  placeholder={placeholderText}
-                  value={text}
-                  onChange={handleTextChange}
-                />
-              </Col>
-            </Row>
-
-          </Col>
-        </Row>
-      </Card>
-    </Col>
-  </Row>
+      <Form.Item>
+        <Button
+          disabled={amount === ""}
+          type="primary"
+          htmlType="submit"
+          block
+        >
+          Save
+        </Button>
+      </Form.Item>
+    </Form>
+  </Container>
 );
 
 GeneralForm.propTypes = {
+  navigateHome: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  amount: PropTypes.number.isRequired,
+  amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handleAmountchange: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
   placeholderText: PropTypes.string.isRequired,

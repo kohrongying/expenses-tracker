@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { List, message, Icon } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
-import GeneralForm from "../UI/GeneralForm";
 import GeneralItem from "../UI/GeneralItem";
 import { withRouter } from "react-router-dom";
 
@@ -21,8 +20,6 @@ class Investment extends Component {
 
   state = {
     loading: true,
-    amount: 0,
-    investment: "",
     items: [],
     totalAmount: 0,
   }
@@ -71,35 +68,8 @@ class Investment extends Component {
     firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments/${id}`).remove();
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
-  handleSelect = name => value => {
-    this.setState({ [name]: parseFloat(value) });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const item = {
-      amount: this.state.amount,
-      date: Date.now(),
-      source: this.state.investment,
-    };
-    firebase.database()
-      .ref(`users/${this.props.uid}/${year}/${month}/investments`)
-      .push(item)
-      .then(() => {
-        this.setState({
-          amount: 0,
-          investment: "",
-        });
-      })
-      .catch(err => console.error(err));
-  }
-
-  navigateHome = () => {
-    this.props.history.push("/");
+  navigate = (route) => () => {
+    this.props.history.push(route);
   }
 
   render(){
@@ -111,7 +81,7 @@ class Investment extends Component {
             <Container>
               <Icon
                 type="arrow-left"
-                onClick={this.navigateHome}
+                onClick={this.navigate("/")}
               />
 
               <MonthSum
@@ -119,18 +89,14 @@ class Investment extends Component {
                 totalAmount={this.state.totalAmount}
                 title="Investment"
               />
-            </Container>
 
-            <GeneralForm
-              title="Add Investment"
-              handleSubmit={this.handleSubmit}
-              amount={this.state.amount}
-              handleAmountchange={this.handleSelect("amount")}
-              text={this.state.investment}
-              placeholderText="Investment"
-              handleTextChange={this.handleChange("investment")}
-            />
-            <Container>
+              <p
+                style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+                onClick={this.navigate("/investment/new")}
+              >
+                Add Investment
+              </p>
+
               <List
                 loading={this.state.loading}
                 dataSource={this.state.items}

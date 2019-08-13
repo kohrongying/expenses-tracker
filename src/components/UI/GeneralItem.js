@@ -8,6 +8,7 @@ const GeneralItem = ({ item, removeItem }) => (
     actions={[
       <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
     ]}
+    style={{ padding: 10, marginBottom: 6, borderRadius: 10, boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)" }}
   >
     <List.Item.Meta
       avatar={<Avatar size="large" icon="dollar" />}

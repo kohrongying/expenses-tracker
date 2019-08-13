@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { List, message, Icon } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
-import GeneralForm from "../UI/GeneralForm";
 import GeneralItem from "../UI/GeneralItem";
 import { withRouter } from "react-router-dom";
 
@@ -21,8 +20,6 @@ class Income extends Component {
 
   state = {
     loading: true,
-    amount: 0,
-    incomeSource: "",
     items: [],
     totalAmount: 0
   }
@@ -73,35 +70,8 @@ class Income extends Component {
     firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove();
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
-  handleSelect = name => value => {
-    this.setState({ [name]: parseFloat(value) });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const item = {
-      amount: this.state.amount,
-      date: Date.now(),
-      source: this.state.incomeSource,
-    };
-    firebase.database()
-      .ref(`users/${this.props.uid}/${year}/${month}/income`)
-      .push(item)
-      .then(() => {
-        this.setState({
-          amount: 0,
-          incomeSource: "",
-        });
-      })
-      .catch(err => console.error(err));
-  }
-
-  navigateHome = () => {
-    this.props.history.push("/");
+  navigate = (route) => () => {
+    this.props.history.push(route);
   }
 
   render() {
@@ -113,7 +83,7 @@ class Income extends Component {
             <Container>
               <Icon
                 type="arrow-left"
-                onClick={this.navigateHome}
+                onClick={this.navigate("/")}
               />
 
               <MonthSum
@@ -121,19 +91,14 @@ class Income extends Component {
                 totalAmount={this.state.totalAmount}
                 title="Income"
               />
-            </Container>
 
-            <GeneralForm
-              title="Add Income"
-              handleSubmit={this.handleSubmit}
-              amount={this.state.amount}
-              handleAmountchange={this.handleSelect("amount")}
-              text={this.state.incomeSource}
-              placeholderText="Income Source"
-              handleTextChange={this.handleChange("incomeSource")}
-            />
+              <p
+                style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+                onClick={this.navigate("/income/new")}
+              >
+                Add Income
+              </p>
 
-            <Container>
               <List
                 loading={this.state.loading}
                 dataSource={this.state.items}
