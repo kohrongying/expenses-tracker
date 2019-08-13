@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import { InputNumber, Icon, Input, Button, Card, Radio, Row, Col } from "antd";
+import { Form, InputNumber, Icon, Input, Button, Radio, Row, Col, message } from "antd";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import Container from "../UI/Container";
+import Header from "../UI/Header";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -38,6 +41,7 @@ const categories = [
 class AddExpenseForm extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
   }
 
   state = {
@@ -66,99 +70,95 @@ class AddExpenseForm extends Component {
       .ref(`users/${this.props.uid}/${year}/${month}/items`)
       .push(item)
       .then(() => {
+        message.success(`Added $${this.state.amount} successfully`);
         this.setState({
           amount: "",
           remarks: "",
         });
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        message.error("Something went wrong. Please try again.");
+      });
+  }
+
+  navigateHome = () => {
+    this.props.history.push("/");
   }
 
   render() {
     return (
-      <Row>
-        <Col
-          xs={{ span: 23, offset: 1 }}
-          lg={{ span: 22, offset: 2 }}
-        >
+      <Container>
+        <Icon
+          type="arrow-left"
+          onClick={this.navigateHome}
+          style={{ marginTop: 30, }}
+        />
+        <Header title="Add Expense" />
 
-          <Card
-            bordered={false}
-            bodyStyle={{
-              backgroundColor: "#B2EBF2",
-              borderTopLeftRadius: 75,
-              borderBottomLeftRadius: 75,
-            }}
-          >
-            <Row>
-              <Col
-                xs={{ span: 22, offset: 1 }}
-                lg={{ span: 18, offset: 2 }}
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Item>
+            <InputNumber
+              value={this.state.amount}
+              style={{ width: "100%" }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              parser={value => value.replace(/\$\s?|(,*)/g, "")}
+              min={0}
+              onChange={this.handleSelect("amount")}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Input
+              prefix={<Icon type="info-circle" />}
+              placeholder="Remarks"
+              value={this.state.remarks}
+              onChange={this.handleChange("remarks")}
+            />
+          </Form.Item>
+
+          <Row>
+            <Col xs={24}>
+              <Radio.Group
+                size="large"
+                style={{ width: "100%", marginTop: 10, }}
+                value={this.state.category}
+                onChange={this.handleChange("category")}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", }}>
-                  <p>Add Expense</p>
-                  <Button onClick={this.handleSubmit}>
+                {categories.map(option => (
+                  <Radio.Button
+                    key={option.value}
+                    value={option.value}
+                    style={{ width: "25%", textAlign: "center", }}
+                  >
+                    <Icon
+                      style={{ fontSize: 18 }}
+                      type={option.icon}
+                      theme="twoTone"
+                      twoToneColor={option.color}
+                    />
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+            </Col>
+          </Row>
+
+          <Form.Item>
+            <Button
+              disabled={this.state.amount === ""}
+              style={{ marginTop: 30, }}type="primary"
+              htmlType="submit"
+              block
+            >
               Save
-                  </Button>
-                </div>
-
-                <Row gutter={8}>
-                  <Col xs={12}>
-                    <InputNumber
-                      value={this.state.amount}
-                      style={{ width: "100%" }}
-                      formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                      onChange={this.handleSelect("amount")}
-                    />
-                  </Col>
-
-                  <Col xs={12}>
-                    <Input
-                      placeholder="Remarks"
-                      value={this.state.remarks}
-                      onChange={this.handleChange("remarks")}
-                    />
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col xs={24}>
-                    <Radio.Group
-                      size="large"
-                      style={{ width: "100%", marginTop: 10, }}
-                      value={this.state.category}
-                      onChange={this.handleChange("category")}
-                    >
-                      {categories.map(option => (
-                        <Radio.Button
-                          key={option.value}
-                          value={option.value}
-                          style={{ width: "25%", textAlign: "center", }}
-                        >
-                          <Icon
-                            style={{ fontSize: 18 }}
-                            type={option.icon}
-                            theme="twoTone"
-                            twoToneColor={option.color}
-                          />
-                        </Radio.Button>
-                      ))}
-                    </Radio.Group>
-                  </Col>
-                </Row>
-
-              </Col>
-            </Row>
-
-
-          </Card>
-        </Col>
-      </Row>
+            </Button>
+          </Form.Item>
+        </Form>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = state => ({ uid: state.user.uid });
 
-export default connect(mapStateToProps, {})(AddExpenseForm);
+export default connect(mapStateToProps, {})(withRouter(AddExpenseForm));

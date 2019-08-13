@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import AddExpenseForm from "./AddExpenseForm";
 import ExpenseItem from "./ExpenseItem";
 import { List, message } from "antd";
 import Container from "../UI/Container";
@@ -71,8 +70,8 @@ class Expense extends Component {
       });
   }
 
-  navigateHome = () => {
-    this.props.history.push("/");
+  navigate = (route) => () => {
+    this.props.history.push(route);
   }
 
   render(){
@@ -84,7 +83,8 @@ class Expense extends Component {
             <Container>
               <Icon
                 type="arrow-left"
-                onClick={this.navigateHome}
+                onClick={this.navigate("/")}
+                style={{ marginTop: 30, }}
               />
 
               <MonthSum
@@ -92,17 +92,20 @@ class Expense extends Component {
                 totalAmount={this.state.totalAmount}
                 title="Expenses"
               />
-            </Container>
 
-            <AddExpenseForm />
+              <p
+                style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+                onClick={this.navigate("/expenses/new")}
+              >
+                Add Expense
+              </p>
 
-            <Container>
               <List
                 loading={this.state.loading}
                 dataSource={this.state.items}
                 renderItem={item => (
                   <ExpenseItem
-                    key="item"
+                    key={item.id}
                     item={item}
                     removeItem={this.removeItem}
                   />
