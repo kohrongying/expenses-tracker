@@ -1,14 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Typography, Row, Col } from "antd";
+import { Typography } from "antd";
+
 const { Title } = Typography;
 
 const Header = ({ title }) => (
-  <Row>
-    <Col>
-      <Title style={{ marginTop: 30 }}>{title}</Title>
-    </Col>
-  </Row>
+  <Title level={2} style={{ marginTop: 30 }}>{title}</Title>
 );
 
 Header.propTypes = {

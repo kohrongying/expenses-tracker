@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import AddExpenseForm from "./AddExpenseForm";
 import ExpenseItem from "./ExpenseItem";
 import { List, message } from "antd";
 import Container from "../UI/Container";
@@ -71,43 +70,54 @@ class Expense extends Component {
       });
   }
 
-  navigateHome = () => {
-    this.props.history.push("/");
+  navigate = (route) => () => {
+    this.props.history.push(route);
   }
 
   render(){
-    return this.props.uid ?
-      <React.Fragment>
-        <div style={{ height: "70%", overflow: "auto" }}>
-          <Container>
-            <Icon
-              type="arrow-left"
-              onClick={this.navigateHome}
-            />
+    return (
+      <div>
+        {this.props.uid ?
+          <React.Fragment>
 
-            <MonthSum
-              loading={this.state.loading}
-              totalAmount={this.state.totalAmount}
-              title="Expenses"
-            />
-          </Container>
-          <List
-            loading={this.state.loading}
-            dataSource={this.state.items}
-            renderItem={item => (
-              <ExpenseItem
-                key="item"
-                item={item}
-                removeItem={this.removeItem}
+            <Container>
+              <Icon
+                type="arrow-left"
+                onClick={this.navigate("/")}
+                style={{ marginTop: 30, }}
               />
-            )}
-          />
-        </div>
-        <AddExpenseForm />
-      </React.Fragment>
-      :
-      <p>You must be logged in.</p>;
 
+              <MonthSum
+                loading={this.state.loading}
+                totalAmount={this.state.totalAmount}
+                title="Expenses"
+              />
+
+              <p
+                style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+                onClick={this.navigate("/expenses/new")}
+              >
+                Add Expense
+              </p>
+
+              <List
+                loading={this.state.loading}
+                dataSource={this.state.items}
+                renderItem={item => (
+                  <ExpenseItem
+                    key={item.id}
+                    item={item}
+                    removeItem={this.removeItem}
+                  />
+                )}
+              />
+            </Container>
+          </React.Fragment>
+          :
+          <p>You must be logged in.</p>
+        }
+      </div>
+    );
   }
 }
 

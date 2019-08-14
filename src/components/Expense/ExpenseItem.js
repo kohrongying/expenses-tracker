@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
-import { List, Avatar, Icon, Row, Col } from "antd";
+import { List, Avatar, Icon } from "antd";
 
 const ItemIcon = (category) => {
   switch (category) {
@@ -18,33 +18,28 @@ const ItemIcon = (category) => {
   }
 };
 
-const Expense = ({ item, removeItem }) => (
-  <Row style={{ backgroundColor: "white", marginBottom: 6 }}>
-    <Col
-      xs={{ span: 20, offset: 2 }}
-      lg={{ span: 16, offset: 4 }}
-    >
-      <List.Item
-        actions={[
-          <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
-        ]}
-      >
-        <List.Item.Meta
-          avatar={ItemIcon(item.category)}
-          title={item.remarks ? item.remarks : item.category}
-          description={(new Date(item.date)).toDateString()}
-        />
-        <div>
-          {`S$ ${formatNumber(item.amount)}`}
-        </div>
-      </List.Item>
-    </Col>
-  </Row>
+const Expense = ({ dashboard, item, removeItem }) => (
+  <List.Item
+    actions={dashboard ? null : [
+      <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
+    ]}
+    style={{ padding: 10, marginBottom: 6, borderRadius: 10, boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)" }}
+  >
+    <List.Item.Meta
+      avatar={ItemIcon(item.category)}
+      title={item.remarks ? item.remarks : item.category}
+      description={(new Date(item.date)).toDateString()}
+    />
+    <div>
+      {`S$ ${formatNumber(item.amount)}`}
+    </div>
+  </List.Item>
 );
 
 Expense.propTypes = {
+  dashboard: PropTypes.bool,
   item: PropTypes.object.isRequired,
-  removeItem: PropTypes.func.isRequired,
+  removeItem: PropTypes.func,
 };
 
 export default Expense;

@@ -124,7 +124,10 @@ class Profile extends Component {
 
   logout = () => {
     firebase.auth().signOut()
-      .then(() => this.props.logout() );
+      .then(() => {
+        this.props.logout();
+        this.props.history.push("/");
+      });
   }
 
   render() {

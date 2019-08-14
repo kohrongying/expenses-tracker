@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import { InputNumber, Icon, Input, Button, Radio, Row, Col } from "antd";
+import { Form, InputNumber, Icon, Input, Button, Radio, Row, Col, message } from "antd";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import Container from "../UI/Container";
+import Header from "../UI/Header";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -38,6 +41,7 @@ const categories = [
 class AddExpenseForm extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
   }
 
   state = {
@@ -66,47 +70,52 @@ class AddExpenseForm extends Component {
       .ref(`users/${this.props.uid}/${year}/${month}/items`)
       .push(item)
       .then(() => {
+        message.success(`Added $${this.state.amount} successfully`);
         this.setState({
           amount: "",
           remarks: "",
         });
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        message.error("Something went wrong. Please try again.");
+      });
+  }
+
+  navigateHome = () => {
+    this.props.history.push("/");
   }
 
   render() {
     return (
-      <Row style={{ position: "absolute", bottom: 0, left: 0, right: 0,height: "30%", backgroundColor: "white", paddingTop: 30, paddingBottom: 35, boxShadow: "rgba(174, 174, 174, 0.5) 1px 0 14px 2px", zIndex: 999, borderRadius: "30px 30px 0 0" }}>
-        <Col
-          xs={{ span: 20, offset: 2 }}
-          lg={{ span: 16, offset: 4 }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", }}>
-            <p>Add Expense</p>
-            <Button onClick={this.handleSubmit}>
-              Save
-            </Button>
-          </div>
+      <Container>
+        <Icon
+          type="arrow-left"
+          onClick={this.navigateHome}
+          style={{ marginTop: 30, }}
+        />
+        <Header title="Add Expense" />
 
-          <Row gutter={8}>
-            <Col xs={12}>
-              <InputNumber
-                value={this.state.amount}
-                style={{ width: "100%" }}
-                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                onChange={this.handleSelect("amount")}
-              />
-            </Col>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Item>
+            <InputNumber
+              value={this.state.amount}
+              style={{ width: "100%" }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              parser={value => value.replace(/\$\s?|(,*)/g, "")}
+              min={0}
+              onChange={this.handleSelect("amount")}
+            />
+          </Form.Item>
 
-            <Col xs={12}>
-              <Input
-                placeholder="Remarks"
-                value={this.state.remarks}
-                onChange={this.handleChange("remarks")}
-              />
-            </Col>
-          </Row>
+          <Form.Item>
+            <Input
+              prefix={<Icon type="info-circle" />}
+              placeholder="Remarks"
+              value={this.state.remarks}
+              onChange={this.handleChange("remarks")}
+            />
+          </Form.Item>
 
           <Row>
             <Col xs={24}>
@@ -134,13 +143,22 @@ class AddExpenseForm extends Component {
             </Col>
           </Row>
 
-        </Col>
-      </Row>
-
+          <Form.Item>
+            <Button
+              disabled={this.state.amount === ""}
+              style={{ marginTop: 30, }}type="primary"
+              htmlType="submit"
+              block
+            >
+              Save
+            </Button>
+          </Form.Item>
+        </Form>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = state => ({ uid: state.user.uid });
 
-export default connect(mapStateToProps, {})(AddExpenseForm);
+export default connect(mapStateToProps, {})(withRouter(AddExpenseForm));

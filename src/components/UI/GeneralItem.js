@@ -1,31 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
-import { List, Avatar, Icon, Row, Col, } from "antd";
+import { List, Avatar, Icon } from "antd";
 
 const GeneralItem = ({ item, removeItem }) => (
-  <Row style={{ backgroundColor: "white", marginBottom: 6 }}>
-    <Col
-      xs={{ span: 20, offset: 2 }}
-      lg={{ span: 16, offset: 4 }}
-    >
-      <List.Item
-        actions={[
-          <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
-        ]}
-      >
-        <List.Item.Meta
-          avatar={<Avatar size="large" icon="dollar" />}
-          title={item.source}
-          style={{ alignItems: "center" }}
-        />
+  <List.Item
+    actions={[
+      <Icon key="delete" type="delete" onClick={removeItem(item.id)} />
+    ]}
+    style={{ padding: 10, marginBottom: 6, borderRadius: 10, boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)" }}
+  >
+    <List.Item.Meta
+      avatar={<Avatar size="large" icon="dollar" />}
+      title={item.source}
+      style={{ alignItems: "center" }}
+    />
 
-        <div>{`S$ ${formatNumber(item.amount)}`}</div>
+    <div>{`S$ ${formatNumber(item.amount)}`}</div>
 
-      </List.Item>
-
-    </Col>
-  </Row>
+  </List.Item>
 );
 
 GeneralItem.propTypes = {
