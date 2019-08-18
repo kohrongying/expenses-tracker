@@ -86,7 +86,7 @@ class Dashboard extends Component {
 
   render() {
     const marks = {
-      100: `$${this.state.expenseBudget}`,
+      [this.state.expenseBudget]: `$${this.state.expenseBudget}`
     };
     return (
       <React.Fragment>
