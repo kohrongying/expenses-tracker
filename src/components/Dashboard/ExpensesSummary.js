@@ -88,9 +88,9 @@ class ExpensesSummary extends Component {
       datasets: [
         {
           label: "Expenses",
-          backgroundColor: "#ff85c0",
+          backgroundColor: "#00d3ba",
           borderWidth: 1,
-          hoverBackgroundColor: "#ff85c0",
+          hoverBackgroundColor: "#00d3ba",
           data: this.state.months
         }
       ]
@@ -108,7 +108,7 @@ class ExpensesSummary extends Component {
             yAxes: [{
               ticks: {
                 beginAtZero: true,
-                stepSize: 40,
+                stepSize: 60,
                 gridlines: { show: false }
               }
             }],
