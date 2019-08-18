@@ -48,7 +48,7 @@ class Income extends Component {
   }
 
   copyMonthlyIncome = () => {
-    firebase.database().ref(`users/${this.props.uid}/monthlyIncome`)
+    firebase.database().ref(`users/${this.props.uid}/profile/monthlyIncome`)
       .once("value")
       .then(snapshot => {
         if (snapshot.exists()) {

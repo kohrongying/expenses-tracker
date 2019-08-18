@@ -46,7 +46,7 @@ class Investment extends Component {
   }
 
   copyMonthlyInvestment = () => {
-    firebase.database().ref(`users/${this.props.uid}/monthlyInvestments`)
+    firebase.database().ref(`users/${this.props.uid}/profile/monthlyInvestments`)
       .once("value")
       .then(snapshot => {
         if (snapshot.exists()) {
