@@ -8,3 +8,14 @@ body {
 #root {
   height: 100vh!important;
 }
+
+.ant-slider-rail {
+  background-color: white!important;
+}
+
+.ant-slider-track {
+  background-color: grey!important;
+}
+.ant-slider-handle {
+  display: none!important;
+}

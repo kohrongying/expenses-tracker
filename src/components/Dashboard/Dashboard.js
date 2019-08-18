@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Row, Col, Icon, List } from "antd";
+import { Row, Col, Icon, List, Slider } from "antd";
 import firebase from "firebase/app";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
@@ -15,13 +15,12 @@ const month = new Date().getMonth();
 const NAVBAR = [
 
   { url: "/expenses", label: "Expenses", icon: "dashboard", color: "#ff85c0" },
-  // { url: "/history", label: "History", icon: "history", color: "#5cdbd3" },
   { url: "/income", label: "Income", icon: "dollar", color: "#597ef7" },
   { url: "/investment", label: "Investment", icon: "bank", color: "#ffd666" },
   { url: "/profile", label: "Profile", icon: "user", color: "#5cdbd3" },
   { url: "/expenses/new", label: "Add Expense", icon: "plus-circle", color: "#ff85c0" },
   { url: "/income/new", label: "Add Income", icon: "plus-circle", color: "#ff85c0" },
-  { url: "/investment/new", label: "Add Budget", icon: "plus-circle", color: "#ff85c0" },
+  { url: "/profile", label: "Add Budget", icon: "plus-circle", color: "#ff85c0" },
 ];
 
 
@@ -36,10 +35,12 @@ class Dashboard extends Component {
     expenses: [],
     totalExpense: 0,
     loading: true,
+    expenseBudget: 0,
   }
 
   componentDidMount() {
     this.getExpenses();
+    this.getBudget();
   }
 
   linkTo = url => () => {
@@ -72,13 +73,36 @@ class Dashboard extends Component {
       .catch(err => console.error(err));
   }
 
+  getBudget = () =>{
+    firebase.database()
+      .ref(`/users/${this.props.uid}/profile/expenseBudget`)
+      .once("value", snapshot => {
+        if (snapshot.exists()) {
+          this.setState({ expenseBudget: snapshot.val() });
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
+    const marks = {
+      100: `$${this.state.expenseBudget}`,
+    };
     return (
       <React.Fragment>
         <Container>
           <Header title="Dashboard" />
-          <p style={{ marginBottom: 0 }}>Expenses</p>
-          <h5>S$ {this.state.totalExpense.toFixed(2)}</h5>
+          <h6 style={{ marginBottom: 0 }}>Expenses</h6>
+          <Row type="flex" align="middle">
+            <Col xs={9}>
+              <h4>$ {this.state.totalExpense.toFixed(2)}</h4>
+            </Col>
+            <Col xs={15}>
+              {this.state.expenseBudget > 0 &&
+                <Slider value={Math.min(this.state.expenseBudget, this.state.totalExpense)} max={this.state.expenseBudget} tooltipVisible={false} marks={marks}/>
+              }
+            </Col>
+          </Row>
 
           <Row gutter={16}
             style={{ marginTop: 20, padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
@@ -102,7 +126,7 @@ class Dashboard extends Component {
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>
-            <p onClick={this.linkTo("/expenses")}>View All</p>
+            <p style={{ marginBottom: 8 }} onClick={this.linkTo("/expenses")}>View All</p>
           </div>
           <List
             loading={this.state.loading}
