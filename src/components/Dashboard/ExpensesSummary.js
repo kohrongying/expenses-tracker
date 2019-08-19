@@ -7,6 +7,7 @@ import { Bar } from "react-chartjs-2";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 class ExpensesSummary extends Component {
   static propTypes = {
@@ -15,12 +16,15 @@ class ExpensesSummary extends Component {
 
   state = {
     months: [],
+    monthLabels: [],
   }
 
   componentDidMount() {
+    let months = [];
+    let monthLabels = [];
+
     // If May or earlier
     if (month <= 4) {
-      let months = [];
       this.getMonths(year, month+1).then(snapshot => {
         if (snapshot.exists()) {
           const result = snapshot.val();
@@ -31,6 +35,7 @@ class ExpensesSummary extends Component {
             } else {
               months.push(0);
             }
+            monthLabels.push(monthNames[i]);
           }
           const remainingMonths = 6 - month - 1;
           this.getMonths(year-1, remainingMonths).then(snapshot => {
@@ -43,8 +48,9 @@ class ExpensesSummary extends Component {
                 } else {
                   months.unshift(0);
                 }
+                monthLabels.push(monthNames[i]);
               }
-              this.setState({ months });
+              this.setState({ months, monthLabels });
             }
           });
         }
@@ -52,7 +58,6 @@ class ExpensesSummary extends Component {
 
     } else {
       this.getMonths(year, 6).then(snapshot => {
-        let months = [];
         if (snapshot.exists()) {
           const result = snapshot.val();
           for (let i = month-6+1; i <= month; i ++) {
@@ -62,8 +67,9 @@ class ExpensesSummary extends Component {
             } else {
               months.push(0);
             }
+            monthLabels.push(monthNames[i]);
           }
-          this.setState({ months });
+          this.setState({ months, monthLabels });
         }
       });
     }
@@ -77,14 +83,15 @@ class ExpensesSummary extends Component {
   }
 
   getTotalExpense = (items) => {
-    return Object.values(items)
+    const totalExp = Object.values(items)
       .map(item => item.amount)
       .reduce((accumulator, curr) => accumulator + curr, 0);
+    return parseFloat(totalExp.toFixed(2));
   }
 
   render() {
     const barData = {
-      labels: [0, 1, 2, 3, 4, 5],
+      labels: this.state.monthLabels,
       datasets: [
         {
           label: "Expenses",
@@ -108,7 +115,7 @@ class ExpensesSummary extends Component {
             yAxes: [{
               ticks: {
                 beginAtZero: true,
-                stepSize: 60,
+                stepSize: 75,
                 gridlines: { show: false }
               }
             }],
