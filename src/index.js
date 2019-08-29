@@ -9,8 +9,11 @@ import reducers from "./reducers";
 import "./index.css";
 import "antd/dist/antd.css";
 import * as serviceWorker from "./serviceWorker";
+import * as Sentry from "@sentry/browser";
 
 let store = createStore(reducers, applyMiddleware(thunk));
+
+Sentry.init({ dsn: "https://a875dec620d14f6b8b364f5da2db8569@sentry.io/1545494" });
 
 ReactDOM.render((
   <Provider store={store}>
