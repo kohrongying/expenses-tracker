@@ -83,10 +83,13 @@ class ExpensesSummary extends Component {
   }
 
   getTotalExpense = (items) => {
-    const totalExp = Object.values(items)
-      .map(item => item.amount)
-      .reduce((accumulator, curr) => accumulator + curr, 0);
-    return parseFloat(totalExp.toFixed(2));
+    if (items) {
+      const totalExp = Object.values(items)
+        .map(item => item.amount)
+        .reduce((accumulator, curr) => accumulator + curr, 0);
+      return parseFloat(totalExp.toFixed(2));
+    }
+    return 0;
   }
 
   render() {
