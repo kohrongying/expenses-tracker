@@ -3,12 +3,11 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import ExpenseItem from "./ExpenseItem";
-import { List, message } from "antd";
+import { withRouter } from "react-router-dom";
+import { List, message, Icon, Button } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
-import { withRouter } from "react-router-dom";
-import { Icon } from "antd";
+import ExpenseItem from "./ExpenseItem";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -93,12 +92,14 @@ class Expense extends Component {
                 title="Expenses"
               />
 
-              <p
-                style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+              <Button
+                block
+                type="link"
+                style={{ marginTop: 30, marginBottom: 20, color: "black" }}
                 onClick={this.navigate("/expenses/new")}
               >
                 Add Expense
-              </p>
+              </Button>
 
               <List
                 loading={this.state.loading}

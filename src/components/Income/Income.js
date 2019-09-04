@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import { List, message, Icon } from "antd";
+import { List, message, Icon, Button } from "antd";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import GeneralItem from "../UI/GeneralItem";
@@ -89,12 +89,14 @@ class Income extends Component {
             title="Income"
           />
 
-          <p
-            style={{ marginTop: 30, marginBottom: 20, textAlign: "center" }}
+          <Button
+            block
+            type="link"
+            style={{ marginTop: 30, marginBottom: 20, color: "black" }}
             onClick={this.navigate("/income/new")}
           >
                 Add Income
-          </p>
+          </Button>
 
           <List
             loading={this.state.loading}
