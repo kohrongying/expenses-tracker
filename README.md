@@ -1,25 +1,19 @@
-[Site](http://imma-save-more-money.netlify.com/) is live! You can track your expenses, income (and soon investments!) here :) 
+[Expense Tracker Site](http://imma-save-more-money.netlify.com/) is live! You can track your expenses, income and investments here.
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) and utilizes [Ant Design](https://ant.design/) UI Framework.
 
-### todo:
-- [x] Expenses - add payment form
-- [x] Material UI - Lists for expense list
-- [x] Home - group by card or cash 
-- [x] Material UI - Chip for card/cash
-- [x] Material UI - Expansion Panel for History
-- [x] By Month - show detailed breakdown of expenses, savings and investments (pie chart) of each month
-- [x] By Month - show bar graph of expenses by category
-- [x] By Year - show graph of expenses across months (and categories)
-- [x] Income - add monthly and extra income 
-- [x] Investments - add monthly and extra investments 
 
-Tutorial: https://css-tricks.com/intro-firebase-react/
- 
-### To deploy: 
-git push to master and it will trigger a build on netlify 
-Deploys to netlify automatically.
+### Project Architecture
+- ReactJS Frontend and Backend
+- Firebase Real Time Database
+- Deployment, CI/CD: Netlify (Commit to push will trigger build on netlify)
 
 ### Updates to UI 
-![Pic1](img1.png)
+Changed from Google's Material UI theme to Ant Design, with a focus on mobile first. [Read more here.](https://blog.rongying.co/babble/2019/08/23/Revisiting-Expense-Tracker/)
 
+![old](ui-old.png)
+###### Old design was a bit tacky but I put up with it cos it was still functional xD
+
+
+![new](ui-new.png)
+###### New design! Hopefully it will last longer.
