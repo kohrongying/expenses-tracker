@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Row, Col, Icon, List, Slider } from "antd";
+import { Row, Col, Icon, List, Slider, Button } from "antd";
 import firebase from "firebase/app";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
@@ -68,6 +68,8 @@ class Dashboard extends Component {
             totalExpense,
             loading: false,
           });
+        } else {
+          this.setState({ loading: false, expenses: []});
         }
       })
       .catch(err => console.error(err));
@@ -110,7 +112,7 @@ class Dashboard extends Component {
               <Col xs={6} key={nav.label}>
                 <div
                   onClick={this.linkTo(nav.url)}
-                  style={{ marginBottom: 10, }}
+                  style={{ marginBottom: 10, cursor: "pointer" }}
                 >
                   <Icon type={nav.icon} />
                   <div style={{ fontSize: 12 }}>{nav.label}</div>
@@ -126,7 +128,7 @@ class Dashboard extends Component {
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>
-            <p style={{ marginBottom: 8 }} onClick={this.linkTo("/expenses")}>View All</p>
+            <Button type="link" style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }} onClick={this.linkTo("/expenses")}>View All</Button>
           </div>
           <List
             loading={this.state.loading}
