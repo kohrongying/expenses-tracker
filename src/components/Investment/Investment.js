@@ -54,7 +54,7 @@ class Investment extends Component {
           return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`)
             .update(investmentItems);
         } else {
-          this.setState({ loading: false });
+          this.setState({ loading: false, items: [], totalAmount: 0 });
         }
       })
       .catch(err => message.error(err));
