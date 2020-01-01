@@ -26,34 +26,30 @@ class ExpensesSummary extends Component {
     // If May or earlier
     if (month <= 4) {
       this.getMonths(year, month+1).then(snapshot => {
-        if (snapshot.exists()) {
-          const result = snapshot.val();
-          for (let i = 0; i < month + 1; i ++) {
-            if (i in result) {
-              const totalExpense = this.getTotalExpense(result[i].items);
-              months.push(totalExpense);
-            } else {
-              months.push(0);
-            }
-            monthLabels.push(monthNames[i]);
+        const result = snapshot.val();
+        for (let i = 0; i < month + 1; i ++) {
+          if (result && i in result) {
+            const totalExpense = this.getTotalExpense(result[i].items);
+            months.push(totalExpense);
+          } else {
+            months.push(0);
           }
-          const remainingMonths = 6 - month - 1;
-          this.getMonths(year-1, remainingMonths).then(snapshot => {
-            if (snapshot.exists()) {
-              const result = snapshot.val();
-              for (let i = 11 ; i >= 12 - remainingMonths; i --) {
-                if (i in result) {
-                  const totalExpense = this.getTotalExpense(result[i].items);
-                  months.unshift(totalExpense);
-                } else {
-                  months.unshift(0);
-                }
-                monthLabels.push(monthNames[i]);
-              }
-              this.setState({ months, monthLabels });
-            }
-          });
+          monthLabels.push(`${monthNames[i]} ${year}`);
         }
+        const remainingMonths = 6 - month - 1;
+        this.getMonths(year-1, remainingMonths).then(snapshot => {
+          const result = snapshot.val();
+          for (let i = 11 ; i >= 12 - remainingMonths; i --) {
+            if (result && i in result) {
+              const totalExpense = this.getTotalExpense(result[i].items);
+              months.unshift(totalExpense);
+            } else {
+              months.unshift(0);
+            }
+            monthLabels.unshift(`${monthNames[i]} ${year-1}`);
+          }
+          this.setState({ months, monthLabels });
+        });
       });
 
     } else {
