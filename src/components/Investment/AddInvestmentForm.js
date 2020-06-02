@@ -11,40 +11,22 @@ const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
 class AddinvestmentForm extends Component {
+  formRef = React.createRef();
+
   static propTypes = {
     uid: PropTypes.string.isRequired,
     history: PropTypes.object.isRequired,
   }
 
-  state = {
-    amount: "",
-    investmentSource: ""
-  }
+  handleSubmit = (values) => {
+    values.date = Date.now();
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
-  handleSelect = name => value => {
-    this.setState({ [name]: value });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const item = {
-      amount: this.state.amount,
-      date: Date.now(),
-      source: this.state.investmentSource,
-    };
     firebase.database()
       .ref(`users/${this.props.uid}/${year}/${month}/investments`)
-      .push(item)
+      .push(values)
       .then(() => {
-        message.success(`Added $${this.state.amount} to investment successfully`);
-        this.setState({
-          amount: "",
-          investmentSource: "",
-        });
+        message.success(`Added $${values.amount} to investment successfully`);
+        this.formRef.current.resetFields();
       })
       .catch(err => {
         console.error(err);
@@ -59,14 +41,11 @@ class AddinvestmentForm extends Component {
   render() {
     return (
       <GeneralForm
+        formRef={this.formRef}
         navigateHome={this.navigateHome}
         title="Add Investment"
         handleSubmit={this.handleSubmit}
-        amount={this.state.amount}
-        handleAmountchange={this.handleSelect("amount")}
-        text={this.state.investmentSource}
         placeholderText="Investment Source"
-        handleTextChange={this.handleChange("investmentSource")}
       />
 
     );

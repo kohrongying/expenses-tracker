@@ -2,27 +2,28 @@ import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
 import { List, Avatar } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, RestOutlined, CarOutlined, ShoppingOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import Colors from "../../constants/Colors";
 
 const ItemIcon = (category) => {
   switch (category) {
   case "Food":
-    return <Avatar size="large" icon="rest" style={{ backgroundColor: "#ff85c0" }} />;
+    return <Avatar size="large" icon={<RestOutlined />} style={{ backgroundColor: Colors.pink }} />;
   case "Transport":
-    return <Avatar size="large" icon="car" style={{ backgroundColor: "#5cdbd3" }} />;
+    return <Avatar size="large" icon={<CarOutlined />} style={{ backgroundColor: Colors.green }} />;
   case "Movie":
-    return <Avatar size="large" icon="play-square"style={{ backgroundColor: "#597ef7" }}  />;
+    return <Avatar size="large" icon={<PlayCircleOutlined />} style={{ backgroundColor: Colors.blue }}  />;
   case "Other":
-    return <Avatar size="large" icon="shopping" style={{ backgroundColor: "#ffd666" }} />;
+    return <Avatar size="large" icon={<ShoppingOutlined />} style={{ backgroundColor: Colors.yellow }} />;
   default:
-    return <Avatar size="large" icon="rest" style={{ backgroundColor: "#ff85c0" }} />;
+    return <Avatar size="large" icon={<RestOutlined />} style={{ backgroundColor: Colors.pink }} />;
   }
 };
 
 const Expense = ({ dashboard, item, removeItem }) => (
   <List.Item
     actions={dashboard ? null : [
-      <DeleteOutlined type="delete" onClick={removeItem(item.id)} />
+      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeItem(item.id)} />
     ]}
     style={{ padding: 10, marginBottom: 6, borderRadius: 10, boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)" }}
   >

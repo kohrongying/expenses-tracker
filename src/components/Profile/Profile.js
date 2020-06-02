@@ -189,7 +189,7 @@ class Profile extends Component {
                 renderItem={item => (
                   <List.Item
                     actions={[
-                      <DeleteOutlined type="delete" onClick={this.removeIncome(item.id)} />
+                      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={this.removeIncome(item.id)} />
                     ]}
                   >
                     <List.Item.Meta
@@ -213,7 +213,7 @@ class Profile extends Component {
                 renderItem={item => (
                   <List.Item
                     actions={[
-                      <DeleteOutlined type="delete" onClick={this.removeInvestment(item.id)}/>
+                      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={this.removeInvestment(item.id)}/>
                     ]}
                   >
                     <List.Item.Meta

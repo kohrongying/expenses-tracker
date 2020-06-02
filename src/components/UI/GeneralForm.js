@@ -9,11 +9,8 @@ const GeneralForm = ({
   navigateHome,
   title,
   handleSubmit,
-  amount,
-  handleAmountchange,
-  text,
   placeholderText,
-  handleTextChange,
+  formRef,
 }) => (
   <Container>
 
@@ -23,29 +20,44 @@ const GeneralForm = ({
     />
     <Header title={title} />
 
-    <Form onSubmit={handleSubmit}>
-      <Form.Item>
+    <Form
+      wrapperCol={{ span: 24 }}
+      onFinish={handleSubmit}
+      ref={formRef}
+    >
+      <Form.Item
+        name="amount"
+        rules={[
+          {
+            required: true,
+            message: "Please input the amount"
+          }
+        ]}
+      >
         <InputNumber
-          value={amount}
           style={{ width: "100%" }}
           formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={handleAmountchange}
         />
       </Form.Item>
 
-      <Form.Item>
+      <Form.Item
+        name="source"
+        rules={[
+          {
+            required: true,
+            message: "Please input the source"
+          }
+        ]}
+      >
         <Input
           prefix={<InfoCircleOutlined />}
           placeholder={placeholderText}
-          value={text}
-          onChange={handleTextChange}
         />
       </Form.Item>
 
       <Form.Item>
         <Button
-          disabled={amount === ""}
           type="primary"
           htmlType="submit"
           block
@@ -61,11 +73,8 @@ GeneralForm.propTypes = {
   navigateHome: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  handleAmountchange: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
   placeholderText: PropTypes.string.isRequired,
-  handleTextChange: PropTypes.func.isRequired,
+  formRef: PropTypes.any.isRequired,
 };
 
 export default GeneralForm;

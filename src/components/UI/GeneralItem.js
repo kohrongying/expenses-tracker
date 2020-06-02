@@ -2,17 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
 import { List, Avatar } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, DollarOutlined } from "@ant-design/icons";
 
 const GeneralItem = ({ item, removeItem }) => (
   <List.Item
     actions={[
-      <DeleteOutlined type="delete" onClick={removeItem(item.id)} />
+      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeItem(item.id)} />
     ]}
     style={{ padding: 10, marginBottom: 6, borderRadius: 10, boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)" }}
   >
     <List.Item.Meta
-      avatar={<Avatar size="large" icon="dollar" />}
+      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
       title={item.source}
       style={{ alignItems: "center" }}
     />
