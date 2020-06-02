@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { InputNumber, Input, Button, Form } from "antd";
-import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import Container from "./Container";
 import Header from "./Header";
 
@@ -18,9 +18,9 @@ const GeneralForm = ({
   <Container>
 
     <ArrowLeftOutlined
-                onClick={navigateHome}
-                style={{ marginTop: 30 }}
-              />
+      onClick={navigateHome}
+      style={{ marginTop: 30 }}
+    />
     <Header title={title} />
 
     <Form onSubmit={handleSubmit}>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import { Form, InputNumber, Input, Button, Radio, Row, Col, message } from "antd";
+import { Form, InputNumber, Input, Button, Radio, message } from "antd";
 import { ArrowLeftOutlined, InfoCircleOutlined, RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
@@ -45,7 +45,7 @@ class AddExpenseForm extends Component {
   }
 
   handleSubmit = (values) => {
-    values.date = Date.now()
+    values.date = Date.now();
 
     firebase.database()
       .ref(`users/${this.props.uid}/${year}/${month}/items`)
@@ -74,10 +74,10 @@ class AddExpenseForm extends Component {
 
         <Header title="Add Expense" />
 
-        <Form 
-          wrapperCol={{span: 24}}
+        <Form
+          wrapperCol={{ span: 24 }}
           onFinish={this.handleSubmit}
-          initialValues={{ remarks: "", category: ""}}
+          initialValues={{ remarks: "", category: "" }}
           ref={this.formRef}
         >
           <Form.Item
@@ -106,16 +106,16 @@ class AddExpenseForm extends Component {
 
           <Form.Item name="category">
             <Radio.Group style={{ width: "100%" }}>
-                {categories.map(option => (
-                  <Radio.Button
-                    key={option.value}
-                    value={option.value}
-                    style={{ width: "25%", textAlign: "center" }}
-                  >
-                    {option.icon}
-                  </Radio.Button>
-                ))}
-              </Radio.Group>
+              {categories.map(option => (
+                <Radio.Button
+                  key={option.value}
+                  value={option.value}
+                  style={{ width: "25%", textAlign: "center" }}
+                >
+                  {option.icon}
+                </Radio.Button>
+              ))}
+            </Radio.Group>
           </Form.Item>
 
           <Form.Item>

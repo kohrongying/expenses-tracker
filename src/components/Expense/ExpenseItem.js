@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
 import { List, Avatar } from "antd";
-import { DeleteOutlined } from "@ant-design/icons"
+import { DeleteOutlined } from "@ant-design/icons";
 
 const ItemIcon = (category) => {
   switch (category) {

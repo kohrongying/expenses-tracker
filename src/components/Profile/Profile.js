@@ -6,7 +6,7 @@ import "firebase/auth";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
-import { ArrowLeftOutlined, EditOutlined, PlusCircleOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, EditOutlined, PlusCircleOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
 import { logout } from "../../actions";
 import { formatNumber } from "../../helpers/common";
@@ -145,8 +145,8 @@ class Profile extends Component {
       <React.Fragment>
         <Container>
           <ArrowLeftOutlined
-                onClick={this.navigateHome}
-              />
+            onClick={this.navigateHome}
+          />
           <h3 style={{ paddingTop: 20 }}>Profile</h3>
 
           <Row type="flex" justify="center">

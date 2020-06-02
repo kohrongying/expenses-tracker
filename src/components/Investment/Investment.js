@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
 import { List, message, Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import GeneralItem from "../UI/GeneralItem";
@@ -79,8 +79,8 @@ class Investment extends Component {
 
         <Container>
           <ArrowLeftOutlined
-                onClick={this.navigate("/")}
-              />
+            onClick={this.navigate("/")}
+          />
 
           <MonthSum
             loading={this.state.loading}

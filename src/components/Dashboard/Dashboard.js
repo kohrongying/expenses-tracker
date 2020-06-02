@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col, List, Slider, Button } from "antd";
-import { DashboardOutlined, DollarOutlined, BankOutlined, UserOutlined, PlusCircleOutlined } from "@ant-design/icons"
+import { DashboardOutlined, DollarOutlined, BankOutlined, UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import firebase from "firebase/app";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
