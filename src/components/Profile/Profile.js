@@ -5,7 +5,8 @@ import "firebase/database";
 import "firebase/auth";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Button, Icon, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
+import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
+import { ArrowLeftOutlined, EditOutlined, PlusCircleOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons"
 import Container from "../UI/Container";
 import { logout } from "../../actions";
 import { formatNumber } from "../../helpers/common";
@@ -143,15 +144,14 @@ class Profile extends Component {
     return (
       <React.Fragment>
         <Container>
-          <Icon
-            type="arrow-left"
-            onClick={this.navigateHome}
-          />
+          <ArrowLeftOutlined
+                onClick={this.navigateHome}
+              />
           <h3 style={{ paddingTop: 20 }}>Profile</h3>
 
           <Row type="flex" justify="center">
             <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
-              <Icon type="user" style={{ fontSize: 60 }}  />
+              <UserOutlined style={{ fontSize: 60 }}  />
             </Col>
           </Row>
 
@@ -162,14 +162,14 @@ class Profile extends Component {
             <Panel
               header="Budget"
               key="1"
-              extra={this.state.expenseBudget==="" ? <Icon type="plus" onClick={this.showBudgetModal(true)} /> : <Icon type="edit" onClick={this.showBudgetModal(true)} /> }
+              extra={this.state.expenseBudget==="" ? <PlusOutlined onClick={this.showBudgetModal(true)} /> : <EditOutlined onClick={this.showBudgetModal(true)} /> }
             >
               <List
                 dataSource={[this.state.expenseBudget]}
                 renderItem={item => (
                   <List.Item>
                     <List.Item.Meta
-                      avatar={<Avatar size="large" icon="dollar" />}
+                      avatar={<Avatar size="large" icon={<UserOutlined />} />}
                       title="Budget"
                       style={{ alignItems: "center" }}
                     />
@@ -182,14 +182,14 @@ class Profile extends Component {
             <Panel
               header="Recurring Income"
               key="2"
-              extra={<Icon type="plus" onClick={this.showModalIncome} />}
+              extra={<PlusOutlined onClick={this.showModalIncome}/>}
             >
               <List
                 dataSource={this.state.income}
                 renderItem={item => (
                   <List.Item
                     actions={[
-                      <Icon key="delete" type="delete" onClick={this.removeIncome(item.id)} />
+                      <DeleteOutlined type="delete" onClick={this.removeIncome(item.id)} />
                     ]}
                   >
                     <List.Item.Meta
@@ -206,14 +206,14 @@ class Profile extends Component {
             <Panel
               header="Recurring investments"
               key="3"
-              extra={<Icon type="plus" onClick={this.showModalInvestment} />}
+              extra={<PlusCircleOutlined onClick={this.showModalInvestment} />}
             >
               <List
                 dataSource={this.state.investments}
                 renderItem={item => (
                   <List.Item
                     actions={[
-                      <Icon key="delete" type="delete" onClick={this.removeInvestment(item.id)} />
+                      <DeleteOutlined type="delete" onClick={this.removeInvestment(item.id)}/>
                     ]}
                   >
                     <List.Item.Meta

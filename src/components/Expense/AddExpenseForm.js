@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import { Form, InputNumber, Icon, Input, Button, Radio, Row, Col, message } from "antd";
+import { Form, InputNumber, Input, Button, Radio, Row, Col, message } from "antd";
+import { ArrowLeftOutlined, InfoCircleOutlined, RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Container from "../UI/Container";
@@ -15,25 +16,25 @@ const categories = [
   {
     value: "Food",
     label: "Food",
-    icon: "rest",
+    icon: <RestTwoTone twoToneColor="#ff85c0" style={{ fontSize: 18 }} />,
     color: "#ff85c0"
   },
   {
     value: "Transport",
     label: "Transport",
-    icon: "car",
+    icon: <CarTwoTone twoToneColor="#5cdbd3" style={{ fontSize: 18 }} />,
     color: "#5cdbd3"
   },
   {
     value: "Movie",
     label: "Movie",
-    icon: "play-square",
+    icon: <PlayCircleTwoTone twoToneColor="#597ef7" style={{ fontSize: 18 }}/>,
     color: "#597ef7"
   },
   {
     value: "Other",
     label: "Other",
-    icon: "shopping",
+    icon: <ShoppingTwoTone twoToneColor="#ffd666" style={{ fontSize: 18 }}/>,
     color: "#ffd666"
   }
 ];
@@ -89,11 +90,11 @@ class AddExpenseForm extends Component {
   render() {
     return (
       <Container>
-        <Icon
-          type="arrow-left"
+        <ArrowLeftOutlined
           onClick={this.navigateHome}
-          style={{ marginTop: 30, }}
+          style={{ marginTop: 30 }}
         />
+
         <Header title="Add Expense" />
 
         <Form onSubmit={this.handleSubmit}>
@@ -110,7 +111,7 @@ class AddExpenseForm extends Component {
 
           <Form.Item>
             <Input
-              prefix={<Icon type="info-circle" />}
+              prefix={<InfoCircleOutlined />}
               placeholder="Remarks"
               value={this.state.remarks}
               onChange={this.handleChange("remarks")}
@@ -131,12 +132,7 @@ class AddExpenseForm extends Component {
                     value={option.value}
                     style={{ width: "25%", textAlign: "center", }}
                   >
-                    <Icon
-                      style={{ fontSize: 18 }}
-                      type={option.icon}
-                      theme="twoTone"
-                      twoToneColor={option.color}
-                    />
+                    {option.icon}
                   </Radio.Button>
                 ))}
               </Radio.Group>

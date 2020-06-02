@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { Switch, Route } from "react-router-dom";
-import History from "./components/History/History";
 import Expense from "./components/Expense/Expense";
 import AddExpenseForm from "./components/Expense/AddExpenseForm";
 import Income from "./components/Income/Income";
@@ -11,7 +10,6 @@ import AddIncomeForm from "./components/Income/AddIncomeForm";
 import Investment from "./components/Investment/Investment";
 import AddInvestmentForm from "./components/Investment/AddInvestmentForm";
 import Profile from "./components/Profile/Profile";
-import MonthlyBreakdown from "./components/History/MonthlyBreakdown";
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import Home from "./Home";
 
@@ -67,13 +65,11 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/expenses" component={Expense} />
           <PrivateRoute exact path="/expenses/new" component={AddExpenseForm} />
-          <PrivateRoute path="/history" component={History} />
           <PrivateRoute exact path="/income" component={Income} />
           <PrivateRoute exact path="/income/new" component={AddIncomeForm} />
           <PrivateRoute exact path="/investment" component={Investment} />
           <PrivateRoute exact path="/investment/new" component={AddInvestmentForm} />
           <PrivateRoute path="/profile" component={Profile} />
-          <PrivateRoute path="/:year/:month" component={MonthlyBreakdown} />
           <Route path="/" component={Home} />
         </Switch>
       </React.Fragment>

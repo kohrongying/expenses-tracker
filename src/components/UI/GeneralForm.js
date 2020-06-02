@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { InputNumber, Input, Button, Form, Icon } from "antd";
+import { InputNumber, Input, Button, Form } from "antd";
+import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons"
 import Container from "./Container";
 import Header from "./Header";
 
@@ -15,11 +16,11 @@ const GeneralForm = ({
   handleTextChange,
 }) => (
   <Container>
-    <Icon
-      type="arrow-left"
-      onClick={navigateHome}
-      style={{ marginTop: 30, }}
-    />
+
+    <ArrowLeftOutlined
+                onClick={navigateHome}
+                style={{ marginTop: 30 }}
+              />
     <Header title={title} />
 
     <Form onSubmit={handleSubmit}>
@@ -35,7 +36,7 @@ const GeneralForm = ({
 
       <Form.Item>
         <Input
-          prefix={<Icon type="info-circle" />}
+          prefix={<InfoCircleOutlined />}
           placeholder={placeholderText}
           value={text}
           onChange={handleTextChange}
