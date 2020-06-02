@@ -6,7 +6,7 @@ import "firebase/auth";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
-import { ArrowLeftOutlined, EditOutlined, PlusCircleOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, EditOutlined, DeleteOutlined, PlusOutlined, UserOutlined, DollarOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
 import { logout } from "../../actions";
 import { formatNumber } from "../../helpers/common";
@@ -193,7 +193,7 @@ class Profile extends Component {
                     ]}
                   >
                     <List.Item.Meta
-                      avatar={<Avatar size="large" icon="dollar" />}
+                      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
                       title={item.source}
                       style={{ alignItems: "center" }}
                     />
@@ -206,7 +206,7 @@ class Profile extends Component {
             <Panel
               header="Recurring investments"
               key="3"
-              extra={<PlusCircleOutlined onClick={this.showModalInvestment} />}
+              extra={<PlusOutlined onClick={this.showModalInvestment} />}
             >
               <List
                 dataSource={this.state.investments}
@@ -217,7 +217,7 @@ class Profile extends Component {
                     ]}
                   >
                     <List.Item.Meta
-                      avatar={<Avatar size="large" icon="dollar" />}
+                      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
                       title={item.source}
                       style={{ alignItems: "center" }}
                     />
