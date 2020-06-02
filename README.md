@@ -1,4 +1,4 @@
-[Expense Tracker Site](http://imma-save-more-money.netlify.com/) is live! You can track your expenses, income and investments here.
+[Expense Tracker Site](http://imma-save-more-money.netlify.app/) is live! You can track your expenses, income and investments here.
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) and utilizes [Ant Design](https://ant.design/) UI Framework.
 
