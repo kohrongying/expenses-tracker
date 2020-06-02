@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
-import { List, message, Icon, Button } from "antd";
+import { List, message, Button } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import GeneralItem from "../UI/GeneralItem";
@@ -78,8 +79,7 @@ class Income extends Component {
     return this.props.uid ?
       <React.Fragment>
         <Container>
-          <Icon
-            type="arrow-left"
+          <ArrowLeftOutlined
             onClick={this.navigate("/")}
           />
 

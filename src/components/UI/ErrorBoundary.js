@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
 
 class ErrorBoundary extends React.Component {
   static propTypes = {
@@ -26,16 +25,16 @@ class ErrorBoundary extends React.Component {
     if (this.state.errorInfo) {
       return (
         <React.Fragment>
-          <Typography variant="h4" gutterBottom component="h2">
+          <p variant="h4" gutterBottom component="h2">
             Something went wrong
-          </Typography>
-          <Typography component="div">
+          </p>
+          <div>
             <details style={{ whiteSpace: "pre-wrap" }}>
               {this.state.error && this.state.error.toString()}
               <br />
               {this.state.errorInfo.componentStack}
             </details>
-          </Typography>
+          </div>
         </React.Fragment>
       );
     }

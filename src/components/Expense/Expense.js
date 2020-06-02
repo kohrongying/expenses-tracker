@@ -4,7 +4,8 @@ import firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { List, message, Icon, Button } from "antd";
+import { List, message, Button } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import ExpenseItem from "./ExpenseItem";
@@ -80,10 +81,9 @@ class Expense extends Component {
           <React.Fragment>
 
             <Container>
-              <Icon
-                type="arrow-left"
+              <ArrowLeftOutlined
                 onClick={this.navigate("/")}
-                style={{ marginTop: 30, }}
+                style={{ marginTop: 30 }}
               />
 
               <MonthSum

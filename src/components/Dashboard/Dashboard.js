@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Row, Col, Icon, List, Slider, Button } from "antd";
+import { Row, Col, List, Slider, Button } from "antd";
+import { DashboardOutlined, DollarOutlined, BankOutlined, UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import firebase from "firebase/app";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
@@ -14,13 +15,13 @@ const year = new Date().getFullYear();
 const month = new Date().getMonth();
 const NAVBAR = [
 
-  { url: "/expenses", label: "Expenses", icon: "dashboard", color: "#ff85c0" },
-  { url: "/income", label: "Income", icon: "dollar", color: "#597ef7" },
-  { url: "/investment", label: "Investment", icon: "bank", color: "#ffd666" },
-  { url: "/profile", label: "Profile", icon: "user", color: "#5cdbd3" },
-  { url: "/expenses/new", label: "Add Expense", icon: "plus-circle", color: "#ff85c0" },
-  { url: "/income/new", label: "Add Income", icon: "plus-circle", color: "#ff85c0" },
-  { url: "/profile", label: "Add Budget", icon: "plus-circle", color: "#ff85c0" },
+  { url: "/expenses", label: "Expenses", icon: <DashboardOutlined />, color: "#ff85c0" },
+  { url: "/income", label: "Income", icon: <DollarOutlined />, color: "#597ef7" },
+  { url: "/investment", label: "Investment", icon: <BankOutlined />, color: "#ffd666" },
+  { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
+  { url: "/expenses/new", label: "Add Expense", icon: <PlusCircleOutlined />, color: "#ff85c0" },
+  { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
+  { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
 ];
 
 
@@ -114,7 +115,7 @@ class Dashboard extends Component {
                   onClick={this.linkTo(nav.url)}
                   style={{ marginBottom: 10, cursor: "pointer" }}
                 >
-                  <Icon type={nav.icon} />
+                  {nav.icon}
                   <div style={{ fontSize: 12 }}>{nav.label}</div>
                 </div>
               </Col>

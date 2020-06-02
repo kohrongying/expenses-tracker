@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
-import { Form, InputNumber, Icon, Input, Button, Radio, Row, Col, message } from "antd";
+import { Form, InputNumber, Input, Button, Radio, message } from "antd";
+import { ArrowLeftOutlined, InfoCircleOutlined, RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
+import Colors from "../../constants/Colors";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
@@ -15,66 +17,42 @@ const categories = [
   {
     value: "Food",
     label: "Food",
-    icon: "rest",
-    color: "#ff85c0"
+    icon: <RestTwoTone twoToneColor={Colors.pink} style={{ fontSize: 18 }} />,
   },
   {
     value: "Transport",
     label: "Transport",
-    icon: "car",
-    color: "#5cdbd3"
+    icon: <CarTwoTone twoToneColor={Colors.green} style={{ fontSize: 18 }} />,
   },
   {
     value: "Movie",
     label: "Movie",
-    icon: "play-square",
-    color: "#597ef7"
+    icon: <PlayCircleTwoTone twoToneColor={Colors.blue} style={{ fontSize: 18 }}/>,
   },
   {
     value: "Other",
     label: "Other",
-    icon: "shopping",
-    color: "#ffd666"
+    icon: <ShoppingTwoTone twoToneColor={Colors.yellow} style={{ fontSize: 18 }}/>,
   }
 ];
 
 class AddExpenseForm extends Component {
+  formRef = React.createRef();
+
   static propTypes = {
     uid: PropTypes.string.isRequired,
     history: PropTypes.object.isRequired,
   }
 
-  state = {
-    amount: "",
-    category: "Food",
-    remarks: "",
-  }
+  handleSubmit = (values) => {
+    values.date = Date.now();
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
-  handleSelect = name => value => {
-    this.setState({ [name]: value });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const item = {
-      amount: parseFloat(this.state.amount),
-      category: this.state.category,
-      date: Date.now(),
-      remarks: this.state.remarks,
-    };
     firebase.database()
       .ref(`users/${this.props.uid}/${year}/${month}/items`)
-      .push(item)
+      .push(values)
       .then(() => {
-        message.success(`Added $${this.state.amount} successfully`);
-        this.setState({
-          amount: "",
-          remarks: "",
-        });
+        message.success(`Added $${values.amount} successfully`);
+        this.formRef.current.resetFields();
       })
       .catch(err => {
         console.error(err);
@@ -89,64 +67,60 @@ class AddExpenseForm extends Component {
   render() {
     return (
       <Container>
-        <Icon
-          type="arrow-left"
+        <ArrowLeftOutlined
           onClick={this.navigateHome}
-          style={{ marginTop: 30, }}
+          style={{ marginTop: 30 }}
         />
+
         <Header title="Add Expense" />
 
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Item>
+        <Form
+          wrapperCol={{ span: 24 }}
+          onFinish={this.handleSubmit}
+          initialValues={{ remarks: "", category: "" }}
+          ref={this.formRef}
+        >
+          <Form.Item
+            name="amount"
+            rules={[
+              {
+                required: true,
+                message: "Please input the amount spent"
+              }
+            ]}
+          >
             <InputNumber
-              value={this.state.amount}
               style={{ width: "100%" }}
               formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               parser={value => value.replace(/\$\s?|(,*)/g, "")}
               min={0}
-              onChange={this.handleSelect("amount")}
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item name="remarks">
             <Input
-              prefix={<Icon type="info-circle" />}
+              prefix={<InfoCircleOutlined />}
               placeholder="Remarks"
-              value={this.state.remarks}
-              onChange={this.handleChange("remarks")}
             />
           </Form.Item>
 
-          <Row>
-            <Col xs={24}>
-              <Radio.Group
-                size="large"
-                style={{ width: "100%", marginTop: 10, }}
-                value={this.state.category}
-                onChange={this.handleChange("category")}
-              >
-                {categories.map(option => (
-                  <Radio.Button
-                    key={option.value}
-                    value={option.value}
-                    style={{ width: "25%", textAlign: "center", }}
-                  >
-                    <Icon
-                      style={{ fontSize: 18 }}
-                      type={option.icon}
-                      theme="twoTone"
-                      twoToneColor={option.color}
-                    />
-                  </Radio.Button>
-                ))}
-              </Radio.Group>
-            </Col>
-          </Row>
+          <Form.Item name="category">
+            <Radio.Group style={{ width: "100%" }}>
+              {categories.map(option => (
+                <Radio.Button
+                  key={option.value}
+                  value={option.value}
+                  style={{ width: "25%", textAlign: "center" }}
+                >
+                  {option.icon}
+                </Radio.Button>
+              ))}
+            </Radio.Group>
+          </Form.Item>
 
           <Form.Item>
             <Button
-              disabled={this.state.amount === ""}
-              style={{ marginTop: 30, }}type="primary"
+              type="primary"
               htmlType="submit"
               block
             >

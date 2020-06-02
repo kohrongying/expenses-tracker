@@ -7,7 +7,7 @@ import "firebase/auth";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Container from "./components/UI/Container";
 import Header from "./components/UI/Header";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -18,12 +18,20 @@ class Home extends Component {
     login: PropTypes.func.isRequired,
   }
 
+  state = {
+    loading: false
+  }
+
   login = () => {
-    firebase.auth().signInWithRedirect(provider)
+    this.setState({ loading: true });
+    firebase.auth().signInWithPopup(provider)
       .then((result)=>{
         this.props.login(result.user.uid);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        this.setState({ loading: false });
+      });
   }
 
   render() {
@@ -35,9 +43,14 @@ class Home extends Component {
             <Dashboard />
           ) : (
             <Container>
-              <Header title="Expense Tracker" />
-              <p>Track your monthly expenditure, set your income and a budget for yourself. Do not be stupid.</p>
-              <Button onClick={this.login}>Login</Button>
+              {this.state.loading ? (<Spin size="large" />) : (
+                <>
+                  <Header title="Expense Tracker" />
+                  <p>Track your monthly expenditure, set your income and a budget for yourself. Do not be stupid.</p>
+                  <Button type="primary" onClick={this.login}>Login with Google</Button>
+                </>
+              )}
+
             </Container>
           )}
 

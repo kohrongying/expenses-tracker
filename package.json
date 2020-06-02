@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.2.1",
-    "@material-ui/icons": "^4.2.1",
-    "@sentry/browser": "^5.6.2",
-    "antd": "^3.20.6",
-    "chart.js": "^2.8.0",
-    "react": "^16.8.6",
-    "react-chartjs-2": "^2.7.6",
-    "react-dom": "^16.8.6",
-    "react-redux": "^7.1.0",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.0.1",
-    "redux": "^4.0.4",
+    "@ant-design/icons": "^4.2.1",
+    "@sentry/browser": "^5.15.5",
+    "antd": "^4.3.0",
+    "chart.js": "^2.9.3",
+    "firebase": "^7.14.6",
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
+    "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
@@ -26,10 +26,8 @@
     "fix": "node_modules/.bin/eslint 'src/**/*.js' --fix"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-react": "^7.12.4",
-    "firebase": "^6.3.1"
+    "babel-eslint": "^10.1.0",
+    "eslint-plugin-react": "^7.20.0"
   },
   "browserslist": [
     ">0.2%",
