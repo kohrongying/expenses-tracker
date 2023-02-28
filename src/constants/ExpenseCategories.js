@@ -1,4 +1,4 @@
-import Colors from "../../constants/Colors";
+import Colors from "./Colors";
 import { RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone, ShopTwoTone, RestOutlined, ShopOutlined, CarOutlined, PlayCircleOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 
