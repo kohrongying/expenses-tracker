@@ -1,26 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
-import { List, Avatar } from "antd";
-import { DeleteOutlined, RestOutlined, CarOutlined, ShoppingOutlined, PlayCircleOutlined, ShopOutlined } from "@ant-design/icons";
-import Colors from "../../constants/Colors";
+import { List } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { categories } from "../../constants/ExpenseCategories";
 
-const ItemIcon = (category) => {
-  switch (category) {
-  case "Food":
-    return <Avatar size="large" icon={<RestOutlined />} style={{ backgroundColor: Colors.pink }} />;
-  case "Groceries":
-    return <Avatar size="large" icon={<ShopOutlined />} style={{ backgroundColor: Colors.purple }} />;  
-  case "Transport":
-    return <Avatar size="large" icon={<CarOutlined />} style={{ backgroundColor: Colors.green }} />;
-  case "Movie":
-    return <Avatar size="large" icon={<PlayCircleOutlined />} style={{ backgroundColor: Colors.blue }}  />;
-  case "Other":
-    return <Avatar size="large" icon={<ShoppingOutlined />} style={{ backgroundColor: Colors.yellow }} />;
-  default:
-    return <Avatar size="large" icon={<RestOutlined />} style={{ backgroundColor: Colors.pink }} />;
+const ItemIcon = (categoryName) => {
+  const foundCategory = categories.find(iterator => iterator.name == categoryName)
+  if (foundCategory) {
+    return foundCategory.avatarIcon
+  } else {
+    const defaultIcon = categories[0].avatarIcon
+    return defaultIcon
   }
-};
+}
 
 const Expense = ({ dashboard, item, removeItem }) => (
   <List.Item
