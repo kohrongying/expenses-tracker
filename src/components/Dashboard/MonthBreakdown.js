@@ -43,17 +43,18 @@ class MonthBreakdown extends Component {
     if (items) {
       const allItems = Object.values(items);
       const groupAmtByCategory = allItems.reduce((r, a) => {
-        const category = a.label.toLowerCase()
-        r[category] = r[category] || []
-        r[category].push(a.amount) 
+        const category = a.label.toLowerCase();
+        r[category] = r[category] || [];
+        r[category].push(a.amount);
+        return r;
       }, {});
       console.log(groupAmtByCategory);
-      const data = []
+      const data = [];
       for (let i=0; i < categories.length; i++) {
-        const category = categories[i].value.toLowerCase()
-        const amounts = groupAmtByCategory[category]
-        const amountSum = amounts.reduce((acc, curr) => acc + curr, 0)
-        data.push(parseFloat(amountSum.toFixed(2)))
+        const category = categories[i].value.toLowerCase();
+        const amounts = groupAmtByCategory[category];
+        const amountSum = amounts.reduce((acc, curr) => acc + curr, 0);
+        data.push(parseFloat(amountSum.toFixed(2)));
       }
       return data;
     }
