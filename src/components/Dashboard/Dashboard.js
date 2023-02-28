@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import ExpensesSummary from "./ExpensesSummary";
+import MonthBreakdown from "./MonthBreakdown";
 import ExpenseItem from "../Expense/ExpenseItem";
 
 const year = new Date().getFullYear();
@@ -17,8 +18,8 @@ const NAVBAR = [
   // { url: "/expenses", label: "Expenses", icon: <DashboardOutlined />, color: "#ff85c0" },
   // { url: "/income", label: "Income", icon: <DollarOutlined />, color: "#597ef7" },
   // { url: "/investment", label: "Investment", icon: <BankOutlined />, color: "#ffd666" },
-  { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
   { url: "/expenses/new", label: "Add Expense", icon: <PlusCircleOutlined />, color: "#ff85c0" },
+  { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
   // { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
   // { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
 ];
@@ -128,6 +129,7 @@ class Dashboard extends Component {
           <h6 style={{ marginTop: 20, marginBottom: 15 }}>
             This month's breakdown
           </h6>
+          <MonthBreakdown />
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>
