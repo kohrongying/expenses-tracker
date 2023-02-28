@@ -43,7 +43,7 @@ class MonthBreakdown extends Component {
     if (items) {
       const allItems = Object.values(items);
       const groupAmtByCategory = allItems.reduce((r, a) => {
-        const category = a.label.toLowerCase();
+        const category = a.category.toLowerCase();
         r[category] = r[category] || [];
         r[category].push(a.amount);
         return r;
