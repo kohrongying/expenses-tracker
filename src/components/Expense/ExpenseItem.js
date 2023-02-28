@@ -6,7 +6,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { categories } from "../../constants/ExpenseCategories";
 
 const ItemIcon = (categoryName) => {
-  const foundCategory = categories.find(iterator => iterator.name == categoryName)
+  const foundCategory = categories.find(iterator => iterator.name.toLowerCase() === categoryName.toLowerCase())
   if (foundCategory) {
     return foundCategory.avatarIcon
   } else {
