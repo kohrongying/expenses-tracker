@@ -3,4 +3,5 @@ export default {
   green: "#5cdbd3",
   blue: "#597ef7",
   yellow: "#ffd666",
+  purple: "#8B33FF",
 };

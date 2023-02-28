@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import firebase from "firebase/app";
 import "firebase/database";
 import { Form, InputNumber, Input, Button, Radio, message } from "antd";
-import { ArrowLeftOutlined, InfoCircleOutlined, RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone } from "@ant-design/icons";
+import { ArrowLeftOutlined, InfoCircleOutlined, RestTwoTone, CarTwoTone, PlayCircleTwoTone, ShoppingTwoTone, ShopTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Container from "../UI/Container";
@@ -18,6 +18,11 @@ const categories = [
     value: "Food",
     label: "Food",
     icon: <RestTwoTone twoToneColor={Colors.pink} style={{ fontSize: 18 }} />,
+  },
+  {
+    value: "Groceries",
+    label: "Groceries",
+    icon: <ShopTwoTone twoToneColor={Colors.purple} style={{ fontSize: 18 }} />,
   },
   {
     value: "Transport",
@@ -110,7 +115,7 @@ class AddExpenseForm extends Component {
                 <Radio.Button
                   key={option.value}
                   value={option.value}
-                  style={{ width: "25%", textAlign: "center" }}
+                  style={{ width: "20%", textAlign: "center" }}
                 >
                   {option.icon}
                 </Radio.Button>

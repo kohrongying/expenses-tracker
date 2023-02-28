@@ -2,13 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
 import { List, Avatar } from "antd";
-import { DeleteOutlined, RestOutlined, CarOutlined, ShoppingOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, RestOutlined, CarOutlined, ShoppingOutlined, PlayCircleOutlined, ShopOutlined } from "@ant-design/icons";
 import Colors from "../../constants/Colors";
 
 const ItemIcon = (category) => {
   switch (category) {
   case "Food":
     return <Avatar size="large" icon={<RestOutlined />} style={{ backgroundColor: Colors.pink }} />;
+  case "Groceries":
+    return <Avatar size="large" icon={<ShopOutlined />} style={{ backgroundColor: Colors.purple }} />;  
   case "Transport":
     return <Avatar size="large" icon={<CarOutlined />} style={{ backgroundColor: Colors.green }} />;
   case "Movie":
