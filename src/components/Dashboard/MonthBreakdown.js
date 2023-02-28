@@ -52,7 +52,7 @@ class MonthBreakdown extends Component {
       const data = [];
       for (let i=0; i < categories.length; i++) {
         const category = categories[i].value.toLowerCase();
-        const amounts = groupAmtByCategory[category];
+        const amounts = groupAmtByCategory[category] || [];
         const amountSum = amounts.reduce((acc, curr) => acc + curr, 0);
         data.push(parseFloat(amountSum.toFixed(2)));
       }
