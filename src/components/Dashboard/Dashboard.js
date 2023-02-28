@@ -94,7 +94,23 @@ class Dashboard extends Component {
       <React.Fragment>
         <Container>
           <Header title="Dashboard" />
-          <h6 style={{ marginBottom: 0 }}>Expenses</h6>
+          
+          <Row gutter={16}
+            style={{ padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
+            {NAVBAR.map(nav => (
+              <Col xs={12} key={nav.label}>
+                <div
+                  onClick={this.linkTo(nav.url)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {nav.icon}
+                  <div style={{ fontSize: 14 }}>{nav.label}</div>
+                </div>
+              </Col>
+            ))}
+          </Row>
+
+          <h6 style={{ marginTop: 20 }}>Expenses</h6>
           <Row type="flex" align="middle">
             <Col xs={9}>
               <h4>$ {this.state.totalExpense.toFixed(2)}</h4>
@@ -106,30 +122,15 @@ class Dashboard extends Component {
             </Col>
           </Row>
 
-          <Row gutter={16}
-            style={{ marginTop: 20, padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
-            {NAVBAR.map(nav => (
-              <Col xs={12} key={nav.label}>
-                <div
-                  onClick={this.linkTo(nav.url)}
-                  style={{ marginBottom: 10, cursor: "pointer" }}
-                >
-                  {nav.icon}
-                  <div style={{ fontSize: 18 }}>{nav.label}</div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-
-          <h6 style={{ marginTop: 20, marginBottom: 15 }}>
-            Overview
-          </h6>
-          <ExpensesSummary />
-
           <h6 style={{ marginTop: 20, marginBottom: 15 }}>
             This month's breakdown
           </h6>
           <MonthBreakdown />
+
+          <h6 style={{ marginTop: 20, marginBottom: 15 }}>
+            The last 6 months
+          </h6>
+          <ExpensesSummary />
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>

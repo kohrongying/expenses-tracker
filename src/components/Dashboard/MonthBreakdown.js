@@ -80,9 +80,6 @@ class MonthBreakdown extends Component {
       <Pie
         data={chartData}
         height={150}
-        options={{
-          legend: { display: false },
-        }}
       />
     );
   }
