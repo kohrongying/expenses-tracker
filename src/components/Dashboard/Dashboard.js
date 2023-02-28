@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col, List, Slider, Button } from "antd";
-import { DashboardOutlined, DollarOutlined, BankOutlined, UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import firebase from "firebase/app";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
@@ -22,7 +22,6 @@ const NAVBAR = [
   // { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
   // { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
 ];
-
 
 class Dashboard extends Component {
   static propTypes = {
@@ -125,6 +124,10 @@ class Dashboard extends Component {
             Overview
           </h6>
           <ExpensesSummary />
+
+          <h6 style={{ marginTop: 20, marginBottom: 15 }}>
+            This month's breakdown
+          </h6>
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>
