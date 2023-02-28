@@ -14,14 +14,13 @@ import ExpenseItem from "../Expense/ExpenseItem";
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 const NAVBAR = [
-
-  { url: "/expenses", label: "Expenses", icon: <DashboardOutlined />, color: "#ff85c0" },
-  { url: "/income", label: "Income", icon: <DollarOutlined />, color: "#597ef7" },
-  { url: "/investment", label: "Investment", icon: <BankOutlined />, color: "#ffd666" },
+  // { url: "/expenses", label: "Expenses", icon: <DashboardOutlined />, color: "#ff85c0" },
+  // { url: "/income", label: "Income", icon: <DollarOutlined />, color: "#597ef7" },
+  // { url: "/investment", label: "Investment", icon: <BankOutlined />, color: "#ffd666" },
   { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
   { url: "/expenses/new", label: "Add Expense", icon: <PlusCircleOutlined />, color: "#ff85c0" },
-  { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
-  { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
+  // { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
+  // { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
 ];
 
 
@@ -110,13 +109,13 @@ class Dashboard extends Component {
           <Row gutter={16}
             style={{ marginTop: 20, padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
             {NAVBAR.map(nav => (
-              <Col xs={6} key={nav.label}>
+              <Col xs={12} key={nav.label}>
                 <div
                   onClick={this.linkTo(nav.url)}
                   style={{ marginBottom: 10, cursor: "pointer" }}
                 >
                   {nav.icon}
-                  <div style={{ fontSize: 12 }}>{nav.label}</div>
+                  <div style={{ fontSize: 18 }}>{nav.label}</div>
                 </div>
               </Col>
             ))}
