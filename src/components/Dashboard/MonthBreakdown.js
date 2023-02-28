@@ -66,7 +66,7 @@ class MonthBreakdown extends Component {
       datasets: [
         {
           label: 'Category Breakdown',
-          data: categoryData,
+          data: this.state.categoryData,
           backgroundColor: categoryColors,
           borderColor: categoryColors,
           borderWidth: 1,
