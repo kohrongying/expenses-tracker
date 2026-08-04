@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import { Button } from "antd";
 import { connect } from "react-redux";
 import { login, logout } from "../../actions";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
 import "firebase/auth";
 
 const provider = new firebase.auth.GoogleAuthProvider();

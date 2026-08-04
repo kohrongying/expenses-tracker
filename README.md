@@ -29,13 +29,13 @@ the Web app as well as under Project Settings -> Your apps. These are passed int
 using environment variables. One way to set them is using a `.env.local` file like this:
 
 ```
-REACT_APP_STAGING_API_KEY=xxx
-REACT_APP_STAGING_AUTH_DOMAIN=xxx
-REACT_APP_STAGING_DATABASE_URL=xxx
-REACT_APP_STAGING_PROJECT_ID=xxx
-REACT_APP_STAGING_STORAGE_BUCKET=xxx
-REACT_APP_STAGING_MESSAGING_SENDER_ID=xxx
-REACT_APP_STAGING_APP_ID=xxx
+VITE_STAGING_API_KEY=xxx
+VITE_STAGING_AUTH_DOMAIN=xxx
+VITE_STAGING_DATABASE_URL=xxx
+VITE_STAGING_PROJECT_ID=xxx
+VITE_STAGING_STORAGE_BUCKET=xxx
+VITE_STAGING_MESSAGING_SENDER_ID=xxx
+VITE_STAGING_APP_ID=xxx
 ```
 
 Expenses Tracker currently only supports logging in with Google, so your project should have the
@@ -59,4 +59,4 @@ their own data:
 }
 ```
 
-After everything is set up, you can run Expenses Tracker locally using `npm start`.
+After everything is set up, you can run Expenses Tracker locally using `npm run dev`.

@@ -2,32 +2,36 @@
   "name": "expenses-tracker",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
-    "@sentry/browser": "^5.15.5",
+    "@sentry/browser": "^10.69.0",
     "antd": "^4.3.0",
     "chart.js": "^2.9.3",
-    "firebase": "^7.14.6",
-    "react": "^16.13.1",
+    "firebase": "^12.17.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
     "react-chartjs-2": "^2.9.0",
-    "react-dom": "^16.13.1",
+    "react-dom": "^18.2.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "lint": "node_modules/.bin/eslint 'src/**/*.js'",
-    "fix": "node_modules/.bin/eslint 'src/**/*.js' --fix"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "node_modules/.bin/eslint 'src/**/*.{js,jsx}'",
+    "fix": "node_modules/.bin/eslint 'src/**/*.{js,jsx}' --fix"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^8.2.0",
     "babel-eslint": "^10.1.0",
-    "eslint-plugin-react": "^7.20.0"
+    "eslint-plugin-react": "^7.20.0",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.10"
   },
   "browserslist": [
     ">0.2%",

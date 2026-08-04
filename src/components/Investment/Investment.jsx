@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
 import "firebase/database";
 import { connect } from "react-redux";
 import { List, message, Button } from "antd";
@@ -13,7 +15,7 @@ import { withRouter } from "react-router-dom";
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-class Income extends Component {
+class Investment extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
     history: PropTypes.object.isRequired,
@@ -22,17 +24,15 @@ class Income extends Component {
   state = {
     loading: true,
     items: [],
-    totalAmount: 0
+    totalAmount: 0,
   }
-
   componentDidMount() {
     if (this.props.uid) {
-      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
+      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`)
         .on("value", (snapshot)=> {
-
           if (snapshot.exists()) {
             let totalAmount = 0;
-            const items = snapshot.val();
+            let items = snapshot.val();
             const itemIds = Object.keys(items);
             const parsedItems = itemIds.map(id => {
               const item = items[id];
@@ -42,20 +42,20 @@ class Income extends Component {
             });
             this.setState({ items: parsedItems, totalAmount, loading: false });
           } else {
-            this.copyMonthlyIncome();
+            this.copyMonthlyInvestment();
           }
         });
     }
   }
 
-  copyMonthlyIncome = () => {
-    firebase.database().ref(`users/${this.props.uid}/profile/monthlyIncome`)
+  copyMonthlyInvestment = () => {
+    firebase.database().ref(`users/${this.props.uid}/profile/monthlyInvestments`)
       .once("value")
       .then(snapshot => {
         if (snapshot.exists()) {
-          const incomeItems = snapshot.val();
-          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-            .update(incomeItems);
+          const investmentItems = snapshot.val();
+          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`)
+            .update(investmentItems);
         } else {
           this.setState({ loading: false, items: [], totalAmount: 0 });
         }
@@ -64,20 +64,21 @@ class Income extends Component {
   }
 
   componentWillUnmount(){
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`).off();
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments`).off();
   }
 
   removeItem = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove();
+    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/investments/${id}`).remove();
   }
 
   navigate = (route) => () => {
     this.props.history.push(route);
   }
 
-  render() {
+  render(){
     return this.props.uid ?
       <React.Fragment>
+
         <Container>
           <ArrowLeftOutlined
             onClick={this.navigate("/")}
@@ -86,16 +87,16 @@ class Income extends Component {
           <MonthSum
             loading={this.state.loading}
             totalAmount={this.state.totalAmount}
-            title="Income"
+            title="Investment"
           />
 
           <Button
             block
             type="link"
             style={{ marginTop: 30, marginBottom: 20, color: "black" }}
-            onClick={this.navigate("/income/new")}
+            onClick={this.navigate("/investment/new")}
           >
-                Add Income
+                Add Investment
           </Button>
 
           <List
@@ -118,4 +119,4 @@ class Income extends Component {
 
 const mapStateToProps = state => ({ uid: state.user.uid });
 
-export default connect(mapStateToProps)(withRouter(Income));
+export default connect(mapStateToProps)(withRouter(Investment));
