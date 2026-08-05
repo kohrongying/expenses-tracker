@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/database";
-import "firebase/database";
+import { ref, onValue, remove } from "firebase/database";
 import { useHistory } from "react-router-dom";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
@@ -29,9 +27,9 @@ function Expense() {
       return;
     }
 
-    const ref = firebase.database().ref(`/users/${uid}/${year}/${month}/items`);
+    const itemsRef = ref(db, `/users/${uid}/${year}/${month}/items`);
 
-    const handleValue = (snapshot) => {
+    const unsubscribe = onValue(itemsRef, (snapshot) => {
       if (snapshot.exists()) {
         const itemsVal = snapshot.val();
         const itemIDs = Object.keys(itemsVal);
@@ -51,20 +49,17 @@ function Expense() {
         setTotalAmount(0);
       }
       setLoading(false);
-    };
+    });
 
-    ref.on("value", handleValue);
-    return () => ref.off("value", handleValue);
+    return () => unsubscribe();
   }, [uid]);
 
   const removeItem = (itemID) => () => {
-    firebase
-      .database()
-      .ref(`users/${uid}/${year}/${month}/items/${itemID}`)
-      .remove()
-      .catch((err) => {
+    remove(ref(db, `users/${uid}/${year}/${month}/items/${itemID}`)).catch(
+      (err) => {
         message.error(err);
-      });
+      }
+    );
   };
 
   const navigate = (route) => () => {

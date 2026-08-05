@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/database";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Button, Spin } from "antd";
+import { auth } from "./firebase";
 import useAuthStore from "./store/authStore";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Container from "./components/UI/Container";
 import Header from "./components/UI/Header";
-import { Button, Spin } from "antd";
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
 
 function Home() {
   const isAuthenticated = useAuthStore((state) => Boolean(state.user));
@@ -17,9 +16,7 @@ function Home() {
 
   const login = () => {
     setLoading(true);
-    firebase
-      .auth()
-      .signInWithPopup(provider)
+    signInWithPopup(auth, provider)
       .then((result) => {
         authLogin(result.user);
       })

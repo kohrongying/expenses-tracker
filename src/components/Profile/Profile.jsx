@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/database";
-import "firebase/database";
-import "firebase/auth";
 import { useHistory } from "react-router-dom";
 import {
   Button,
@@ -24,6 +19,9 @@ import {
   UserOutlined,
   DollarOutlined,
 } from "@ant-design/icons";
+import { ref, onValue, remove, push, update } from "firebase/database";
+import { signOut } from "firebase/auth";
+import { db, auth } from "../../firebase";
 import Container from "../UI/Container";
 import useAuthStore from "../../store/authStore";
 import { formatNumber } from "../../helpers/common";
@@ -35,107 +33,33 @@ function Profile() {
   const authLogout = useAuthStore((state) => state.logout);
   const history = useHistory();
 
-  const [income, setIncome] = useState([]);
-  const [investments, setInvestments] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalFunc, setModalFunc] = useState(() => () => {});
-  const [amount, setAmount] = useState(0);
-  const [source, setSource] = useState("");
   const [showBudgetModal, setShowBudgetModal] = useState(false);
   const [expenseBudget, setExpenseBudget] = useState("");
 
   useEffect(() => {
     if (!uid) return;
 
-    const ref = firebase.database().ref(`users/${uid}/profile`);
-    const handleValue = (snapshot) => {
+    const profileRef = ref(db, `users/${uid}/profile`);
+    const unsubscribe = onValue(profileRef, (snapshot) => {
       if (snapshot.exists()) {
         const profile = snapshot.val();
-        const incomeItems = profile.monthlyIncome || {};
-        const investmentItems = profile.monthlyInvestments || {};
         const budget = profile.expenseBudget || "";
 
-        const incomeList = Object.keys(incomeItems).map((key) => {
-          const item = incomeItems[key];
-          item.id = key;
-          return item;
-        });
-
-        const investmentList = Object.keys(investmentItems).map((key) => {
-          const item = investmentItems[key];
-          item.id = key;
-          return item;
-        });
-
-        setIncome(incomeList);
-        setInvestments(investmentList);
         setExpenseBudget(budget);
       }
-    };
+    });
 
-    ref.on("value", handleValue);
-    return () => ref.off("value", handleValue);
+    return () => unsubscribe();
   }, [uid]);
-
-  const removeIncome = (id) => () => {
-    firebase
-      .database()
-      .ref(`users/${uid}/profile/monthlyIncome/${id}`)
-      .remove();
-  };
-
-  const removeInvestment = (id) => () => {
-    firebase
-      .database()
-      .ref(`users/${uid}/profile/monthlyInvestments/${id}`)
-      .remove();
-  };
 
   const showBudgetModalHandler = (visible) => () => {
     setShowBudgetModal(visible);
   };
 
-  const showModalHandler = (visible) => () => {
-    setShowModal(visible);
-  };
-
-  const showModalIncome = () => {
-    setModalTitle("Add Recurring Income");
-    setModalFunc(() => addRecurringItem("monthlyIncome"));
-    setShowModal(true);
-  };
-
-  const showModalInvestment = () => {
-    setModalTitle("Add Recurring Investment");
-    setModalFunc(() => addRecurringItem("monthlyInvestments"));
-    setShowModal(true);
-  };
-
-  const addRecurringItem = (ref) => async () => {
-    await firebase.database().ref(`users/${uid}/profile/${ref}`).push({
-      amount,
-      source,
-    });
-    setAmount(0);
-    setSource("");
-    setShowModal(false);
-  };
-
   const updateBudget = () => {
-    firebase
-      .database()
-      .ref(`users/${uid}/profile`)
-      .update({ expenseBudget })
-      .then(() => {
-        setShowBudgetModal(false);
-      });
-  };
-
-  const handleChange = (name) => (event) => {
-    if (name === "source") {
-      setSource(event.target.value);
-    }
+    update(ref(db, `users/${uid}/profile`), { expenseBudget }).then(() => {
+      setShowBudgetModal(false);
+    });
   };
 
   const handleSelect = (name) => (value) => {
@@ -152,13 +76,10 @@ function Profile() {
   };
 
   const logout = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        authLogout();
-        history.push("/");
-      });
+    signOut(auth).then(() => {
+      authLogout();
+      history.push("/");
+    });
   };
 
   return (
@@ -202,62 +123,6 @@ function Profile() {
                     style={{ alignItems: "center" }}
                   />
                   <div>{item ? `S$ ${formatNumber(item)}` : "Not set yet"}</div>
-                </List.Item>
-              )}
-            />
-          </Panel>
-
-          <Panel
-            header="Recurring Income"
-            key="2"
-            extra={<PlusOutlined onClick={showModalIncome} />}
-          >
-            <List
-              dataSource={income}
-              renderItem={(item) => (
-                <List.Item
-                  actions={[
-                    <DeleteOutlined
-                      key={`delete-item${item.id}`}
-                      type="delete"
-                      onClick={removeIncome(item.id)}
-                    />,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar size="large" icon={<DollarOutlined />} />}
-                    title={item.source}
-                    style={{ alignItems: "center" }}
-                  />
-                  <div>{`S$ ${formatNumber(item.amount)}`}</div>
-                </List.Item>
-              )}
-            />
-          </Panel>
-
-          <Panel
-            header="Recurring investments"
-            key="3"
-            extra={<PlusOutlined onClick={showModalInvestment} />}
-          >
-            <List
-              dataSource={investments}
-              renderItem={(item) => (
-                <List.Item
-                  actions={[
-                    <DeleteOutlined
-                      key={`delete-item${item.id}`}
-                      type="delete"
-                      onClick={removeInvestment(item.id)}
-                    />,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar size="large" icon={<DollarOutlined />} />}
-                    title={item.source}
-                    style={{ alignItems: "center" }}
-                  />
-                  <div>{`S$ ${formatNumber(item.amount)}`}</div>
                 </List.Item>
               )}
             />

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, List, Slider, Button } from "antd";
 import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/database";
-import "firebase/database";
+import { ref, get } from "firebase/database";
 import { useHistory } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
+import { db } from "../../firebase";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 // import ExpensesSummary from "./ExpensesSummary";
@@ -49,10 +47,9 @@ function Dashboard() {
 
     const fetchExpenses = async () => {
       try {
-        const snapshot = await firebase
-          .database()
-          .ref(`/users/${uid}/${year}/${month}/items`)
-          .once("value");
+        const snapshot = await get(
+          ref(db, `/users/${uid}/${year}/${month}/items`)
+        );
         if (snapshot.exists()) {
           const items = snapshot.val();
           const itemIDs = Object.keys(items);
@@ -80,10 +77,9 @@ function Dashboard() {
 
     const fetchBudget = async () => {
       try {
-        const snapshot = await firebase
-          .database()
-          .ref(`/users/${uid}/profile/expenseBudget`)
-          .once("value");
+        const snapshot = await get(
+          ref(db, `/users/${uid}/profile/expenseBudget`)
+        );
         if (snapshot.exists()) {
           setExpenseBudget(snapshot.val());
         }

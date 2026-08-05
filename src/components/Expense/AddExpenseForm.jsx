@@ -1,11 +1,9 @@
 import React, { useRef } from "react";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/database";
-import "firebase/database";
+import { ref, push } from "firebase/database";
 import { Form, InputNumber, Input, Button, Radio, message } from "antd";
 import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
+import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
@@ -22,10 +20,7 @@ function AddExpenseForm() {
   const handleSubmit = (values) => {
     values.date = Date.now();
 
-    firebase
-      .database()
-      .ref(`users/${uid}/${year}/${month}/items`)
-      .push(values)
+    push(ref(db, `users/${uid}/${year}/${month}/items`), values)
       .then(() => {
         message.success(`Added $${values.amount} successfully`);
         if (formRef.current) {
