@@ -60,3 +60,15 @@ their own data:
 ```
 
 After everything is set up, you can run Expenses Tracker locally using `npm run dev`.
+
+
+TODO
+- [ ] Use tailwind instead of antd
+- [x] Replace store/redux?  -> use zustand
+- [x] Change to functional components
+- [ ] Improve UI/UX
+- [ ] Add more charts
+- [ ] Update data to be from firestore instead? 
+- [ ] Make into working PWA
+- [ ] Reorg
+- [ ] Linting not working
