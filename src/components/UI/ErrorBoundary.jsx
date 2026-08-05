@@ -1,11 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-class ErrorBoundary extends React.Component {
-  static propTypes = {
-    children: PropTypes.any,
-  };
-
+class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,33 +10,38 @@ class ErrorBoundary extends React.Component {
     };
   }
 
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      error,
-      errorInfo,
-    });
+    this.setState({ errorInfo });
   }
 
   render() {
-    if (this.state.errorInfo) {
+    const { error, errorInfo } = this.state;
+
+    if (errorInfo) {
       return (
         <React.Fragment>
-          <p variant="h4" gutterBottom component="h2">
-            Something went wrong
-          </p>
+          <h2>Something went wrong</h2>
           <div>
             <details style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.error && this.state.error.toString()}
+              {error && error.toString()}
               <br />
-              {this.state.errorInfo.componentStack}
+              {errorInfo.componentStack}
             </details>
           </div>
         </React.Fragment>
       );
     }
-    // Render children if there's no error
+
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default ErrorBoundary;

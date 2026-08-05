@@ -1,56 +1,52 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useRef } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import GeneralForm from "../UI/GeneralForm";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 import { message } from "antd";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-class AddIncomeForm extends Component {
-  formRef = React.createRef();
+function AddIncomeForm() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const history = useHistory();
+  const formRef = useRef();
 
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-    history: PropTypes.object.isRequired,
-  }
-
-  handleSubmit = (values) => {
+  const handleSubmit = (values) => {
     values.date = Date.now();
 
     firebase.database()
-      .ref(`users/${this.props.uid}/${year}/${month}/income`)
+      .ref(`users/${uid}/${year}/${month}/income`)
       .push(values)
       .then(() => {
         message.success(`Added $${values.amount} to income successfully`);
-        this.formRef.current.resetFields();
+        if (formRef.current) {
+          formRef.current.resetFields();
+        }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         message.error("Something went wrong. Please try again.");
       });
-  }
+  };
 
-  navigateHome = () => {
-    this.props.history.push("/");
-  }
+  const navigateHome = () => {
+    history.push("/");
+  };
 
-  render() {
-    return (
-      <GeneralForm
-        formRef={this.formRef}
-        navigateHome={this.navigateHome}
-        title="Add Income"
-        handleSubmit={this.handleSubmit}
-        placeholderText="Income Source"
-      />
-
-    );
-  }
+  return (
+    <GeneralForm
+      formRef={formRef}
+      navigateHome={navigateHome}
+      title="Add Income"
+      handleSubmit={handleSubmit}
+      placeholderText="Income Source"
+    />
+  );
 }
 
-export default withAuth(withRouter(AddIncomeForm));
+export default AddIncomeForm;

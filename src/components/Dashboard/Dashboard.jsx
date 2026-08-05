@@ -1,13 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { Row, Col, List, Slider, Button } from "antd";
 import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { withRouter } from "react-router-dom";
-import withAuth from "../../store/withAuth";
+import { useHistory } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 // import ExpensesSummary from "./ExpensesSummary";
@@ -17,142 +16,124 @@ import ExpenseItem from "../Expense/ExpenseItem";
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 const NAVBAR = [
-  // { url: "/expenses", label: "Expenses", icon: <DashboardOutlined />, color: "#ff85c0" },
-  // { url: "/income", label: "Income", icon: <DollarOutlined />, color: "#597ef7" },
-  // { url: "/investment", label: "Investment", icon: <BankOutlined />, color: "#ffd666" },
   { url: "/expenses/new", label: "Add Expense", icon: <PlusCircleOutlined />, color: "#ff85c0" },
   { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
-  // { url: "/income/new", label: "Add Income", icon: <PlusCircleOutlined />, color: "#ff85c0" },
-  // { url: "/profile", label: "Add Budget", icon: <PlusCircleOutlined />, color: "#ff85c0" },
 ];
 
-class Dashboard extends Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-    uid: PropTypes.string.isRequired,
-  }
+function Dashboard() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const history = useHistory();
+  const [expenses, setExpenses] = useState([]);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [expenseBudget, setExpenseBudget] = useState(0);
 
-  state = {
-    uid: "",
-    expenses: [],
-    totalExpense: 0,
-    loading: true,
-    expenseBudget: 0,
-  }
+  useEffect(() => {
+    if (!uid) {
+      setExpenses([]);
+      setTotalExpense(0);
+      setExpenseBudget(0);
+      setLoading(false);
+      return;
+    }
 
-  componentDidMount() {
-    this.getExpenses();
-    this.getBudget();
-  }
-
-  linkTo = url => () => {
-    this.props.history.push(url);
-  }
-
-  getExpenses = () => {
-    firebase.database()
-      .ref(`/users/${this.props.uid}/${year}/${month}/items`)
-      .once("value", snapshot => {
+    const fetchExpenses = async () => {
+      try {
+        const snapshot = await firebase.database().ref(`/users/${uid}/${year}/${month}/items`).once("value");
         if (snapshot.exists()) {
           const items = snapshot.val();
           const itemIDs = Object.keys(items);
-          let totalExpense = 0;
+          let total = 0;
 
-          const parsedItems = itemIDs.map(id => {
+          const parsedItems = itemIDs.map((id) => {
             const item = items[id];
-            totalExpense += parseFloat(item.amount);
-            item["id"] = id;
+            total += parseFloat(item.amount);
+            item.id = id;
             return item;
           });
 
-          this.setState({
-            expenses: parsedItems.reverse().slice(0, 3),
-            totalExpense,
-            loading: false,
-          });
+          setExpenses(parsedItems.reverse().slice(0, 3));
+          setTotalExpense(total);
         } else {
-          this.setState({ loading: false, expenses: []});
+          setExpenses([]);
+          setTotalExpense(0);
         }
-      })
-      .catch(err => console.error(err));
-  }
-
-  getBudget = () =>{
-    firebase.database()
-      .ref(`/users/${this.props.uid}/profile/expenseBudget`)
-      .once("value", snapshot => {
-        if (snapshot.exists()) {
-          this.setState({ expenseBudget: snapshot.val() });
-        }
-      })
-      .catch(err => console.error(err));
-  }
-
-  render() {
-    const marks = {
-      [this.state.expenseBudget]: `$${this.state.expenseBudget}`
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
-    return (
-      <React.Fragment>
-        <Container>
-          <Header title="Dashboard" />
-          
-          <Row gutter={16}
-            style={{ padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
-            {NAVBAR.map(nav => (
-              <Col xs={12} key={nav.label}>
-                <div
-                  onClick={this.linkTo(nav.url)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {nav.icon}
-                  <div style={{ fontSize: 14 }}>{nav.label}</div>
-                </div>
-              </Col>
-            ))}
-          </Row>
 
-          <h6 style={{ marginTop: 20 }}>Expenses</h6>
-          <Row type="flex" align="middle">
-            <Col xs={9}>
-              <h4>$ {this.state.totalExpense.toFixed(2)}</h4>
+    const fetchBudget = async () => {
+      try {
+        const snapshot = await firebase.database().ref(`/users/${uid}/profile/expenseBudget`).once("value");
+        if (snapshot.exists()) {
+          setExpenseBudget(snapshot.val());
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchExpenses();
+    fetchBudget();
+  }, [uid]);
+
+  const linkTo = (url) => () => {
+    history.push(url);
+  };
+
+  const marks = {
+    [expenseBudget]: `$${expenseBudget}`,
+  };
+
+  return (
+    <React.Fragment>
+      <Container>
+        <Header title="Dashboard" />
+
+        <Row gutter={16} style={{ padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
+          {NAVBAR.map((nav) => (
+            <Col xs={12} key={nav.label}>
+              <div onClick={linkTo(nav.url)} style={{ cursor: "pointer" }}>
+                {nav.icon}
+                <div style={{ fontSize: 14 }}>{nav.label}</div>
+              </div>
             </Col>
-            <Col xs={15}>
-              {this.state.expenseBudget > 0 &&
-                <Slider value={Math.min(this.state.expenseBudget, this.state.totalExpense)} max={this.state.expenseBudget} tooltipVisible={false} marks={marks}/>
-              }
-            </Col>
-          </Row>
+          ))}
+        </Row>
 
-          {/* <h6 style={{ marginTop: 20, marginBottom: 15 }}>
-            This month's breakdown
-          </h6>
-          <MonthBreakdown />
-
-          <h6 style={{ marginTop: 20, marginBottom: 15 }}>
-            The last 6 months
-          </h6>
-          <ExpensesSummary /> */}
-
-          <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <h6>Expenses</h6>
-            <Button type="link" style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }} onClick={this.linkTo("/expenses")}>View All</Button>
-          </div>
-          <List
-            loading={this.state.loading}
-            dataSource={this.state.expenses}
-            renderItem={item => (
-              <ExpenseItem
-                dashboard
-                key={item.id}
-                item={item}
-              />
+        <h6 style={{ marginTop: 20 }}>Expenses</h6>
+        <Row type="flex" align="middle">
+          <Col xs={9}>
+            <h4>$ {totalExpense.toFixed(2)}</h4>
+          </Col>
+          <Col xs={15}>
+            {expenseBudget > 0 && (
+              <Slider value={Math.min(expenseBudget, totalExpense)} max={expenseBudget} tooltipVisible={false} marks={marks} />
             )}
-          />
-        </Container>
-      </React.Fragment>
-    );
-  }
+          </Col>
+        </Row>
+
+        {/* <h6 style={{ marginTop: 20, marginBottom: 15 }}>
+          This month's breakdown
+        </h6>
+        <MonthBreakdown />
+
+        <h6 style={{ marginTop: 20, marginBottom: 15 }}>
+          The last 6 months
+        </h6>
+        <ExpensesSummary /> */}
+
+        <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <h6>Expenses</h6>
+          <Button type="link" style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }} onClick={linkTo("/expenses")}>View All</Button>
+        </div>
+        <List loading={loading} dataSource={expenses} renderItem={(item) => <ExpenseItem dashboard key={item.id} item={item} />} />
+      </Container>
+    </React.Fragment>
+  );
 }
 
-export default withAuth(withRouter(Dashboard));
+export default Dashboard;

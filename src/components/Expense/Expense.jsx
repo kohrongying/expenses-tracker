@@ -1,13 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import withAuth from "../../store/withAuth";
+import useAuthStore from "../../store/authStore";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import ExpenseItem from "./ExpenseItem";
@@ -15,113 +14,78 @@ import ExpenseItem from "./ExpenseItem";
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-class Expense extends Component {
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-    history: PropTypes.object.isRequired,
-  }
+function Expense() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const history = useHistory();
+  const [items, setItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  state = {
-    items: [],
-    totalAmount: 0,
-    loading: true
-  }
-
-  componentDidMount() {
-    if (this.props.uid) {
-      firebase.database()
-        .ref(`/users/${this.props.uid}/${year}/${month}/items`)
-        .on("value", snapshot => {
-          if (snapshot.exists()) {
-            const items = snapshot.val();
-            const itemIDs = Object.keys(items);
-            let totalAmount = 0;
-
-            const parsedItems = itemIDs.map(id => {
-              const item = items[id];
-              totalAmount += parseFloat(item.amount);
-              item["id"] = id;
-              return item;
-            });
-
-            this.setState({
-              items: parsedItems.reverse(),
-              totalAmount,
-              loading: false,
-            });
-          } else {
-            this.setState({
-              loading: false,
-              items: [],
-              totalAmount: 0 });
-          }
-        });
+  useEffect(() => {
+    if (!uid) {
+      setItems([]);
+      setTotalAmount(0);
+      setLoading(false);
+      return;
     }
-  }
 
-  componentWillUnmount() {
-    firebase.database().ref(`/users/${this.props.uid}/${year}/${month}/items`)
-      .off();
-  }
+    const ref = firebase.database().ref(`/users/${uid}/${year}/${month}/items`);
 
-  removeItem = (itemID) => () => {
-    firebase.database()
-      .ref(`users/${this.props.uid}/${year}/${month}/items/${itemID}`).remove()
-      .catch(err => {
-        message.error(err);
-      });
-  }
+    const handleValue = (snapshot) => {
+      if (snapshot.exists()) {
+        const itemsVal = snapshot.val();
+        const itemIDs = Object.keys(itemsVal);
+        let total = 0;
 
-  navigate = (route) => () => {
-    this.props.history.push(route);
-  }
+        const parsedItems = itemIDs.map((id) => {
+          const item = itemsVal[id];
+          total += parseFloat(item.amount);
+          item.id = id;
+          return item;
+        });
 
-  render(){
-    return (
-      <div>
-        {this.props.uid ?
-          <React.Fragment>
+        setItems(parsedItems.reverse());
+        setTotalAmount(total);
+      } else {
+        setItems([]);
+        setTotalAmount(0);
+      }
+      setLoading(false);
+    };
 
-            <Container>
-              <ArrowLeftOutlined
-                onClick={this.navigate("/")}
-                style={{ marginTop: 30 }}
-              />
+    ref.on("value", handleValue);
+    return () => ref.off("value", handleValue);
+  }, [uid]);
 
-              <MonthSum
-                loading={this.state.loading}
-                totalAmount={this.state.totalAmount}
-                title="Expenses"
-              />
+  const removeItem = (itemID) => () => {
+    firebase.database().ref(`users/${uid}/${year}/${month}/items/${itemID}`).remove().catch((err) => {
+      message.error(err);
+    });
+  };
 
-              <Button
-                block
-                type="link"
-                style={{ marginTop: 30, marginBottom: 20, color: "black" }}
-                onClick={this.navigate("/expenses/new")}
-              >
-                Add Expense
-              </Button>
+  const navigate = (route) => () => {
+    history.push(route);
+  };
 
-              <List
-                loading={this.state.loading}
-                dataSource={this.state.items}
-                renderItem={item => (
-                  <ExpenseItem
-                    key={item.id}
-                    item={item}
-                    removeItem={this.removeItem}
-                  />
-                )}
-              />
-            </Container>
-          </React.Fragment>
-          :
-          <p>You must be logged in.</p>
-        }
-      </div>
-    );
-  }
+  return (
+    <div>
+      {uid ? (
+        <React.Fragment>
+          <Container>
+            <ArrowLeftOutlined onClick={navigate("/")} style={{ marginTop: 30 }} />
+
+            <MonthSum loading={loading} totalAmount={totalAmount} title="Expenses" />
+
+            <Button block type="link" style={{ marginTop: 30, marginBottom: 20, color: "black" }} onClick={navigate("/expenses/new")}>Add Expense</Button>
+
+            <List loading={loading} dataSource={items} renderItem={(item) => <ExpenseItem key={item.id} item={item} removeItem={removeItem} />} />
+          </Container>
+        </React.Fragment>
+      ) : (
+        <p>You must be logged in.</p>
+      )}
+    </div>
+  );
 }
 
-export default withAuth(withRouter(Expense));
+export default Expense;

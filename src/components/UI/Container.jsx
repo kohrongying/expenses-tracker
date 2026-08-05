@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Row, Col } from "antd";
 
 const Container = (props) => (
@@ -13,9 +12,5 @@ const Container = (props) => (
     </Col>
   </Row>
 );
-
-Container.propTypes = {
-  children: PropTypes.any.isRequired,
-};
 
 export default Container;

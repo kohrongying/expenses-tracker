@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
@@ -7,84 +6,70 @@ import "firebase/database";
 import { Pie } from "react-chartjs-2";
 import { Empty } from 'antd';
 import { categories } from "../../constants/ExpenseCategories";
-import withAuth from "../../store/withAuth";
+import useAuthStore from "../../store/authStore";
 
-const categoryLabels = categories.map(category => category.value.toLowerCase());
-const categoryColors = categories.map(category => category.color);
+const categoryLabels = categories.map((category) => category.value.toLowerCase());
+const categoryColors = categories.map((category) => category.color);
 
-class MonthBreakdown extends Component {
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-  }
+function MonthBreakdown() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const [categoryData, setCategoryData] = useState([]);
 
-  state = {
-    categoryData: [],
-  }
+  useEffect(() => {
+    if (!uid) {
+      setCategoryData([]);
+      return;
+    }
 
-  componentDidMount() {
-    this.getCurrentMonthItems().then(snapshot => {
+    const getCurrentMonthItems = async () => {
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth();
+      const snapshot = await firebase.database().ref(`users/${uid}/${year}/${month}`).once("value");
       if (snapshot.exists()) {
-        const result = snapshot.val()
-        const categoryData = this.computeCategoryData(result.items)
-        console.log(categoryData)
-        this.setState({ categoryData })
+        const result = snapshot.val();
+        const data = computeCategoryData(result.items);
+        setCategoryData(data);
       }
-    })
-  }
+    };
 
-  getCurrentMonthItems = () => {
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth();
+    const computeCategoryData = (items) => {
+      if (items) {
+        const allItems = Object.values(items);
+        const groupAmtByCategory = allItems.reduce((result, item) => {
+          const category = item.category.toLowerCase();
+          result[category] = result[category] || [];
+          result[category].push(item.amount);
+          return result;
+        }, {});
 
-    return firebase.database()
-      .ref(`users/${this.props.uid}/${year}/${month}`)
-      .once("value");
-  }
-
-  computeCategoryData = (items) => {
-    if (items) {
-      const allItems = Object.values(items);
-      const groupAmtByCategory = allItems.reduce((r, a) => {
-        const category = a.category.toLowerCase();
-        r[category] = r[category] || [];
-        r[category].push(a.amount);
-        return r;
-      }, {});
-      console.log(groupAmtByCategory);
-      const data = [];
-      for (let i=0; i < categories.length; i++) {
-        const category = categories[i].value.toLowerCase();
-        const amounts = groupAmtByCategory[category] || [];
-        const amountSum = amounts.reduce((acc, curr) => acc + curr, 0);
-        data.push(parseFloat(amountSum.toFixed(2)));
+        return categories.map((category) => {
+          const amounts = groupAmtByCategory[category.value.toLowerCase()] || [];
+          const amountSum = amounts.reduce((acc, curr) => acc + curr, 0);
+          return parseFloat(amountSum.toFixed(2));
+        });
       }
-      return data;
-    }
-    return [];
-  }
+      return [];
+    };
 
-  render() {
-    const chartData = {
-      labels: categoryLabels,
-      datasets: [
-        {
-          label: 'Category Breakdown',
-          data: this.state.categoryData,
-          backgroundColor: categoryColors,
-          borderColor: categoryColors,
-          borderWidth: 1,
-        }
-      ]
-    }
-    if (this.state.categoryData.length === 0) return <Empty />;
-    
-    return (
-      <Pie
-        data={chartData}
-        height={150}
-      />
-    );
-  }
+    getCurrentMonthItems();
+  }, [uid]);
+
+  if (categoryData.length === 0) return <Empty />;
+
+  const chartData = {
+    labels: categoryLabels,
+    datasets: [
+      {
+        label: 'Category Breakdown',
+        data: categoryData,
+        backgroundColor: categoryColors,
+        borderColor: categoryColors,
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  return <Pie data={chartData} height={150} />;
 }
 
-export default withAuth(MonthBreakdown);
+export default MonthBreakdown;

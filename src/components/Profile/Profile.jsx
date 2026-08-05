@@ -1,289 +1,234 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import "firebase/auth";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
 import { ArrowLeftOutlined, EditOutlined, DeleteOutlined, PlusOutlined, UserOutlined, DollarOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
-import withAuth from "../../store/withAuth";
+import useAuthStore from "../../store/authStore";
 import { formatNumber } from "../../helpers/common";
 
-class Profile extends Component {
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-    history: PropTypes.object.isRequired,
-    authLogout: PropTypes.func.isRequired,
-  }
+const { Panel } = Collapse;
 
-  state = {
-    income: [],
-    investments: [],
-    showModal: false,
-    modalTitle: "",
-    modalFunc: () => {},
-    amount: 0,
-    source: "",
-    showBudgetModal: false,
-    expenseBudget: "",
-  }
+function Profile() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const authLogout = useAuthStore((state) => state.logout);
+  const history = useHistory();
 
-  componentDidMount() {
-    this.watchProfile();
-  }
+  const [income, setIncome] = useState([]);
+  const [investments, setInvestments] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalFunc, setModalFunc] = useState(() => () => {});
+  const [amount, setAmount] = useState(0);
+  const [source, setSource] = useState("");
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [expenseBudget, setExpenseBudget] = useState("");
 
-  componentWillUnmount() {
-    firebase.database().ref(`users/${this.props.uid}/profile`).off();
-  }
+  useEffect(() => {
+    if (!uid) return;
 
-  watchProfile = () => {
-    firebase.database().ref(`users/${this.props.uid}/profile`).on("value", snapshot => {
+    const ref = firebase.database().ref(`users/${uid}/profile`);
+    const handleValue = (snapshot) => {
       if (snapshot.exists()) {
         const profile = snapshot.val();
         const incomeItems = profile.monthlyIncome || {};
         const investmentItems = profile.monthlyInvestments || {};
-        const expenseBudget = profile.expenseBudget || "";
-        const income = Object.keys(incomeItems).map(key => {
-          let item = incomeItems[key];
-          item["id"] = key;
+        const budget = profile.expenseBudget || "";
+
+        const incomeList = Object.keys(incomeItems).map((key) => {
+          const item = incomeItems[key];
+          item.id = key;
           return item;
         });
-        const investments = Object.keys(investmentItems).map(key => {
-          let item = investmentItems[key];
-          item["id"] = key;
+
+        const investmentList = Object.keys(investmentItems).map((key) => {
+          const item = investmentItems[key];
+          item.id = key;
           return item;
         });
-        this.setState({ investments, income, expenseBudget });
+
+        setIncome(incomeList);
+        setInvestments(investmentList);
+        setExpenseBudget(budget);
       }
-    });
-  }
+    };
 
-  removeIncome = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/profile/monthlyIncome/${id}`).remove();
-  }
+    ref.on("value", handleValue);
+    return () => ref.off("value", handleValue);
+  }, [uid]);
 
-  removeInvestment = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/profile/monthlyInvestments/${id}`).remove();
-  }
-
-  showBudgetModal = (showBudgetModal) => () => {
-    this.setState({ showBudgetModal });
-  }
-
-  showModal = (showModal) => () => {
-    this.setState({ showModal });
-  }
-
-  showModalIncome = () => {
-    this.setState({
-      showModal: true,
-      modalTitle: "Add Recurring Income",
-      modalFunc: this.addRecurringItem("monthlyIncome"),
-    });
-  }
-
-  showModalInvestment = () => {
-    this.setState({
-      showModal: true,
-      modalTitle: "Add Recurring Investment",
-      modalFunc: this.addRecurringItem("monthlyInvestments"),
-    });
-  }
-
-  addRecurringItem = (ref) => () => {
-    firebase.database().ref(`users/${this.props.uid}/profile/${ref}`)
-      .push({
-        amount: this.state.amount,
-        source: this.state.source,
-      })
-      .then(() => {
-        this.setState({
-          amount: 0,
-          source: "",
-          showModal: false,
-        });
-      });
-  }
-
-  updateBudget = () => {
-    firebase.database().ref(`users/${this.props.uid}/profile`)
-      .update({
-        expenseBudget: this.state.expenseBudget,
-      })
-      .then(() => {
-        this.setState({
-          showBudgetModal: false,
-        });
-      });
-  }
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+  const removeIncome = (id) => () => {
+    firebase.database().ref(`users/${uid}/profile/monthlyIncome/${id}`).remove();
   };
 
-  handleSelect = name => value => {
-    this.setState({ [name]: parseFloat(value) });
-  }
+  const removeInvestment = (id) => () => {
+    firebase.database().ref(`users/${uid}/profile/monthlyInvestments/${id}`).remove();
+  };
 
-  navigateHome = () => {
-    this.props.history.push("/");
-  }
+  const showBudgetModalHandler = (visible) => () => {
+    setShowBudgetModal(visible);
+  };
 
-  logout = () => {
-    firebase.auth().signOut()
-      .then(() => {
-        this.props.authLogout();
-        this.props.history.push("/");
-      });
-  }
+  const showModalHandler = (visible) => () => {
+    setShowModal(visible);
+  };
 
-  render() {
-    return (
-      <React.Fragment>
-        <Container>
-          <ArrowLeftOutlined
-            onClick={this.navigateHome}
-          />
-          <h3 style={{ paddingTop: 20 }}>Profile</h3>
+  const showModalIncome = () => {
+    setModalTitle("Add Recurring Income");
+    setModalFunc(() => addRecurringItem("monthlyIncome"));
+    setShowModal(true);
+  };
 
-          <Row type="flex" justify="center">
-            <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
-              <UserOutlined style={{ fontSize: 60 }}  />
+  const showModalInvestment = () => {
+    setModalTitle("Add Recurring Investment");
+    setModalFunc(() => addRecurringItem("monthlyInvestments"));
+    setShowModal(true);
+  };
+
+  const addRecurringItem = (ref) => async () => {
+    await firebase.database().ref(`users/${uid}/profile/${ref}`).push({
+      amount,
+      source,
+    });
+    setAmount(0);
+    setSource("");
+    setShowModal(false);
+  };
+
+  const updateBudget = () => {
+    firebase.database().ref(`users/${uid}/profile`).update({ expenseBudget }).then(() => {
+      setShowBudgetModal(false);
+    });
+  };
+
+  const handleChange = (name) => (event) => {
+    if (name === "source") {
+      setSource(event.target.value);
+    }
+  };
+
+  const handleSelect = (name) => (value) => {
+    if (name === "amount") {
+      setAmount(parseFloat(value));
+    }
+    if (name === "expenseBudget") {
+      setExpenseBudget(parseFloat(value));
+    }
+  };
+
+  const navigateHome = () => {
+    history.push("/");
+  };
+
+  const logout = () => {
+    firebase.auth().signOut().then(() => {
+      authLogout();
+      history.push("/");
+    });
+  };
+
+  return (
+    <React.Fragment>
+      <Container>
+        <ArrowLeftOutlined onClick={navigateHome} />
+        <h3 style={{ paddingTop: 20 }}>Profile</h3>
+
+        <Row type="flex" justify="center">
+          <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
+            <UserOutlined style={{ fontSize: 60 }} />
+          </Col>
+        </Row>
+
+        <Collapse bordered={false} expandIconPosition="right">
+          <Panel header="Budget" key="1" extra={expenseBudget === "" ? <PlusOutlined onClick={showBudgetModalHandler(true)} /> : <EditOutlined onClick={showBudgetModalHandler(true)} />}>
+            <List
+              dataSource={[expenseBudget]}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta avatar={<Avatar size="large" icon={<UserOutlined />} />} title="Budget" style={{ alignItems: "center" }} />
+                  <div>{item ? `S$ ${formatNumber(item)}` : "Not set yet"}</div>
+                </List.Item>
+              )}
+            />
+          </Panel>
+
+          <Panel header="Recurring Income" key="2" extra={<PlusOutlined onClick={showModalIncome} />}>
+            <List
+              dataSource={income}
+              renderItem={(item) => (
+                <List.Item actions={[<DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeIncome(item.id)} />]}>
+                  <List.Item.Meta avatar={<Avatar size="large" icon={<DollarOutlined />} />} title={item.source} style={{ alignItems: "center" }} />
+                  <div>{`S$ ${formatNumber(item.amount)}`}</div>
+                </List.Item>
+              )}
+            />
+          </Panel>
+
+          <Panel header="Recurring investments" key="3" extra={<PlusOutlined onClick={showModalInvestment} />}>
+            <List
+              dataSource={investments}
+              renderItem={(item) => (
+                <List.Item actions={[<DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeInvestment(item.id)} />]}>
+                  <List.Item.Meta avatar={<Avatar size="large" icon={<DollarOutlined />} />} title={item.source} style={{ alignItems: "center" }} />
+                  <div>{`S$ ${formatNumber(item.amount)}`}</div>
+                </List.Item>
+              )}
+            />
+          </Panel>
+        </Collapse>
+
+        <Modal
+          title={modalTitle}
+          centered
+          visible={showModal}
+          onOk={modalFunc}
+          okButtonProps={{ disabled: source === "" || amount === 0 }}
+          onCancel={showModalHandler(false)}
+        >
+          <Row gutter={8}>
+            <Col xs={12}>
+              <InputNumber
+                value={amount}
+                style={{ width: "100%" }}
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                onChange={handleSelect("amount")}
+              />
+            </Col>
+
+            <Col xs={12}>
+              <Input placeholder="Source" value={source} onChange={handleChange("source")} />
             </Col>
           </Row>
+        </Modal>
 
-          <Collapse
-            bordered={false}
-            expandIconPosition="right"
-          >
-            <Panel
-              header="Budget"
-              key="1"
-              extra={this.state.expenseBudget==="" ? <PlusOutlined onClick={this.showBudgetModal(true)} /> : <EditOutlined onClick={this.showBudgetModal(true)} /> }
-            >
-              <List
-                dataSource={[this.state.expenseBudget]}
-                renderItem={item => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<Avatar size="large" icon={<UserOutlined />} />}
-                      title="Budget"
-                      style={{ alignItems: "center" }}
-                    />
-                    <div>{item ? `S$ ${formatNumber(item)}` : "Not set yet"}</div>
-                  </List.Item>
-                )}
-              />
-            </Panel>
+        <Modal
+          title="Update Monthly Expense Budget"
+          centered
+          visible={showBudgetModal}
+          onOk={updateBudget}
+          okButtonProps={{ disabled: expenseBudget === "" || expenseBudget === 0 }}
+          onCancel={showBudgetModalHandler(false)}
+        >
+          <InputNumber
+            value={expenseBudget}
+            style={{ width: "100%" }}
+            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            onChange={handleSelect("expenseBudget")}
+          />
+        </Modal>
 
-            <Panel
-              header="Recurring Income"
-              key="2"
-              extra={<PlusOutlined onClick={this.showModalIncome}/>}
-            >
-              <List
-                dataSource={this.state.income}
-                renderItem={item => (
-                  <List.Item
-                    actions={[
-                      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={this.removeIncome(item.id)} />
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
-                      title={item.source}
-                      style={{ alignItems: "center" }}
-                    />
-                    <div>{`S$ ${formatNumber(item.amount)}`}</div>
-                  </List.Item>
-                )}
-              />
-            </Panel>
-
-            <Panel
-              header="Recurring investments"
-              key="3"
-              extra={<PlusOutlined onClick={this.showModalInvestment} />}
-            >
-              <List
-                dataSource={this.state.investments}
-                renderItem={item => (
-                  <List.Item
-                    actions={[
-                      <DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={this.removeInvestment(item.id)}/>
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
-                      title={item.source}
-                      style={{ alignItems: "center" }}
-                    />
-                    <div>{`S$ ${formatNumber(item.amount)}`}</div>
-                  </List.Item>
-                )}
-              />
-            </Panel>
-          </Collapse>
-
-          <Modal
-            title={this.state.modalTitle}
-            centered
-            visible={this.state.showModal}
-            onOk={this.state.modalFunc}
-            okButtonProps={{
-              disabled: this.state.source === "" || this.state.amount === 0
-            }}
-            onCancel={this.showModal(false)}
-          >
-            <Row gutter={8}>
-              <Col xs={12}>
-                <InputNumber
-                  value={this.state.amount}
-                  style={{ width: "100%" }}
-                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                  onChange={this.handleSelect("amount")}
-                />
-              </Col>
-
-              <Col xs={12}>
-                <Input
-                  placeholder="Source"
-                  value={this.state.source}
-                  onChange={this.handleChange("source")}
-                />
-              </Col>
-            </Row>
-          </Modal>
-
-          <Modal
-            title="Update Monthly Expense Budget"
-            centered
-            visible={this.state.showBudgetModal}
-            onOk={this.updateBudget}
-            okButtonProps={{
-              disabled: this.state.expenseBudget === "" || this.state.expenseBudget === 0
-            }}
-            onCancel={this.showBudgetModal(false)}
-          >
-            <InputNumber
-              value={this.state.expenseBudget}
-              style={{ width: "100%" }}
-              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              parser={value => value.replace(/\$\s?|(,*)/g, "")}
-              onChange={this.handleSelect("expenseBudget")}
-            />
-          </Modal>
-
-          <div style={{ display: "flex", justifyContent: "center", margin: 30 }}>
-            <Button onClick={this.logout}>Logout</Button>
-          </div>
-        </Container>
-      </React.Fragment>
-    );
-  }
+        <div style={{ display: "flex", justifyContent: "center", margin: 30 }}>
+          <Button onClick={logout}>Logout</Button>
+        </div>
+      </Container>
+    </React.Fragment>
+  );
 }
 
-export default withAuth(withRouter(Profile));
+export default Profile;

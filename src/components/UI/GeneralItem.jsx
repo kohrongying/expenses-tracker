@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { formatNumber } from "../../helpers/common";
 import { List, Avatar } from "antd";
 import { DeleteOutlined, DollarOutlined } from "@ant-design/icons";
@@ -21,10 +20,5 @@ const GeneralItem = ({ item, removeItem }) => (
 
   </List.Item>
 );
-
-GeneralItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  removeItem: PropTypes.func.isRequired,
-};
 
 export default GeneralItem;

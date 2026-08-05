@@ -1,131 +1,120 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import withAuth from "../../store/withAuth";
-
 import { Bar } from "react-chartjs-2";
+import useAuthStore from "../../store/authStore";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-class ExpensesSummary extends Component {
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-  }
+function ExpensesSummary() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const [months, setMonths] = useState([]);
+  const [monthLabels, setMonthLabels] = useState([]);
 
-  state = {
-    months: [],
-    monthLabels: [],
-  }
+  useEffect(() => {
+    if (!uid) {
+      setMonths([]);
+      setMonthLabels([]);
+      return;
+    }
 
-  componentDidMount() {
-    let months = [];
-    let monthLabels = [];
+    const getMonths = async (yearRef, num) => firebase.database().ref(`users/${uid}/${yearRef}`).limitToLast(num).once("value");
 
-    // If May or earlier
-    if (month <= 4) {
-      this.getMonths(year, month+1).then(snapshot => {
+    const getTotalExpense = (items) => {
+      if (items) {
+        const totalExp = Object.values(items).map((item) => item.amount).reduce((accumulator, curr) => accumulator + curr, 0);
+        return parseFloat(totalExp.toFixed(2));
+      }
+      return 0;
+    };
+
+    const loadData = async () => {
+      const newMonths = [];
+      const newLabels = [];
+
+      if (month <= 4) {
+        const snapshot = await getMonths(year, month + 1);
         const result = snapshot.val();
-        for (let i = 0; i < month + 1; i ++) {
+        for (let i = 0; i < month + 1; i += 1) {
           if (result && i in result) {
-            const totalExpense = this.getTotalExpense(result[i].items);
-            months.push(totalExpense);
+            newMonths.push(getTotalExpense(result[i].items));
           } else {
-            months.push(0);
+            newMonths.push(0);
           }
-          monthLabels.push(`${monthNames[i]} ${year}`);
+          newLabels.push(`${monthNames[i]} ${year}`);
         }
-        const remainingMonths = 6 - month - 1;
-        this.getMonths(year-1, remainingMonths).then(snapshot => {
-          const result = snapshot.val();
-          for (let i = 11 ; i >= 12 - remainingMonths; i --) {
-            if (result && i in result) {
-              const totalExpense = this.getTotalExpense(result[i].items);
-              months.unshift(totalExpense);
-            } else {
-              months.unshift(0);
-            }
-            monthLabels.unshift(`${monthNames[i]} ${year-1}`);
-          }
-          this.setState({ months, monthLabels });
-        });
-      });
 
-    } else {
-      this.getMonths(year, 6).then(snapshot => {
+        const remainingMonths = 6 - month - 1;
+        const prevSnapshot = await getMonths(year - 1, remainingMonths);
+        const prevResult = prevSnapshot.val();
+        for (let i = 11; i >= 12 - remainingMonths; i -= 1) {
+          if (prevResult && i in prevResult) {
+            newMonths.unshift(getTotalExpense(prevResult[i].items));
+          } else {
+            newMonths.unshift(0);
+          }
+          newLabels.unshift(`${monthNames[i]} ${year - 1}`);
+        }
+      } else {
+        const snapshot = await getMonths(year, 6);
         if (snapshot.exists()) {
           const result = snapshot.val();
-          for (let i = month-6+1; i <= month; i ++) {
+          for (let i = month - 6 + 1; i <= month; i += 1) {
             if (i in result) {
-              const totalExpense = this.getTotalExpense(result[i].items);
-              months.push(totalExpense);
+              newMonths.push(getTotalExpense(result[i].items));
             } else {
-              months.push(0);
+              newMonths.push(0);
             }
-            monthLabels.push(monthNames[i]);
+            newLabels.push(monthNames[i]);
           }
-          this.setState({ months, monthLabels });
         }
-      });
-    }
-  }
+      }
 
-  getMonths = (yearRef, num) => {
-    return firebase.database()
-      .ref(`users/${this.props.uid}/${yearRef}`)
-      .limitToLast(num)
-      .once("value");
-  }
-
-  getTotalExpense = (items) => {
-    if (items) {
-      const totalExp = Object.values(items)
-        .map(item => item.amount)
-        .reduce((accumulator, curr) => accumulator + curr, 0);
-      return parseFloat(totalExp.toFixed(2));
-    }
-    return 0;
-  }
-
-  render() {
-    const barData = {
-      labels: this.state.monthLabels,
-      datasets: [
-        {
-          label: "Expenses",
-          backgroundColor: "#00d3ba",
-          borderWidth: 1,
-          hoverBackgroundColor: "#00d3ba",
-          data: this.state.months
-        }
-      ]
+      setMonths(newMonths);
+      setMonthLabels(newLabels);
     };
-    if (this.state.months.length === 0) return null;
-    return (
 
-      <Bar
-        data={barData}
-        height={150}
-        options={{
-          legend: { display: false },
-          scales: {
-            xAxes: [{ display: false, barPercentage: 0.5 }],
-            yAxes: [{
-              ticks: {
-                beginAtZero: true,
-                stepSize: 75,
-                gridlines: { show: false }
-              }
-            }],
-          }
-        }}
-      />
-    );
-  }
+    loadData();
+  }, [uid]);
+
+  if (months.length === 0) return null;
+
+  const barData = {
+    labels: monthLabels,
+    datasets: [
+      {
+        label: "Expenses",
+        backgroundColor: "#00d3ba",
+        borderWidth: 1,
+        hoverBackgroundColor: "#00d3ba",
+        data: months,
+      },
+    ],
+  };
+
+  return (
+    <Bar
+      data={barData}
+      height={150}
+      options={{
+        legend: { display: false },
+        scales: {
+          xAxes: [{ display: false, barPercentage: 0.5 }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 75,
+              gridlines: { show: false },
+            },
+          }],
+        },
+      }}
+    />
+  );
 }
 
-export default withAuth(ExpensesSummary);
+export default ExpensesSummary;

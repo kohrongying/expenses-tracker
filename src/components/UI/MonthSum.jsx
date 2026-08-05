@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Card, Typography } from "antd";
 import { getMonthYear, formatNumber } from "../../helpers/common";
 const { Title } = Typography;
@@ -20,11 +19,5 @@ const MonthSum = ({ loading, totalAmount, title }) => (
   </Card>
 
 );
-
-MonthSum.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  totalAmount: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-};
 
 export default MonthSum;

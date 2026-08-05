@@ -1,120 +1,111 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import GeneralItem from "../UI/GeneralItem";
-import { withRouter } from "react-router-dom";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-class Income extends Component {
-  static propTypes = {
-    uid: PropTypes.string.isRequired,
-    history: PropTypes.object.isRequired,
-  }
+function Income() {
+  const uid = useAuthStore((state) => state.user?.uid || "");
+  const history = useHistory();
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  state = {
-    loading: true,
-    items: [],
-    totalAmount: 0
-  }
-
-  componentDidMount() {
-    if (this.props.uid) {
-      firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-        .on("value", (snapshot)=> {
-
-          if (snapshot.exists()) {
-            let totalAmount = 0;
-            const items = snapshot.val();
-            const itemIds = Object.keys(items);
-            const parsedItems = itemIds.map(id => {
-              const item = items[id];
-              item["id"] = id;
-              totalAmount += parseFloat(item.amount);
-              return item;
-            });
-            this.setState({ items: parsedItems, totalAmount, loading: false });
-          } else {
-            this.copyMonthlyIncome();
-          }
-        });
+  useEffect(() => {
+    if (!uid) {
+      setLoading(false);
+      setItems([]);
+      setTotalAmount(0);
+      return;
     }
-  }
 
-  copyMonthlyIncome = () => {
-    firebase.database().ref(`users/${this.props.uid}/profile/monthlyIncome`)
-      .once("value")
-      .then(snapshot => {
+    const ref = firebase.database().ref(`users/${uid}/${year}/${month}/income`);
+
+    const handleValue = (snapshot) => {
+      if (snapshot.exists()) {
+        let total = 0;
+        const incomeItems = snapshot.val();
+        const itemIds = Object.keys(incomeItems);
+        const parsedItems = itemIds.map((id) => {
+          const item = incomeItems[id];
+          item.id = id;
+          total += parseFloat(item.amount);
+          return item;
+        });
+        setItems(parsedItems);
+        setTotalAmount(total);
+        setLoading(false);
+      } else {
+        copyMonthlyIncome();
+      }
+    };
+
+    const copyMonthlyIncome = async () => {
+      try {
+        const snapshot = await firebase.database().ref(`users/${uid}/profile/monthlyIncome`).once("value");
         if (snapshot.exists()) {
           const incomeItems = snapshot.val();
-          return firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`)
-            .update(incomeItems);
+          await firebase.database().ref(`users/${uid}/${year}/${month}/income`).update(incomeItems);
         } else {
-          this.setState({ loading: false, items: [], totalAmount: 0 });
+          setItems([]);
+          setTotalAmount(0);
+          setLoading(false);
         }
-      })
-      .catch(err => message.error(err));
-  }
+      } catch (err) {
+        message.error(err);
+      }
+    };
 
-  componentWillUnmount(){
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income`).off();
-  }
+    ref.on("value", handleValue);
+    return () => ref.off("value", handleValue);
+  }, [uid]);
 
-  removeItem = (id) => () => {
-    firebase.database().ref(`users/${this.props.uid}/${year}/${month}/income/${id}`).remove();
-  }
+  const removeItem = (id) => () => {
+    firebase.database().ref(`users/${uid}/${year}/${month}/income/${id}`).remove();
+  };
 
-  navigate = (route) => () => {
-    this.props.history.push(route);
-  }
+  const navigate = (route) => () => {
+    history.push(route);
+  };
 
-  render() {
-    return this.props.uid ?
-      <React.Fragment>
-        <Container>
-          <ArrowLeftOutlined
-            onClick={this.navigate("/")}
-          />
+  return uid ? (
+    <React.Fragment>
+      <Container>
+        <ArrowLeftOutlined onClick={navigate("/")} />
 
-          <MonthSum
-            loading={this.state.loading}
-            totalAmount={this.state.totalAmount}
-            title="Income"
-          />
+        <MonthSum loading={loading} totalAmount={totalAmount} title="Income" />
 
-          <Button
-            block
-            type="link"
-            style={{ marginTop: 30, marginBottom: 20, color: "black" }}
-            onClick={this.navigate("/income/new")}
-          >
-                Add Income
-          </Button>
+        <Button
+          block
+          type="link"
+          style={{ marginTop: 30, marginBottom: 20, color: "black" }}
+          onClick={navigate("/income/new")}
+        >
+          Add Income
+        </Button>
 
-          <List
-            loading={this.state.loading}
-            dataSource={this.state.items}
-            renderItem={item => (
-              <GeneralItem
-                key="item"
-                item={item}
-                removeItem={this.removeItem}
-              />
-            )}
-          />
-        </Container>
-      </React.Fragment>
-      :
-      <p>You must be logged in.</p>;
-  }
+        <List
+          loading={loading}
+          dataSource={items}
+          renderItem={(item) => (
+            <GeneralItem key={item.id} item={item} removeItem={removeItem} />
+          )}
+        />
+      </Container>
+    </React.Fragment>
+  ) : (
+    <p>You must be logged in.</p>
+  );
 }
 
-export default withAuth(withRouter(Income));
+export default Income;
