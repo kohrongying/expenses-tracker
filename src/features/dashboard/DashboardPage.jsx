@@ -5,11 +5,11 @@ import { ref, get } from "firebase/database";
 import { useHistory } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import { db } from "../../firebase";
-import Container from "../UI/Container";
-import Header from "../UI/Header";
+import Container from "../../components/ui/Container";
+import Header from "../../components/ui/Header";
 // import ExpensesSummary from "./ExpensesSummary";
 // import MonthBreakdown from "./MonthBreakdown";
-import ExpenseItem from "../Expense/ExpenseItem";
+import ExpenseItem from "../expense/ExpenseItem";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();

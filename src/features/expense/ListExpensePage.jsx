@@ -5,14 +5,14 @@ import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
-import Container from "../UI/Container";
-import MonthSum from "../UI/MonthSum";
+import Container from "../../components/ui/Container";
+import MonthSum from "../../components/ui/MonthSum";
 import ExpenseItem from "./ExpenseItem";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-function Expense() {
+function ListExpensePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const history = useHistory();
   const [items, setItems] = useState([]);
@@ -111,4 +111,4 @@ function Expense() {
   );
 }
 
-export default Expense;
+export default ListExpensePage;

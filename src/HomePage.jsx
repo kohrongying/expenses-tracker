@@ -3,9 +3,9 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Button, Spin } from "antd";
 import { auth } from "./firebase";
 import useAuthStore from "./store/authStore";
-import Dashboard from "./components/Dashboard/Dashboard";
-import Container from "./components/UI/Container";
-import Header from "./components/UI/Header";
+import Dashboard from "./features/dashboard/DashboardPage";
+import Container from "./components/ui/Container";
+import Header from "./components/ui/Header";
 
 const provider = new GoogleAuthProvider();
 

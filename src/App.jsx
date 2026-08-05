@@ -1,12 +1,12 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-const Expense = lazy(() => import("./components/Expense/Expense"));
+const Expense = lazy(() => import("./features/expense/ListExpensePage"));
 const AddExpenseForm = lazy(
-  () => import("./components/Expense/AddExpenseForm")
+  () => import("./features/expense/AddExpensePage")
 );
-const Profile = lazy(() => import("./components/Profile/Profile"));
-import PrivateRoute from "./components/Auth/PrivateRoute";
-import Home from "./Home";
+const Profile = lazy(() => import("./features/profile/ProfilePage"));
+import PrivateRoute from "./features/auth/PrivateRoute";
+import Home from "./HomePage";
 
 import useAuthStore from "./store/authStore";
 

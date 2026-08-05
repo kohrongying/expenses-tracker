@@ -5,14 +5,14 @@ import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
-import Container from "../UI/Container";
-import Header from "../UI/Header";
+import Container from "../../components/ui/Container";
+import Header from "../../components/ui/Header";
 import { categories } from "../../constants/ExpenseCategories";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 
-function AddExpenseForm() {
+function AddExpensePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const history = useHistory();
   const formRef = useRef();
@@ -91,4 +91,4 @@ function AddExpenseForm() {
   );
 }
 
-export default AddExpenseForm;
+export default AddExpensePage;

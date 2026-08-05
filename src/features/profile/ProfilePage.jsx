@@ -22,13 +22,13 @@ import {
 import { ref, onValue, remove, push, update } from "firebase/database";
 import { signOut } from "firebase/auth";
 import { db, auth } from "../../firebase";
-import Container from "../UI/Container";
+import Container from "../../components/ui/Container";
 import useAuthStore from "../../store/authStore";
 import { formatNumber } from "../../helpers/common";
 
 const { Panel } = Collapse;
 
-function Profile() {
+function ProfilePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const authLogout = useAuthStore((state) => state.logout);
   const history = useHistory();
@@ -130,37 +130,6 @@ function Profile() {
         </Collapse>
 
         <Modal
-          title={modalTitle}
-          centered
-          visible={showModal}
-          onOk={modalFunc}
-          okButtonProps={{ disabled: source === "" || amount === 0 }}
-          onCancel={showModalHandler(false)}
-        >
-          <Row gutter={8}>
-            <Col xs={12}>
-              <InputNumber
-                value={amount}
-                style={{ width: "100%" }}
-                formatter={(value) =>
-                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                onChange={handleSelect("amount")}
-              />
-            </Col>
-
-            <Col xs={12}>
-              <Input
-                placeholder="Source"
-                value={source}
-                onChange={handleChange("source")}
-              />
-            </Col>
-          </Row>
-        </Modal>
-
-        <Modal
           title="Update Monthly Expense Budget"
           centered
           visible={showBudgetModal}
@@ -189,4 +158,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfilePage;

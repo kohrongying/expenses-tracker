@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import ErrorBoundary from "../UI/ErrorBoundary";
+import ErrorBoundary from "../../components/ui/ErrorBoundary";
 import useAuthStore from "../../store/authStore";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
