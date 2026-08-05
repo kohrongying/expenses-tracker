@@ -4,11 +4,13 @@ import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import { Pie } from "react-chartjs-2";
-import { Empty } from 'antd';
+import { Empty } from "antd";
 import { categories } from "../../constants/ExpenseCategories";
 import useAuthStore from "../../store/authStore";
 
-const categoryLabels = categories.map((category) => category.value.toLowerCase());
+const categoryLabels = categories.map((category) =>
+  category.value.toLowerCase()
+);
 const categoryColors = categories.map((category) => category.color);
 
 function MonthBreakdown() {
@@ -24,7 +26,10 @@ function MonthBreakdown() {
     const getCurrentMonthItems = async () => {
       const year = new Date().getFullYear();
       const month = new Date().getMonth();
-      const snapshot = await firebase.database().ref(`users/${uid}/${year}/${month}`).once("value");
+      const snapshot = await firebase
+        .database()
+        .ref(`users/${uid}/${year}/${month}`)
+        .once("value");
       if (snapshot.exists()) {
         const result = snapshot.val();
         const data = computeCategoryData(result.items);
@@ -43,7 +48,8 @@ function MonthBreakdown() {
         }, {});
 
         return categories.map((category) => {
-          const amounts = groupAmtByCategory[category.value.toLowerCase()] || [];
+          const amounts =
+            groupAmtByCategory[category.value.toLowerCase()] || [];
           const amountSum = amounts.reduce((acc, curr) => acc + curr, 0);
           return parseFloat(amountSum.toFixed(2));
         });
@@ -60,7 +66,7 @@ function MonthBreakdown() {
     labels: categoryLabels,
     datasets: [
       {
-        label: 'Category Breakdown',
+        label: "Category Breakdown",
         data: categoryData,
         backgroundColor: categoryColors,
         borderColor: categoryColors,

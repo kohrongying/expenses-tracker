@@ -13,31 +13,25 @@ const GeneralForm = ({
   formRef,
 }) => (
   <Container>
-
-    <ArrowLeftOutlined
-      onClick={navigateHome}
-      style={{ marginTop: 30 }}
-    />
+    <ArrowLeftOutlined onClick={navigateHome} style={{ marginTop: 30 }} />
     <Header title={title} />
 
-    <Form
-      wrapperCol={{ span: 24 }}
-      onFinish={handleSubmit}
-      ref={formRef}
-    >
+    <Form wrapperCol={{ span: 24 }} onFinish={handleSubmit} ref={formRef}>
       <Form.Item
         name="amount"
         rules={[
           {
             required: true,
-            message: "Please input the amount"
-          }
+            message: "Please input the amount",
+          },
         ]}
       >
         <InputNumber
           style={{ width: "100%" }}
-          formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          parser={value => value.replace(/\$\s?|(,*)/g, "")}
+          formatter={(value) =>
+            `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
         />
       </Form.Item>
 
@@ -46,22 +40,15 @@ const GeneralForm = ({
         rules={[
           {
             required: true,
-            message: "Please input the source"
-          }
+            message: "Please input the source",
+          },
         ]}
       >
-        <Input
-          prefix={<InfoCircleOutlined />}
-          placeholder={placeholderText}
-        />
+        <Input prefix={<InfoCircleOutlined />} placeholder={placeholderText} />
       </Form.Item>
 
       <Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          block
-        >
+        <Button type="primary" htmlType="submit" block>
           Save
         </Button>
       </Form.Item>

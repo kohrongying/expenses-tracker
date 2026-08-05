@@ -2,20 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: rgba(240, 240, 240, 0.7)!important;
+  background-color: rgba(240, 240, 240, 0.7) !important;
 }
 
 #root {
-  height: 100vh!important;
+  height: 100vh !important;
 }
 
 .ant-slider-rail {
-  background-color: white!important;
+  background-color: white !important;
 }
 
 .ant-slider-track {
-  background-color: grey!important;
+  background-color: grey !important;
 }
 .ant-slider-handle {
-  display: none!important;
+  display: none !important;
 }

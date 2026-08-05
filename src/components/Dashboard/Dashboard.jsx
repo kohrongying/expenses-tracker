@@ -16,8 +16,18 @@ import ExpenseItem from "../Expense/ExpenseItem";
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
 const NAVBAR = [
-  { url: "/expenses/new", label: "Add Expense", icon: <PlusCircleOutlined />, color: "#ff85c0" },
-  { url: "/profile", label: "Profile", icon: <UserOutlined />, color: "#5cdbd3" },
+  {
+    url: "/expenses/new",
+    label: "Add Expense",
+    icon: <PlusCircleOutlined />,
+    color: "#ff85c0",
+  },
+  {
+    url: "/profile",
+    label: "Profile",
+    icon: <UserOutlined />,
+    color: "#5cdbd3",
+  },
 ];
 
 function Dashboard() {
@@ -39,7 +49,10 @@ function Dashboard() {
 
     const fetchExpenses = async () => {
       try {
-        const snapshot = await firebase.database().ref(`/users/${uid}/${year}/${month}/items`).once("value");
+        const snapshot = await firebase
+          .database()
+          .ref(`/users/${uid}/${year}/${month}/items`)
+          .once("value");
         if (snapshot.exists()) {
           const items = snapshot.val();
           const itemIDs = Object.keys(items);
@@ -67,7 +80,10 @@ function Dashboard() {
 
     const fetchBudget = async () => {
       try {
-        const snapshot = await firebase.database().ref(`/users/${uid}/profile/expenseBudget`).once("value");
+        const snapshot = await firebase
+          .database()
+          .ref(`/users/${uid}/profile/expenseBudget`)
+          .once("value");
         if (snapshot.exists()) {
           setExpenseBudget(snapshot.val());
         }
@@ -93,7 +109,14 @@ function Dashboard() {
       <Container>
         <Header title="Dashboard" />
 
-        <Row gutter={16} style={{ padding: 10, borderRadius: 10, boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)" }}>
+        <Row
+          gutter={16}
+          style={{
+            padding: 10,
+            borderRadius: 10,
+            boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)",
+          }}
+        >
           {NAVBAR.map((nav) => (
             <Col xs={12} key={nav.label}>
               <div onClick={linkTo(nav.url)} style={{ cursor: "pointer" }}>
@@ -111,7 +134,12 @@ function Dashboard() {
           </Col>
           <Col xs={15}>
             {expenseBudget > 0 && (
-              <Slider value={Math.min(expenseBudget, totalExpense)} max={expenseBudget} tooltipVisible={false} marks={marks} />
+              <Slider
+                value={Math.min(expenseBudget, totalExpense)}
+                max={expenseBudget}
+                tooltipVisible={false}
+                marks={marks}
+              />
             )}
           </Col>
         </Row>
@@ -126,11 +154,32 @@ function Dashboard() {
         </h6>
         <ExpensesSummary /> */}
 
-        <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            marginTop: 20,
+            marginBottom: 15,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <h6>Expenses</h6>
-          <Button type="link" style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }} onClick={linkTo("/expenses")}>View All</Button>
+          <Button
+            type="link"
+            style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }}
+            onClick={linkTo("/expenses")}
+          >
+            View All
+          </Button>
         </div>
-        <List loading={loading} dataSource={expenses} renderItem={(item) => <ExpenseItem dashboard key={item.id} item={item} />} />
+        <List
+          loading={loading}
+          dataSource={expenses}
+          renderItem={(item) => (
+            <ExpenseItem dashboard key={item.id} item={item} />
+          )}
+        />
       </Container>
     </React.Fragment>
   );

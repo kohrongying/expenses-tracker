@@ -5,8 +5,25 @@ import "firebase/compat/database";
 import "firebase/database";
 import "firebase/auth";
 import { useHistory } from "react-router-dom";
-import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
-import { ArrowLeftOutlined, EditOutlined, DeleteOutlined, PlusOutlined, UserOutlined, DollarOutlined } from "@ant-design/icons";
+import {
+  Button,
+  List,
+  Collapse,
+  Modal,
+  InputNumber,
+  Input,
+  Row,
+  Col,
+  Avatar,
+} from "antd";
+import {
+  ArrowLeftOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  UserOutlined,
+  DollarOutlined,
+} from "@ant-design/icons";
 import Container from "../UI/Container";
 import useAuthStore from "../../store/authStore";
 import { formatNumber } from "../../helpers/common";
@@ -62,11 +79,17 @@ function Profile() {
   }, [uid]);
 
   const removeIncome = (id) => () => {
-    firebase.database().ref(`users/${uid}/profile/monthlyIncome/${id}`).remove();
+    firebase
+      .database()
+      .ref(`users/${uid}/profile/monthlyIncome/${id}`)
+      .remove();
   };
 
   const removeInvestment = (id) => () => {
-    firebase.database().ref(`users/${uid}/profile/monthlyInvestments/${id}`).remove();
+    firebase
+      .database()
+      .ref(`users/${uid}/profile/monthlyInvestments/${id}`)
+      .remove();
   };
 
   const showBudgetModalHandler = (visible) => () => {
@@ -100,9 +123,13 @@ function Profile() {
   };
 
   const updateBudget = () => {
-    firebase.database().ref(`users/${uid}/profile`).update({ expenseBudget }).then(() => {
-      setShowBudgetModal(false);
-    });
+    firebase
+      .database()
+      .ref(`users/${uid}/profile`)
+      .update({ expenseBudget })
+      .then(() => {
+        setShowBudgetModal(false);
+      });
   };
 
   const handleChange = (name) => (event) => {
@@ -125,10 +152,13 @@ function Profile() {
   };
 
   const logout = () => {
-    firebase.auth().signOut().then(() => {
-      authLogout();
-      history.push("/");
-    });
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        authLogout();
+        history.push("/");
+      });
   };
 
   return (
@@ -138,42 +168,95 @@ function Profile() {
         <h3 style={{ paddingTop: 20 }}>Profile</h3>
 
         <Row type="flex" justify="center">
-          <Col style={{ padding: 15, borderRadius: "50%", backgroundColor: "#5cdbd3", marginBottom: 20 }}>
+          <Col
+            style={{
+              padding: 15,
+              borderRadius: "50%",
+              backgroundColor: "#5cdbd3",
+              marginBottom: 20,
+            }}
+          >
             <UserOutlined style={{ fontSize: 60 }} />
           </Col>
         </Row>
 
         <Collapse bordered={false} expandIconPosition="right">
-          <Panel header="Budget" key="1" extra={expenseBudget === "" ? <PlusOutlined onClick={showBudgetModalHandler(true)} /> : <EditOutlined onClick={showBudgetModalHandler(true)} />}>
+          <Panel
+            header="Budget"
+            key="1"
+            extra={
+              expenseBudget === "" ? (
+                <PlusOutlined onClick={showBudgetModalHandler(true)} />
+              ) : (
+                <EditOutlined onClick={showBudgetModalHandler(true)} />
+              )
+            }
+          >
             <List
               dataSource={[expenseBudget]}
               renderItem={(item) => (
                 <List.Item>
-                  <List.Item.Meta avatar={<Avatar size="large" icon={<UserOutlined />} />} title="Budget" style={{ alignItems: "center" }} />
+                  <List.Item.Meta
+                    avatar={<Avatar size="large" icon={<UserOutlined />} />}
+                    title="Budget"
+                    style={{ alignItems: "center" }}
+                  />
                   <div>{item ? `S$ ${formatNumber(item)}` : "Not set yet"}</div>
                 </List.Item>
               )}
             />
           </Panel>
 
-          <Panel header="Recurring Income" key="2" extra={<PlusOutlined onClick={showModalIncome} />}>
+          <Panel
+            header="Recurring Income"
+            key="2"
+            extra={<PlusOutlined onClick={showModalIncome} />}
+          >
             <List
               dataSource={income}
               renderItem={(item) => (
-                <List.Item actions={[<DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeIncome(item.id)} />]}>
-                  <List.Item.Meta avatar={<Avatar size="large" icon={<DollarOutlined />} />} title={item.source} style={{ alignItems: "center" }} />
+                <List.Item
+                  actions={[
+                    <DeleteOutlined
+                      key={`delete-item${item.id}`}
+                      type="delete"
+                      onClick={removeIncome(item.id)}
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar size="large" icon={<DollarOutlined />} />}
+                    title={item.source}
+                    style={{ alignItems: "center" }}
+                  />
                   <div>{`S$ ${formatNumber(item.amount)}`}</div>
                 </List.Item>
               )}
             />
           </Panel>
 
-          <Panel header="Recurring investments" key="3" extra={<PlusOutlined onClick={showModalInvestment} />}>
+          <Panel
+            header="Recurring investments"
+            key="3"
+            extra={<PlusOutlined onClick={showModalInvestment} />}
+          >
             <List
               dataSource={investments}
               renderItem={(item) => (
-                <List.Item actions={[<DeleteOutlined key={`delete-item${item.id}`} type="delete" onClick={removeInvestment(item.id)} />]}>
-                  <List.Item.Meta avatar={<Avatar size="large" icon={<DollarOutlined />} />} title={item.source} style={{ alignItems: "center" }} />
+                <List.Item
+                  actions={[
+                    <DeleteOutlined
+                      key={`delete-item${item.id}`}
+                      type="delete"
+                      onClick={removeInvestment(item.id)}
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar size="large" icon={<DollarOutlined />} />}
+                    title={item.source}
+                    style={{ alignItems: "center" }}
+                  />
                   <div>{`S$ ${formatNumber(item.amount)}`}</div>
                 </List.Item>
               )}
@@ -194,14 +277,20 @@ function Profile() {
               <InputNumber
                 value={amount}
                 style={{ width: "100%" }}
-                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                formatter={(value) =>
+                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
                 parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                 onChange={handleSelect("amount")}
               />
             </Col>
 
             <Col xs={12}>
-              <Input placeholder="Source" value={source} onChange={handleChange("source")} />
+              <Input
+                placeholder="Source"
+                value={source}
+                onChange={handleChange("source")}
+              />
             </Col>
           </Row>
         </Modal>
@@ -211,13 +300,17 @@ function Profile() {
           centered
           visible={showBudgetModal}
           onOk={updateBudget}
-          okButtonProps={{ disabled: expenseBudget === "" || expenseBudget === 0 }}
+          okButtonProps={{
+            disabled: expenseBudget === "" || expenseBudget === 0,
+          }}
           onCancel={showBudgetModalHandler(false)}
         >
           <InputNumber
             value={expenseBudget}
             style={{ width: "100%" }}
-            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            formatter={(value) =>
+              `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
             parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             onChange={handleSelect("expenseBudget")}
           />

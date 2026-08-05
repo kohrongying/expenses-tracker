@@ -17,7 +17,9 @@ function Home() {
 
   const login = () => {
     setLoading(true);
-    firebase.auth().signInWithPopup(provider)
+    firebase
+      .auth()
+      .signInWithPopup(provider)
       .then((result) => {
         authLogin(result.user);
       })
@@ -39,8 +41,13 @@ function Home() {
             ) : (
               <>
                 <Header title="Expense Tracker" />
-                <p>Track your monthly expenditure, set your income and a budget for yourself. Do not be stupid.</p>
-                <Button type="primary" onClick={login}>Login with Google</Button>
+                <p>
+                  Track your monthly expenditure, set your income and a budget
+                  for yourself. Do not be stupid.
+                </p>
+                <Button type="primary" onClick={login}>
+                  Login with Google
+                </Button>
               </>
             )}
           </Container>

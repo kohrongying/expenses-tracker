@@ -7,7 +7,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         codeSplitting: {
-          firebase: ["firebase/compat/app", "firebase/compat/auth", "firebase/compat/database"],
+          firebase: [
+            "firebase/compat/app",
+            "firebase/compat/auth",
+            "firebase/compat/database",
+          ],
           vendor: ["react", "react-dom", "react-router-dom", "react-redux"],
         },
       },

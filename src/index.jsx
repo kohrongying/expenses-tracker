@@ -6,10 +6,13 @@ import "./index.css";
 import "antd/dist/antd.css";
 import * as Sentry from "@sentry/browser";
 
-Sentry.init({ dsn: "https://a875dec620d14f6b8b364f5da2db8569@sentry.io/1545494" });
+Sentry.init({
+  dsn: "https://a875dec620d14f6b8b364f5da2db8569@sentry.io/1545494",
+});
 
-ReactDOM.render((
+ReactDOM.render(
   <BrowserRouter>
     <App />
-  </BrowserRouter>
-), document.getElementById("root"));
+  </BrowserRouter>,
+  document.getElementById("root")
+);

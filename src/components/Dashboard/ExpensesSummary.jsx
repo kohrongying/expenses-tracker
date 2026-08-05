@@ -8,7 +8,20 @@ import useAuthStore from "../../store/authStore";
 
 const year = new Date().getFullYear();
 const month = new Date().getMonth();
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 function ExpensesSummary() {
   const uid = useAuthStore((state) => state.user?.uid || "");
@@ -22,11 +35,18 @@ function ExpensesSummary() {
       return;
     }
 
-    const getMonths = async (yearRef, num) => firebase.database().ref(`users/${uid}/${yearRef}`).limitToLast(num).once("value");
+    const getMonths = async (yearRef, num) =>
+      firebase
+        .database()
+        .ref(`users/${uid}/${yearRef}`)
+        .limitToLast(num)
+        .once("value");
 
     const getTotalExpense = (items) => {
       if (items) {
-        const totalExp = Object.values(items).map((item) => item.amount).reduce((accumulator, curr) => accumulator + curr, 0);
+        const totalExp = Object.values(items)
+          .map((item) => item.amount)
+          .reduce((accumulator, curr) => accumulator + curr, 0);
         return parseFloat(totalExp.toFixed(2));
       }
       return 0;
@@ -104,13 +124,15 @@ function ExpensesSummary() {
         legend: { display: false },
         scales: {
           xAxes: [{ display: false, barPercentage: 0.5 }],
-          yAxes: [{
-            ticks: {
-              beginAtZero: true,
-              stepSize: 75,
-              gridlines: { show: false },
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                stepSize: 75,
+                gridlines: { show: false },
+              },
             },
-          }],
+          ],
         },
       }}
     />

@@ -4,9 +4,7 @@ const Banner = (props) => (
   <section className="banner">
     <div className="container d-flex flex-column align-items-center">
       <h5>{props.title}</h5>
-      {props.secondaryText ? (
-        <h2>{props.secondaryText}</h2>
-      ) : null }
+      {props.secondaryText ? <h2>{props.secondaryText}</h2> : null}
     </div>
   </section>
 );

@@ -5,11 +5,15 @@ import "firebase/compat/database";
 import "firebase/auth";
 import { Switch, Route } from "react-router-dom";
 const Expense = lazy(() => import("./components/Expense/Expense"));
-const AddExpenseForm = lazy(() => import("./components/Expense/AddExpenseForm"));
+const AddExpenseForm = lazy(
+  () => import("./components/Expense/AddExpenseForm")
+);
 const Income = lazy(() => import("./components/Income/Income"));
 const AddIncomeForm = lazy(() => import("./components/Income/AddIncomeForm"));
 const Investment = lazy(() => import("./components/Investment/Investment"));
-const AddInvestmentForm = lazy(() => import("./components/Investment/AddInvestmentForm"));
+const AddInvestmentForm = lazy(
+  () => import("./components/Investment/AddInvestmentForm")
+);
 const Profile = lazy(() => import("./components/Profile/Profile"));
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import Home from "./Home";
@@ -58,7 +62,11 @@ function App() {
           <PrivateRoute exact path="/income" component={Income} />
           <PrivateRoute exact path="/income/new" component={AddIncomeForm} />
           <PrivateRoute exact path="/investment" component={Investment} />
-          <PrivateRoute exact path="/investment/new" component={AddInvestmentForm} />
+          <PrivateRoute
+            exact
+            path="/investment/new"
+            component={AddInvestmentForm}
+          />
           <PrivateRoute path="/profile" component={Profile} />
           <Route path="/" component={Home} />
         </Switch>

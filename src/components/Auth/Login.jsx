@@ -11,20 +11,22 @@ function Login() {
   const login = useAuthStore((state) => state.login);
 
   const handleLogin = () => {
-    firebase.auth().signInWithRedirect(provider)
-      .then((result)=>{
+    firebase
+      .auth()
+      .signInWithRedirect(provider)
+      .then((result) => {
         const user = result.user;
         login(user);
       })
       // eslint-disable-next-line no-console
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
   return (
-      <div>
-        <Button onClick={handleLogin}>Login</Button>
-      </div>
-    );
+    <div>
+      <Button onClick={handleLogin}>Login</Button>
+    </div>
+  );
 }
 
 export default Login;

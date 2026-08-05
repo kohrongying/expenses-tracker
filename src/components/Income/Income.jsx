@@ -52,10 +52,16 @@ function Income() {
 
     const copyMonthlyIncome = async () => {
       try {
-        const snapshot = await firebase.database().ref(`users/${uid}/profile/monthlyIncome`).once("value");
+        const snapshot = await firebase
+          .database()
+          .ref(`users/${uid}/profile/monthlyIncome`)
+          .once("value");
         if (snapshot.exists()) {
           const incomeItems = snapshot.val();
-          await firebase.database().ref(`users/${uid}/${year}/${month}/income`).update(incomeItems);
+          await firebase
+            .database()
+            .ref(`users/${uid}/${year}/${month}/income`)
+            .update(incomeItems);
         } else {
           setItems([]);
           setTotalAmount(0);
@@ -71,7 +77,10 @@ function Income() {
   }, [uid]);
 
   const removeItem = (id) => () => {
-    firebase.database().ref(`users/${uid}/${year}/${month}/income/${id}`).remove();
+    firebase
+      .database()
+      .ref(`users/${uid}/${year}/${month}/income/${id}`)
+      .remove();
   };
 
   const navigate = (route) => () => {

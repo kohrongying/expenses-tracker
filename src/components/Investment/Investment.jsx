@@ -29,7 +29,9 @@ function Investment() {
       return;
     }
 
-    const ref = firebase.database().ref(`users/${uid}/${year}/${month}/investments`);
+    const ref = firebase
+      .database()
+      .ref(`users/${uid}/${year}/${month}/investments`);
 
     const handleValue = (snapshot) => {
       if (snapshot.exists()) {
@@ -52,10 +54,16 @@ function Investment() {
 
     const copyMonthlyInvestment = async () => {
       try {
-        const snapshot = await firebase.database().ref(`users/${uid}/profile/monthlyInvestments`).once("value");
+        const snapshot = await firebase
+          .database()
+          .ref(`users/${uid}/profile/monthlyInvestments`)
+          .once("value");
         if (snapshot.exists()) {
           const investmentItems = snapshot.val();
-          await firebase.database().ref(`users/${uid}/${year}/${month}/investments`).update(investmentItems);
+          await firebase
+            .database()
+            .ref(`users/${uid}/${year}/${month}/investments`)
+            .update(investmentItems);
         } else {
           setItems([]);
           setTotalAmount(0);
@@ -71,7 +79,10 @@ function Investment() {
   }, [uid]);
 
   const removeItem = (id) => () => {
-    firebase.database().ref(`users/${uid}/${year}/${month}/investments/${id}`).remove();
+    firebase
+      .database()
+      .ref(`users/${uid}/${year}/${month}/investments/${id}`)
+      .remove();
   };
 
   const navigate = (route) => () => {
@@ -83,7 +94,11 @@ function Investment() {
       <Container>
         <ArrowLeftOutlined onClick={navigate("/")} />
 
-        <MonthSum loading={loading} totalAmount={totalAmount} title="Investment" />
+        <MonthSum
+          loading={loading}
+          totalAmount={totalAmount}
+          title="Investment"
+        />
 
         <Button
           block
@@ -97,7 +112,9 @@ function Investment() {
         <List
           loading={loading}
           dataSource={items}
-          renderItem={(item) => <GeneralItem key={item.id} item={item} removeItem={removeItem} />}
+          renderItem={(item) => (
+            <GeneralItem key={item.id} item={item} removeItem={removeItem} />
+          )}
         />
       </Container>
     </React.Fragment>

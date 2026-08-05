@@ -22,7 +22,8 @@ function AddExpenseForm() {
   const handleSubmit = (values) => {
     values.date = Date.now();
 
-    firebase.database()
+    firebase
+      .database()
       .ref(`users/${uid}/${year}/${month}/items`)
       .push(values)
       .then(() => {
@@ -47,14 +48,21 @@ function AddExpenseForm() {
 
       <Header title="Add Expense" />
 
-      <Form wrapperCol={{ span: 24 }} onFinish={handleSubmit} initialValues={{ remarks: "", category: "" }} ref={formRef}>
+      <Form
+        wrapperCol={{ span: 24 }}
+        onFinish={handleSubmit}
+        initialValues={{ remarks: "", category: "" }}
+        ref={formRef}
+      >
         <Form.Item
           name="amount"
           rules={[{ required: true, message: "Please input the amount spent" }]}
         >
           <InputNumber
             style={{ width: "100%" }}
-            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            formatter={(value) =>
+              `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
             parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             min={0}
           />
@@ -67,7 +75,11 @@ function AddExpenseForm() {
         <Form.Item name="category">
           <Radio.Group style={{ width: "100%" }}>
             {categories.map((option) => (
-              <Radio.Button key={option.value} value={option.value} style={{ width: "20%", textAlign: "center" }}>
+              <Radio.Button
+                key={option.value}
+                value={option.value}
+                style={{ width: "20%", textAlign: "center" }}
+              >
                 {option.icon}
               </Radio.Button>
             ))}

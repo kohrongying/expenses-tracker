@@ -22,13 +22,17 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.5",
     "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^17.9.0",
+    "prettier": "^3.9.6",
     "vite": "^8.2.0",
     "vitest": "^4.1.10"
   },

@@ -19,7 +19,8 @@ function AddInvestmentForm() {
   const handleSubmit = (values) => {
     values.date = Date.now();
 
-    firebase.database()
+    firebase
+      .database()
       .ref(`users/${uid}/${year}/${month}/investments`)
       .push(values)
       .then(() => {

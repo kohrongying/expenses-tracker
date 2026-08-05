@@ -1,7 +1,20 @@
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export const getMonthName = () => {
-  return monthNames[(new Date().getMonth())];
+  return monthNames[new Date().getMonth()];
 };
 
 export const getMonth = () => {
@@ -14,7 +27,7 @@ export const formatNumber = (num) => {
 };
 
 export const getMonthYear = () => {
-  return `${monthNames[(new Date().getMonth())]} ${new Date().getFullYear()}`;
+  return `${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 };
 
 export const getTotalFromItems = (items) => {

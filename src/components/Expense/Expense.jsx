@@ -58,9 +58,13 @@ function Expense() {
   }, [uid]);
 
   const removeItem = (itemID) => () => {
-    firebase.database().ref(`users/${uid}/${year}/${month}/items/${itemID}`).remove().catch((err) => {
-      message.error(err);
-    });
+    firebase
+      .database()
+      .ref(`users/${uid}/${year}/${month}/items/${itemID}`)
+      .remove()
+      .catch((err) => {
+        message.error(err);
+      });
   };
 
   const navigate = (route) => () => {
@@ -72,13 +76,37 @@ function Expense() {
       {uid ? (
         <React.Fragment>
           <Container>
-            <ArrowLeftOutlined onClick={navigate("/")} style={{ marginTop: 30 }} />
+            <ArrowLeftOutlined
+              onClick={navigate("/")}
+              style={{ marginTop: 30 }}
+            />
 
-            <MonthSum loading={loading} totalAmount={totalAmount} title="Expenses" />
+            <MonthSum
+              loading={loading}
+              totalAmount={totalAmount}
+              title="Expenses"
+            />
 
-            <Button block type="link" style={{ marginTop: 30, marginBottom: 20, color: "black" }} onClick={navigate("/expenses/new")}>Add Expense</Button>
+            <Button
+              block
+              type="link"
+              style={{ marginTop: 30, marginBottom: 20, color: "black" }}
+              onClick={navigate("/expenses/new")}
+            >
+              Add Expense
+            </Button>
 
-            <List loading={loading} dataSource={items} renderItem={(item) => <ExpenseItem key={item.id} item={item} removeItem={removeItem} />} />
+            <List
+              loading={loading}
+              dataSource={items}
+              renderItem={(item) => (
+                <ExpenseItem
+                  key={item.id}
+                  item={item}
+                  removeItem={removeItem}
+                />
+              )}
+            />
           </Container>
         </React.Fragment>
       ) : (

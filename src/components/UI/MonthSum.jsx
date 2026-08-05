@@ -14,10 +14,13 @@ const MonthSum = ({ loading, totalAmount, title }) => (
       backgroundColor: "rgba(240, 240, 240, 0.7)",
     }}
   >
-    <p>{title} - {getMonthYear()}</p>
-    <Title style={{ fontSize: 50, margin: 0, }}>$ {formatNumber(totalAmount)}</Title>
+    <p>
+      {title} - {getMonthYear()}
+    </p>
+    <Title style={{ fontSize: 50, margin: 0 }}>
+      $ {formatNumber(totalAmount)}
+    </Title>
   </Card>
-
 );
 
 export default MonthSum;

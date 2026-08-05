@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import react from "eslint-plugin-react";
 import globals from "globals";
+import prettierConfig from "eslint-config-prettier";
 
 export default [
   {
@@ -26,24 +27,11 @@ export default [
       react: { version: "detect" },
     },
     rules: {
-      "react/prop-types": ["error", { ignore: ["location"]}],
-      indent: ["error", 2],
-      "linebreak-style": ["error", "unix"],
-      quotes: ["error", "double", { allowTemplateLiterals: true }],
-      semi: ["error", "always"],
+      "react/prop-types": ["error", { ignore: ["location"] }],
       "default-case": "error",
       eqeqeq: "error",
-      "brace-style": ["error", "1tbs", { allowSingleLine: true }],
-      "keyword-spacing": ["error"],
-      "no-multiple-empty-lines": ["error"],
-      "no-trailing-spaces": ["error", { ignoreComments: true }],
-      "eol-last": ["error", "never"],
-      "object-curly-spacing": [
-        "error",
-        "always",
-        { objectsInObjects: false, arraysInObjects: false },
-      ],
-      "no-console": ["error", { allow: ["warn", "error"]}],
+      "no-console": ["error", { allow: ["warn", "error"] }],
     },
   },
+  prettierConfig, // must stay last
 ];

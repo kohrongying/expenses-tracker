@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url("https://fonts.googleapis.com/css?family=Nunito");
 
 :root {
   --purple: #7d83ff;
@@ -7,9 +7,16 @@
   --grey: #353434;
 }
 
-h1,h2,h3,h4,h5,h6,p,div {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+div {
   color: var(--grey);
-  font-family: 'Nunito';
+  font-family: "Nunito";
 }
 
 .row {
@@ -21,8 +28,9 @@ nav {
   background-color: var(--purple);
 }
 
-.navbar-brand, .nav-link {
-  color: white!important;
+.navbar-brand,
+.nav-link {
+  color: white !important;
 }
 
 .nav-link:hover {
@@ -35,7 +43,8 @@ section.banner {
   padding-bottom: 30px;
 }
 
-section.banner h2, section.banner h5 {
+section.banner h2,
+section.banner h5 {
   color: white;
 }
 
@@ -52,7 +61,7 @@ ul.display-list > li.item > .row {
 }
 
 ul.display-list h3 {
-  margin-bottom: 0;  
+  margin-bottom: 0;
 }
 
 .year-title {
@@ -70,7 +79,8 @@ ul.display-list h3 {
     padding-right: 5px;
   }
 
-  div,h3 {
+  div,
+  h3 {
     font-size: 0.8rem;
   }
 
