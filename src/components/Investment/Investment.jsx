@@ -4,7 +4,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { connect } from "react-redux";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
@@ -117,6 +116,4 @@ class Investment extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps)(withRouter(Investment));
+export default withAuth(withRouter(Investment));

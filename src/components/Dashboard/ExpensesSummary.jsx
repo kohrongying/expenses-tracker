@@ -4,7 +4,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { connect } from "react-redux";
+import withAuth from "../../store/withAuth";
+
 import { Bar } from "react-chartjs-2";
 
 const year = new Date().getFullYear();
@@ -127,6 +128,4 @@ class ExpensesSummary extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps)(ExpensesSummary);
+export default withAuth(ExpensesSummary);

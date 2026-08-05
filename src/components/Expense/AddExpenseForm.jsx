@@ -7,7 +7,7 @@ import "firebase/database";
 import { Form, InputNumber, Input, Button, Radio, message } from "antd";
 import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
+import withAuth from "../../store/withAuth";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import { categories } from "../../constants/ExpenseCategories";
@@ -112,6 +112,4 @@ class AddExpenseForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps, {})(withRouter(AddExpenseForm));
+export default withAuth(withRouter(AddExpenseForm));

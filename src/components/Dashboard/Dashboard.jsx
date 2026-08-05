@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { Row, Col, List, Slider, Button } from "antd";
 import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import firebase from "firebase/compat/app";
@@ -8,10 +7,11 @@ import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import { withRouter } from "react-router-dom";
+import withAuth from "../../store/withAuth";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
-import ExpensesSummary from "./ExpensesSummary";
-import MonthBreakdown from "./MonthBreakdown";
+// import ExpensesSummary from "./ExpensesSummary";
+// import MonthBreakdown from "./MonthBreakdown";
 import ExpenseItem from "../Expense/ExpenseItem";
 
 const year = new Date().getFullYear();
@@ -124,7 +124,7 @@ class Dashboard extends Component {
             </Col>
           </Row>
 
-          <h6 style={{ marginTop: 20, marginBottom: 15 }}>
+          {/* <h6 style={{ marginTop: 20, marginBottom: 15 }}>
             This month's breakdown
           </h6>
           <MonthBreakdown />
@@ -132,7 +132,7 @@ class Dashboard extends Component {
           <h6 style={{ marginTop: 20, marginBottom: 15 }}>
             The last 6 months
           </h6>
-          <ExpensesSummary />
+          <ExpensesSummary /> */}
 
           <div style={{ marginTop: 20, marginBottom: 15, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <h6>Expenses</h6>
@@ -155,6 +155,4 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps)(withRouter(Dashboard));
+export default withAuth(withRouter(Dashboard));

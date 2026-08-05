@@ -5,21 +5,18 @@ import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
 import "firebase/auth";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Button, List, Collapse, Modal, InputNumber, Input, Row, Col, Avatar } from "antd";
 import { ArrowLeftOutlined, EditOutlined, DeleteOutlined, PlusOutlined, UserOutlined, DollarOutlined } from "@ant-design/icons";
 import Container from "../UI/Container";
-import { logout } from "../../actions";
+import withAuth from "../../store/withAuth";
 import { formatNumber } from "../../helpers/common";
-
-const { Panel } = Collapse;
 
 class Profile extends Component {
   static propTypes = {
     uid: PropTypes.string.isRequired,
     history: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
+    authLogout: PropTypes.func.isRequired,
   }
 
   state = {
@@ -137,7 +134,7 @@ class Profile extends Component {
   logout = () => {
     firebase.auth().signOut()
       .then(() => {
-        this.props.logout();
+        this.props.authLogout();
         this.props.history.push("/");
       });
   }
@@ -289,7 +286,4 @@ class Profile extends Component {
   }
 }
 
-
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps, { logout })(withRouter(Profile));
+export default withAuth(withRouter(Profile));

@@ -4,7 +4,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { connect } from "react-redux";
 import GeneralForm from "../UI/GeneralForm";
 import { withRouter } from "react-router-dom";
 import { message } from "antd";
@@ -54,6 +53,4 @@ class AddinvestmentForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps, {})(withRouter(AddinvestmentForm));
+export default withAuth(withRouter(AddinvestmentForm));

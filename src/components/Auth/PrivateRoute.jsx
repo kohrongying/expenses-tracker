@@ -1,25 +1,20 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Route } from "react-router-dom";
-import { connect } from "react-redux";
+import { Route, Redirect } from "react-router-dom";
 import ErrorBoundary from "../UI/ErrorBoundary";
+import useAuthStore from "../../store/authStore";
 
-const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const user = useAuthStore((state) => state.user);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  return (
   <ErrorBoundary>
     <Route
       {...rest}
       render={props => (
-        isAuthenticated && <Component {...props} />
+        isLoading ? <div>Loading...</div> : (user ? <Component {...props} /> : <Redirect to="/" />)
       )}
     />
   </ErrorBoundary>
-);
-
-PrivateRoute.propTypes = {
-  component: PropTypes.any,
-  isAuthenticated: PropTypes.bool,
+)
 };
-
-const mapStateToProps = state => ({ isAuthenticated: state.user.isAuthenticated });
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;

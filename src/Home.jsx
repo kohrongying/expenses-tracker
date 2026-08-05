@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { login } from "./actions";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
-import "firebase/auth";
+import { withRouter } from "react-router-dom";
+import withAuth from "./store/withAuth";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Container from "./components/UI/Container";
 import Header from "./components/UI/Header";
@@ -17,7 +16,7 @@ class Home extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     history: PropTypes.object.isRequired,
-    login: PropTypes.func.isRequired,
+    authLogin: PropTypes.func.isRequired,
   }
 
   state = {
@@ -28,7 +27,7 @@ class Home extends Component {
     this.setState({ loading: true });
     firebase.auth().signInWithPopup(provider)
       .then((result)=>{
-        this.props.login(result.user.uid);
+        this.props.authLogin(result.user);
       })
       .catch(err => {
         console.error(err);
@@ -61,6 +60,5 @@ class Home extends Component {
     );
   }
 }
-const mapStateToProps = state => ({ isAuthenticated: state.user.isAuthenticated, });
 
-export default connect(mapStateToProps, { login })(Home);
+export default withAuth(withRouter(Home));

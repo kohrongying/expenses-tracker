@@ -1,38 +1,30 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import { Button } from "antd";
-import { connect } from "react-redux";
-import { login, logout } from "../../actions";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
-import "firebase/auth";
+import useAuthStore from "../../store/authStore";
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
-class Login extends Component {
-  static propTypes = {
-    login: PropTypes.func.isRequired,
-  }
+function Login() {
+  const login = useAuthStore((state) => state.login);
 
-  login = () => {
+  const handleLogin = () => {
     firebase.auth().signInWithRedirect(provider)
       .then((result)=>{
         const user = result.user;
-        this.props.login(user.uid);
+        login(user);
       })
       // eslint-disable-next-line no-console
       .catch(err => console.log(err));
   }
 
-  render() {
-    return (
+  return (
       <div>
-        <Button onClick={this.login}>Login</Button>
+        <Button onClick={handleLogin}>Login</Button>
       </div>
     );
-  }
 }
 
-
-export default connect(null, { login, logout })(Login);
+export default Login;

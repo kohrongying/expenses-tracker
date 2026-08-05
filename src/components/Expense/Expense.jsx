@@ -4,10 +4,10 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import withAuth from "../../store/withAuth";
 import Container from "../UI/Container";
 import MonthSum from "../UI/MonthSum";
 import ExpenseItem from "./ExpenseItem";
@@ -124,6 +124,4 @@ class Expense extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps)(withRouter(Expense));
+export default withAuth(withRouter(Expense));

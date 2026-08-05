@@ -1,5 +1,4 @@
-import React, { Component, lazy, Suspense } from "react";
-import PropTypes from "prop-types";
+import React, { lazy, Suspense, useEffect } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
@@ -12,12 +11,10 @@ const AddIncomeForm = lazy(() => import("./components/Income/AddIncomeForm"));
 const Investment = lazy(() => import("./components/Investment/Investment"));
 const AddInvestmentForm = lazy(() => import("./components/Investment/AddInvestmentForm"));
 const Profile = lazy(() => import("./components/Profile/Profile"));
-
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import Home from "./Home";
 
-import { connect } from "react-redux";
-import { login } from "./actions";
+import useAuthStore from "./store/authStore";
 
 const env = import.meta.env;
 const prodConfig = {
@@ -44,43 +41,30 @@ const config = import.meta.env.PROD === "production" ? prodConfig : devConfig;
 
 firebase.initializeApp(config);
 
-class App extends Component {
+function App() {
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
-  static propTypes = {
-    login: PropTypes.func.isRequired,
-  }
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
-  state = {
-    loading: false,
-  }
-
-  componentDidMount(){
-    firebase.auth().onAuthStateChanged((user)=>{
-      if (user) {
-        this.props.login(user.uid);
-      }
-    });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <PrivateRoute exact path="/expenses" component={Expense} />
-            <PrivateRoute exact path="/expenses/new" component={AddExpenseForm} />
-            <PrivateRoute exact path="/income" component={Income} />
-            <PrivateRoute exact path="/income/new" component={AddIncomeForm} />
-            <PrivateRoute exact path="/investment" component={Investment} />
-            <PrivateRoute exact path="/investment/new" component={AddInvestmentForm} />
-            <PrivateRoute path="/profile" component={Profile} />
-            <Route path="/" component={Home} />
-          </Switch>
-        </Suspense>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <PrivateRoute exact path="/expenses" component={Expense} />
+          <PrivateRoute exact path="/expenses/new" component={AddExpenseForm} />
+          <PrivateRoute exact path="/income" component={Income} />
+          <PrivateRoute exact path="/income/new" component={AddIncomeForm} />
+          <PrivateRoute exact path="/investment" component={Investment} />
+          <PrivateRoute exact path="/investment/new" component={AddInvestmentForm} />
+          <PrivateRoute path="/profile" component={Profile} />
+          <Route path="/" component={Home} />
+        </Switch>
+      </Suspense>
+    </React.Fragment>
+  );
 }
 
-export default connect(null, { login })(App);
+export default App;

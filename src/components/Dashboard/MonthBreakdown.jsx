@@ -4,10 +4,10 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/database";
-import { connect } from "react-redux";
 import { Pie } from "react-chartjs-2";
 import { Empty } from 'antd';
 import { categories } from "../../constants/ExpenseCategories";
+import withAuth from "../../store/withAuth";
 
 const categoryLabels = categories.map(category => category.value.toLowerCase());
 const categoryColors = categories.map(category => category.color);
@@ -87,6 +87,4 @@ class MonthBreakdown extends Component {
   }
 }
 
-const mapStateToProps = state => ({ uid: state.user.uid });
-
-export default connect(mapStateToProps)(MonthBreakdown);
+export default withAuth(MonthBreakdown);
