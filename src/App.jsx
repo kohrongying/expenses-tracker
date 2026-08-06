@@ -1,15 +1,16 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
+import PrivateRoute from "./features/auth/PrivateRoute";
+import Home from "./HomePage";
+import useAuthStore from "./store/authStore";
+
 const Expense = lazy(() => import("./features/expense/ListExpensePage"));
 const AddExpenseForm = lazy(
   () => import("./features/expense/AddExpensePage")
 );
-import PrivateRoute from "./features/auth/PrivateRoute";
-import Home from "./HomePage";
 
-import useAuthStore from "./store/authStore";
-
-import "./firebase"; // runs initializeApp once
+// runs initializeApp once
+import "./firebase"; 
 
 function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);

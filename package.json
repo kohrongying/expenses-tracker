@@ -5,7 +5,9 @@
   "type": "module",
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
+    "@heroicons/react": "^2.2.0",
     "@sentry/browser": "^10.69.0",
+    "@tailwindcss/vite": "^4.3.3",
     "antd": "^4.3.0",
     "firebase": "^12.17.0",
     "prop-types": "^15.8.1",
@@ -13,6 +15,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.2.0",
     "recharts": "^3.10.1",
+    "tailwindcss": "^4.3.3",
     "zustand": "^5.0.14"
   },
   "scripts": {
