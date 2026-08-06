@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, Typography } from "antd";
-import { getMonthYear, formatNumber } from "../../helpers/common";
+import { getMonthYear, formatNumber, formatCentsToString } from "../../helpers/common";
 const { Title } = Typography;
 
-const MonthSum = ({ loading, totalAmount, title }) => (
+const MonthSum = ({ loading, totalAmountInCents, title }) => (
   <Card
     loading={loading}
     bordered={false}
@@ -18,7 +18,7 @@ const MonthSum = ({ loading, totalAmount, title }) => (
       {title} - {getMonthYear()}
     </p>
     <Title style={{ fontSize: 50, margin: 0 }}>
-      $ {formatNumber(totalAmount)}
+      S$ {formatCentsToString(totalAmountInCents)}
     </Title>
   </Card>
 );

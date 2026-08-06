@@ -1,5 +1,5 @@
 import React from "react";
-import { formatNumber } from "../../helpers/common";
+import { formatCentsToString } from "../../helpers/common";
 import { List, Avatar } from "antd";
 import { DeleteOutlined, DollarOutlined } from "@ant-design/icons";
 
@@ -25,7 +25,7 @@ const GeneralItem = ({ item, removeItem }) => (
       style={{ alignItems: "center" }}
     />
 
-    <div>{`S$ ${formatNumber(item.amount)}`}</div>
+    <div>{`S$ ${formatCentsToString(item.amountInCents)}`}</div>
   </List.Item>
 );
 

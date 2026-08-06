@@ -1,9 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { formatNumber } from "../../helpers/common";
 import { List } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { categories } from "../../constants/ExpenseCategories";
+import { formatCentsToString } from "../../helpers/common";
 
 const ItemIcon = (categoryName) => {
   const foundCategory = categories.find(
@@ -17,7 +16,7 @@ const ItemIcon = (categoryName) => {
   }
 };
 
-const Expense = ({ dashboard, item, removeItem }) => (
+const ExpenseItem = ({ dashboard, item, removeItem }) => (
   <List.Item
     actions={
       dashboard
@@ -39,17 +38,11 @@ const Expense = ({ dashboard, item, removeItem }) => (
   >
     <List.Item.Meta
       avatar={ItemIcon(item.category)}
-      title={item.remarks ? item.remarks : item.category}
-      description={new Date(item.date).toDateString()}
+      title={item.desc ?? item.category}
+      description={item.date.toDate().toDateString()}
     />
-    <div>{`S$ ${formatNumber(item.amount)}`}</div>
+    <div>{`S$ ${formatCentsToString(item.amountInCents)}`}</div>
   </List.Item>
 );
 
-Expense.propTypes = {
-  dashboard: PropTypes.bool,
-  item: PropTypes.object.isRequired,
-  removeItem: PropTypes.func,
-};
-
-export default Expense;
+export default ExpenseItem;

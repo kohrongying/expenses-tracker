@@ -4,7 +4,6 @@ const Expense = lazy(() => import("./features/expense/ListExpensePage"));
 const AddExpenseForm = lazy(
   () => import("./features/expense/AddExpensePage")
 );
-const Profile = lazy(() => import("./features/profile/ProfilePage"));
 import PrivateRoute from "./features/auth/PrivateRoute";
 import Home from "./HomePage";
 
@@ -26,7 +25,6 @@ function App() {
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/expenses" component={Expense} />
           <PrivateRoute exact path="/expenses/new" component={AddExpenseForm} />
-          <PrivateRoute path="/profile" component={Profile} />
           <Route path="/" component={Home} />
         </Switch>
       </Suspense>

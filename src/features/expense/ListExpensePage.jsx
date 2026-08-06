@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ref, onValue, remove } from "firebase/database";
 import { useHistory } from "react-router-dom";
 import { List, message, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
 import Container from "../../components/ui/Container";
 import MonthSum from "../../components/ui/MonthSum";
 import ExpenseItem from "./ExpenseItem";
-
-const year = new Date().getFullYear();
-const month = new Date().getMonth();
+import { subscribeToCurrentMonthExpenses } from "./expenseApi";
 
 function ListExpensePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
@@ -27,43 +23,39 @@ function ListExpensePage() {
       return;
     }
 
-    const itemsRef = ref(db, `/users/${uid}/${year}/${month}/items`);
+    setLoading(true);
 
-    const unsubscribe = onValue(itemsRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const itemsVal = snapshot.val();
-        const itemIDs = Object.keys(itemsVal);
-        let total = 0;
-
-        const parsedItems = itemIDs.map((id) => {
-          const item = itemsVal[id];
-          total += parseFloat(item.amount);
-          item.id = id;
-          return item;
-        });
-
-        setItems(parsedItems.reverse());
+    const unsubscribe = subscribeToCurrentMonthExpenses(
+      uid,
+      (expenses) => {
+        const total = expenses.reduce((sum, item) => sum + item.amountInCents, 0);
+        setItems(expenses);
         setTotalAmount(total);
-      } else {
-        setItems([]);
-        setTotalAmount(0);
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        message.error("Couldn't load expenses. Please try again.");
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    );
 
     return () => unsubscribe();
   }, [uid]);
 
-  const removeItem = (itemID) => () => {
-    remove(ref(db, `users/${uid}/${year}/${month}/items/${itemID}`)).catch(
-      (err) => {
-        message.error(err);
-      }
-    );
-  };
-
   const navigate = (route) => () => {
     history.push(route);
+  };
+
+  // inside the component
+  const handleRemove = (itemId) => async () => {
+    try {
+      await removeExpense(uid, itemId);
+      message.success("Expense removed");
+    } catch (err) {
+      console.error(err);
+      message.error("Couldn't remove expense. Please try again.");
+    }
   };
 
   return (
@@ -71,16 +63,9 @@ function ListExpensePage() {
       {uid ? (
         <React.Fragment>
           <Container>
-            <ArrowLeftOutlined
-              onClick={navigate("/")}
-              style={{ marginTop: 30 }}
-            />
+            <ArrowLeftOutlined onClick={navigate("/")} style={{ marginTop: 30 }} />
 
-            <MonthSum
-              loading={loading}
-              totalAmount={totalAmount}
-              title="Expenses"
-            />
+            <MonthSum loading={loading} totalAmountInCents={totalAmount} title="Expenses" />
 
             <Button
               block
@@ -98,7 +83,7 @@ function ListExpensePage() {
                 <ExpenseItem
                   key={item.id}
                   item={item}
-                  removeItem={removeItem}
+                  removeItem={handleRemove}
                 />
               )}
             />

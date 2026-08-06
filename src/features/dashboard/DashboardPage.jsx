@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, List, Slider, Button } from "antd";
 import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { ref, get } from "firebase/database";
 import { useHistory } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
-import { db } from "../../firebase";
 import Container from "../../components/ui/Container";
 import Header from "../../components/ui/Header";
 // import ExpensesSummary from "./ExpensesSummary";
 // import MonthBreakdown from "./MonthBreakdown";
 import ExpenseItem from "../expense/ExpenseItem";
+import { subscribeToRecentExpenses } from "../expense/expenseApi";
+import { formatCentsToString } from "../../helpers/common";
 
-const year = new Date().getFullYear();
-const month = new Date().getMonth();
 const NAVBAR = [
   {
     url: "/expenses/new",
@@ -20,76 +18,42 @@ const NAVBAR = [
     icon: <PlusCircleOutlined />,
     color: "#ff85c0",
   },
-  {
-    url: "/profile",
-    label: "Profile",
-    icon: <UserOutlined />,
-    color: "#5cdbd3",
-  },
 ];
 
 function Dashboard() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const history = useHistory();
   const [expenses, setExpenses] = useState([]);
-  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalExpenseInCents, setTotalExpenseInCents] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [expenseBudget, setExpenseBudget] = useState(0);
+  const [expenseBudget, setExpenseBudget] = useState(500);
 
   useEffect(() => {
     if (!uid) {
       setExpenses([]);
-      setTotalExpense(0);
-      setExpenseBudget(0);
+      setTotalExpenseInCents(0);
       setLoading(false);
       return;
     }
 
-    const fetchExpenses = async () => {
-      try {
-        const snapshot = await get(
-          ref(db, `/users/${uid}/${year}/${month}/items`)
-        );
-        if (snapshot.exists()) {
-          const items = snapshot.val();
-          const itemIDs = Object.keys(items);
-          let total = 0;
+    setLoading(true);
 
-          const parsedItems = itemIDs.map((id) => {
-            const item = items[id];
-            total += parseFloat(item.amount);
-            item.id = id;
-            return item;
-          });
-
-          setExpenses(parsedItems.reverse().slice(0, 3));
-          setTotalExpense(total);
-        } else {
-          setExpenses([]);
-          setTotalExpense(0);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
+    const unsubscribe = subscribeToRecentExpenses(
+      uid,
+      3,
+      (items) => {
+        const totalInCents = items.reduce((sum, item) => sum + item.amountInCents, 0);
+        setExpenses(items);
+        setTotalExpenseInCents(totalInCents);
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
         setLoading(false);
       }
-    };
+    );
 
-    const fetchBudget = async () => {
-      try {
-        const snapshot = await get(
-          ref(db, `/users/${uid}/profile/expenseBudget`)
-        );
-        if (snapshot.exists()) {
-          setExpenseBudget(snapshot.val());
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchExpenses();
-    fetchBudget();
+    return () => unsubscribe();
   }, [uid]);
 
   const linkTo = (url) => () => {
@@ -126,17 +90,7 @@ function Dashboard() {
         <h6 style={{ marginTop: 20 }}>Expenses</h6>
         <Row type="flex" align="middle">
           <Col xs={9}>
-            <h4>$ {totalExpense.toFixed(2)}</h4>
-          </Col>
-          <Col xs={15}>
-            {expenseBudget > 0 && (
-              <Slider
-                value={Math.min(expenseBudget, totalExpense)}
-                max={expenseBudget}
-                tooltipVisible={false}
-                marks={marks}
-              />
-            )}
+            <h4>S$ {formatCentsToString(totalExpenseInCents)}</h4>
           </Col>
         </Row>
 

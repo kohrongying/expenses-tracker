@@ -26,6 +26,12 @@ export const formatNumber = (num) => {
   return result;
 };
 
+// Returns string
+export const formatCentsToString = (amountInCents) => {
+  let result = amountInCents !== null ? (amountInCents / 100).toFixed(2) : "0.00";
+  return result;
+};
+
 export const getMonthYear = () => {
   return `${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 };

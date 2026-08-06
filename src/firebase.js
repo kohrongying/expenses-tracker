@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase } from "firebase/database";
-
+import { getFirestore } from "firebase/firestore";
 const env = import.meta.env;
 
 const prodConfig = {
@@ -29,5 +28,6 @@ const config = import.meta.env.PROD ? prodConfig : devConfig;
 const app = initializeApp(config);
 
 export const auth = getAuth(app);
-export const db = getDatabase(app);
+export const db = getFirestore(app);
+
 export default app;

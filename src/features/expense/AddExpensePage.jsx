@@ -1,36 +1,29 @@
 import React, { useRef } from "react";
-import { ref, push } from "firebase/database";
 import { Form, InputNumber, Input, Button, Radio, message } from "antd";
 import { ArrowLeftOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import { db } from "../../firebase";
 import useAuthStore from "../../store/authStore";
 import Container from "../../components/ui/Container";
 import Header from "../../components/ui/Header";
 import { categories } from "../../constants/ExpenseCategories";
-
-const year = new Date().getFullYear();
-const month = new Date().getMonth();
+import { addExpense } from "./expenseApi";
 
 function AddExpensePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const history = useHistory();
   const formRef = useRef();
 
-  const handleSubmit = (values) => {
-    values.date = Date.now();
-
-    push(ref(db, `users/${uid}/${year}/${month}/items`), values)
-      .then(() => {
-        message.success(`Added $${values.amount} successfully`);
-        if (formRef.current) {
-          formRef.current.resetFields();
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        message.error("Something went wrong. Please try again.");
-      });
+  const handleSubmit = async (values) => {
+    try {
+      await addExpense(uid, values);
+      message.success(`Added $${values.amount} successfully`);
+      if (formRef.current) {
+        formRef.current.resetFields();
+      }
+    } catch (err) {
+      console.error(err);
+      message.error("Something went wrong. Please try again.");
+    }
   };
 
   const navigateHome = () => {
@@ -40,7 +33,6 @@ function AddExpensePage() {
   return (
     <Container>
       <ArrowLeftOutlined onClick={navigateHome} style={{ marginTop: 30 }} />
-
       <Header title="Add Expense" />
 
       <Form
@@ -55,9 +47,7 @@ function AddExpensePage() {
         >
           <InputNumber
             style={{ width: "100%" }}
-            formatter={(value) =>
-              `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            }
+            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             min={0}
           />
