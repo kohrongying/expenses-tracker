@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import useAuthedUser from "../auth/useAuthedUser";
-import Container from "../../components/ui/Container";
-import Navbar from "../../components/ui/Navbar";
-import PageShell from "../../components/ui/PageShell";
-import MonthSum from "../../components/ui/MonthSum";
-import { Button } from "../../components/ui/button";
+import useAuthedUser from "@/features/auth/useAuthedUser";
+import Container from "@/components/ui/Container";
+import Navbar from "@/components/ui/Navbar";
+import PageShell from "@/components/ui/PageShell";
+import MonthSum from "@/components/ui/MonthSum";
+import { Button } from "@/components/ui/button";
 import ExpenseItem from "./ExpenseItem";
 import { subscribeToCurrentMonthExpenses, removeExpense } from "./expenseApi";
 

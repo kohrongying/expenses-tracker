@@ -11,7 +11,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import { startOfMonth, startOfMonthsAgo } from "../../lib/utils";
+import { startOfMonth, startOfMonthsAgo } from "@/lib/utils";
 
 function expensesCollection(uid) {
   return collection(db, `users/${uid}/expenses`);

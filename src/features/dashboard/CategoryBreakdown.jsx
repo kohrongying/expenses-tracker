@@ -1,5 +1,5 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { formatCentsToString } from "../../lib/utils";
+import { formatCentsToString } from "@/lib/utils";
 
 function CategoryBreakdown({ breakdown, loading }) {
   if (loading) {

@@ -1,4 +1,4 @@
-import useAuthStore from "../../store/authStore";
+import useAuthStore from "@/store/authStore";
 
 /**
  * Reads the current user for pages rendered inside PrivateRoute, where a

@@ -1,5 +1,5 @@
-import { categories } from "../../constants/ExpenseCategories";
-import { monthKey, shortMonthLabel, startOfMonthsAgo } from "../../lib/utils";
+import { categories } from "@/constants/ExpenseCategories";
+import { monthKey, shortMonthLabel, startOfMonthsAgo } from "@/lib/utils";
 
 export function sumAmountInCents(items) {
   return items.reduce((total, item) => total + item.amountInCents, 0);

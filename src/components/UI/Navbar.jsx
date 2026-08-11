@@ -1,6 +1,6 @@
 import React from "react";
 import { LogOut } from "lucide-react";
-import useAuthStore from "../../store/authStore";
+import useAuthStore from "@/store/authStore";
 import { CONTAINER_WIDTH } from "./Container";
 
 const Navbar = () => {

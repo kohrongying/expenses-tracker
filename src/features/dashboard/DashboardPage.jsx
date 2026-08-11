@@ -1,14 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import useAuthedUser from "../auth/useAuthedUser";
-import Container, { CONTAINER_WIDTH } from "../../components/ui/Container";
-import Ticket from "../../components/ui/Ticket";
-import { Button } from "../../components/ui/button";
+import Container, { CONTAINER_WIDTH } from "@/components/ui/Container";
+import Ticket from "@/components/ui/Ticket";
+import { Button } from "@/components/ui/button";
 import ExpenseItem from "../expense/ExpenseItem";
 import CategoryBreakdown from "./CategoryBreakdown";
 import MonthlyTrend from "./MonthlyTrend";
 import useDashboardData from "./useDashboardData";
-import { formatCentsToString, getMonthYear } from "../../lib/utils";
+import { formatCentsToString, getMonthYear } from "@/lib/utils";
 
 const Eyebrow = ({ children, className = "" }) => (
   <p className={`font-mono text-[0.6875rem] font-bold uppercase tracking-wide text-muted-foreground ${className}`}>

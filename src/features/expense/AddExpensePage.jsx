@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import useAuthedUser from "../auth/useAuthedUser";
-import Container from "../../components/ui/Container";
-import Navbar from "../../components/ui/Navbar";
-import PageShell from "../../components/ui/PageShell";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import CategoryStamp from "../../components/ui/CategoryStamp";
-import { categories } from "../../constants/ExpenseCategories";
+import useAuthedUser from "@/features/auth/useAuthedUser";
+import Container from "@/components/ui/Container";
+import Navbar from "@/components/ui/Navbar";
+import PageShell from "@/components/ui/PageShell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import CategoryStamp from "@/components/ui/CategoryStamp";
+import { categories } from "@/constants/ExpenseCategories";
 import { addExpense } from "./expenseApi";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 function AddExpensePage() {
   const { uid } = useAuthedUser();
