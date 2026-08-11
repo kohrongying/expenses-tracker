@@ -26,3 +26,6 @@ dist
 
 # AI AGENTS
 .claude
+
+# admin sdk keys
+*adminsdk*.json
