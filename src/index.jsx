@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
-import "antd/dist/antd.css";
 import * as Sentry from "@sentry/browser";
 
 if (import.meta.env.PROD) {

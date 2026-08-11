@@ -6,12 +6,12 @@ import {
   query,
   where,
   orderBy,
-  limit,
   onSnapshot,
   Timestamp,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { startOfMonth, startOfMonthsAgo } from "../../lib/common";
 
 function expensesCollection(uid) {
   return collection(db, `users/${uid}/expenses`);
@@ -52,14 +52,10 @@ export async function addExpense(uid, { amount, category, remarks }) {
  * onError: (error) => void       called on read/permission errors
  */
 export function subscribeToCurrentMonthExpenses(uid, onData, onError) {
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
   const q = query(
     expensesCollection(uid),
-    where("date", ">=", Timestamp.fromDate(startOfMonth)),
-    where("date", "<", Timestamp.fromDate(startOfNextMonth)),
+    where("date", ">=", Timestamp.fromDate(startOfMonth())),
+    where("date", "<", Timestamp.fromDate(startOfMonthsAgo(-1))),
     orderBy("date", "desc")
   );
 
@@ -84,20 +80,18 @@ export async function removeExpense(uid, expenseId) {
 }
 
 /**
- * Variant used by Dashboard.jsx — same query, capped to a few items,
- * one-time read instead of a live subscription (dashboard doesn't need live updates).
+ * Subscribe to every expense on/after `sinceDate`, newest first.
+ * Returns an unsubscribe function — call it on cleanup.
+ *
+ * Used by the dashboard to fetch one range covering both the current month
+ * and the trailing months needed for the 6-month chart in a single query,
+ * rather than a separate read per view.
  */
-export function subscribeToRecentExpenses(uid, count, onData, onError) {
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
+export function subscribeToExpensesSince(uid, sinceDate, onData, onError) {
   const q = query(
     expensesCollection(uid),
-    where("date", ">=", Timestamp.fromDate(startOfMonth)),
-    where("date", "<", Timestamp.fromDate(startOfNextMonth)),
-    orderBy("date", "desc"),
-    limit(count)
+    where("date", ">=", Timestamp.fromDate(sinceDate)),
+    orderBy("date", "desc")
   );
 
   return onSnapshot(

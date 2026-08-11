@@ -36,6 +36,19 @@ export const getMonthYear = () => {
   return `${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 };
 
+// Midnight on the 1st of the given date's month.
+export const startOfMonth = (date = new Date()) => new Date(date.getFullYear(), date.getMonth(), 1);
+
+// Midnight on the 1st of the month `monthsAgo` months before the given date.
+export const startOfMonthsAgo = (monthsAgo, date = new Date()) =>
+  new Date(date.getFullYear(), date.getMonth() - monthsAgo, 1);
+
+// Sortable/groupable key for a date's month, e.g. "2026-08".
+export const monthKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const shortMonthLabel = (date) => shortMonthNames[date.getMonth()];
+
 export const getTotalFromItems = (items) => {
   let total = 0;
   for (let item in items) {

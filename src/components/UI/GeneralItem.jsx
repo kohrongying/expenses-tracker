@@ -1,32 +1,27 @@
 import React from "react";
-import { formatCentsToString } from "../../helpers/common";
-import { List, Avatar } from "antd";
-import { DeleteOutlined, DollarOutlined } from "@ant-design/icons";
+import { formatCentsToString } from "../../lib/common";
 
 const GeneralItem = ({ item, removeItem }) => (
-  <List.Item
-    actions={[
-      <DeleteOutlined
-        key={`delete-item${item.id}`}
-        type="delete"
+  <div className="flex items-center justify-between gap-4 p-4 mb-3 rounded-3xl shadow-md bg-white">
+    <div className="flex items-center gap-4">
+      <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-100 text-slate-900 text-xl">
+        $ 
+      </div>
+      <div>
+        <p className="text-base font-semibold text-slate-900">{item.source}</p>
+      </div>
+    </div>
+    <div className="flex items-center gap-4">
+      <div className="text-base font-semibold text-slate-900">S$ {formatCentsToString(item.amountInCents)}</div>
+      <button
+        type="button"
         onClick={removeItem(item.id)}
-      />,
-    ]}
-    style={{
-      padding: 10,
-      marginBottom: 6,
-      borderRadius: 10,
-      boxShadow: " 0px 3px 16px 0px rgba(0,0,0,0.16)",
-    }}
-  >
-    <List.Item.Meta
-      avatar={<Avatar size="large" icon={<DollarOutlined />} />}
-      title={item.source}
-      style={{ alignItems: "center" }}
-    />
-
-    <div>{`S$ ${formatCentsToString(item.amountInCents)}`}</div>
-  </List.Item>
+        className="text-slate-500 hover:text-red-600 cursor-pointer"
+      >
+        🗑️
+      </button>
+    </div>
+  </div>
 );
 
 export default GeneralItem;

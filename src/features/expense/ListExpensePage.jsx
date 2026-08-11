@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { List, message, Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import useAuthStore from "../../store/authStore";
 import Container from "../../components/ui/Container";
 import MonthSum from "../../components/ui/MonthSum";
+import { Button } from "../../components/ui/button";
 import ExpenseItem from "./ExpenseItem";
-import { subscribeToCurrentMonthExpenses } from "./expenseApi";
+import { subscribeToCurrentMonthExpenses, removeExpense } from "./expenseApi";
 
 function ListExpensePage() {
   const uid = useAuthStore((state) => state.user?.uid || "");
@@ -14,6 +13,8 @@ function ListExpensePage() {
   const [items, setItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [messageText, setMessageText] = useState("");
+  const [messageType, setMessageType] = useState("success");
 
   useEffect(() => {
     if (!uid) {
@@ -24,6 +25,7 @@ function ListExpensePage() {
     }
 
     setLoading(true);
+    setMessageText("");
 
     const unsubscribe = subscribeToCurrentMonthExpenses(
       uid,
@@ -35,7 +37,8 @@ function ListExpensePage() {
       },
       (error) => {
         console.error(error);
-        message.error("Couldn't load expenses. Please try again.");
+        setMessageText("Couldn't load expenses. Please try again.");
+        setMessageType("error");
         setLoading(false);
       }
     );
@@ -47,50 +50,66 @@ function ListExpensePage() {
     history.push(route);
   };
 
-  // inside the component
   const handleRemove = (itemId) => async () => {
     try {
       await removeExpense(uid, itemId);
-      message.success("Expense removed");
+      setMessageText("Expense removed");
+      setMessageType("success");
     } catch (err) {
       console.error(err);
-      message.error("Couldn't remove expense. Please try again.");
+      setMessageText("Couldn't remove expense. Please try again.");
+      setMessageType("error");
     }
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       {uid ? (
-        <React.Fragment>
-          <Container>
-            <ArrowLeftOutlined onClick={navigate("/")} style={{ marginTop: 30 }} />
-
-            <MonthSum loading={loading} totalAmountInCents={totalAmount} title="Expenses" />
-
-            <Button
-              block
-              type="link"
-              style={{ marginTop: 30, marginBottom: 20, color: "black" }}
-              onClick={navigate("/expenses/new")}
+        <Container>
+          <div className="mb-6 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={navigate("/")}
+              className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-[6px] border border-border/70 bg-card text-sm"
+              aria-label="Back"
             >
-              Add Expense
-            </Button>
+              ←
+            </button>
+            <h1 className="text-[0.9375rem] font-extrabold">Expenses</h1>
+          </div>
 
-            <List
-              loading={loading}
-              dataSource={items}
-              renderItem={(item) => (
-                <ExpenseItem
-                  key={item.id}
-                  item={item}
-                  removeItem={handleRemove}
-                />
-              )}
-            />
-          </Container>
-        </React.Fragment>
+          <MonthSum loading={loading} totalAmountInCents={totalAmount} title="Expenses" />
+
+          {messageText && (
+            <div
+              className={`mt-4 rounded-[4px] px-4 py-3 text-sm ${
+                messageType === "success" ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
+              }`}
+            >
+              {messageText}
+            </div>
+          )}
+
+          <Button
+            type="button"
+            onClick={navigate("/expenses/new")}
+            className="tear-notch mt-6 w-full rounded-[6px] py-6 font-mono text-sm font-bold uppercase tracking-wide"
+          >
+            + Add expense
+          </Button>
+
+          <div className="mt-8 rounded-[4px] border border-border/70 bg-card px-4 shadow-sm">
+            {loading ? (
+              <p className="py-4 text-sm text-muted-foreground">Loading…</p>
+            ) : items.length === 0 ? (
+              <p className="py-4 text-sm text-muted-foreground">No expenses found.</p>
+            ) : (
+              items.map((item) => <ExpenseItem key={item.id} item={item} removeItem={handleRemove} />)
+            )}
+          </div>
+        </Container>
       ) : (
-        <p>You must be logged in.</p>
+        <p className="py-10 text-center text-muted-foreground">You must be logged in.</p>
       )}
     </div>
   );

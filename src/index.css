@@ -1,1 +1,175 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-ink-soft: var(--ink-soft);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: #d7d3c5;
+    --foreground: #1e1b12;
+    --card: #faf8f1;
+    --card-foreground: #1e1b12;
+    --popover: #faf8f1;
+    --popover-foreground: #1e1b12;
+    --primary: #1a7a52;
+    --primary-foreground: #faf8f1;
+    --secondary: #f1eee2;
+    --secondary-foreground: #1e1b12;
+    --muted: #f1eee2;
+    --muted-foreground: #9a927a;
+    --ink-soft: #675f4c;
+    --accent: #f1eee2;
+    --accent-foreground: #1e1b12;
+    --destructive: #d03b3b;
+    --border: rgba(28,24,14,0.14);
+    --input: rgba(28,24,14,0.14);
+    --ring: #1a7a52;
+    --chart-1: #2a78d6;
+    --chart-2: #eb6834;
+    --chart-3: #1baf7a;
+    --chart-4: #eda100;
+    --chart-5: #e87ba4;
+    --radius: 0.3rem;
+    --sidebar: #faf8f1;
+    --sidebar-foreground: #1e1b12;
+    --sidebar-primary: #1a7a52;
+    --sidebar-primary-foreground: #faf8f1;
+    --sidebar-accent: #f1eee2;
+    --sidebar-accent-foreground: #1e1b12;
+    --sidebar-border: rgba(28,24,14,0.14);
+    --sidebar-ring: #1a7a52;
+}
+
+.dark {
+    --background: #0c0b08;
+    --foreground: #f4f1e6;
+    --card: #211d16;
+    --card-foreground: #f4f1e6;
+    --popover: #211d16;
+    --popover-foreground: #f4f1e6;
+    --primary: #37a56e;
+    --primary-foreground: #0c0b08;
+    --secondary: #29241b;
+    --secondary-foreground: #f4f1e6;
+    --muted: #29241b;
+    --muted-foreground: #8a8370;
+    --ink-soft: #c3bca6;
+    --accent: #29241b;
+    --accent-foreground: #f4f1e6;
+    --destructive: #e34948;
+    --border: rgba(255,251,240,0.14);
+    --input: rgba(255,251,240,0.14);
+    --ring: #37a56e;
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
+    --sidebar: #211d16;
+    --sidebar-foreground: #f4f1e6;
+    --sidebar-primary: #37a56e;
+    --sidebar-primary-foreground: #0c0b08;
+    --sidebar-accent: #29241b;
+    --sidebar-accent-foreground: #f4f1e6;
+    --sidebar-border: rgba(255,251,240,0.14);
+    --sidebar-ring: #37a56e;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
+
+@layer components {
+  /* Punched-paper edge: circles cut from the top of a ticket, revealing the page behind it. */
+  .ticket-perf {
+    position: relative;
+  }
+  .ticket-perf::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: 0;
+    right: 0;
+    height: 14px;
+    background-image: radial-gradient(circle 7px, var(--background) 99%, transparent 100%);
+    background-size: 19px 14px;
+    background-position: center;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+
+  /* Ticket-stub notches: semicircles bitten out of the left/right edges. */
+  .tear-notch {
+    position: relative;
+  }
+  .tear-notch::before,
+  .tear-notch::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background: var(--background);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .tear-notch::before {
+    left: -7px;
+  }
+  .tear-notch::after {
+    right: -7px;
+  }
+}

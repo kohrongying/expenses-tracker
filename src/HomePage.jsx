@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { Button, Spin } from "antd";
 import { auth } from "./firebase";
 import useAuthStore from "./store/authStore";
 import Dashboard from "./features/dashboard/DashboardPage";
 import Container from "./components/ui/Container";
 import Header from "./components/ui/Header";
+import { Button } from "./components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 
 const provider = new GoogleAuthProvider();
 
@@ -27,30 +28,33 @@ function Home() {
   };
 
   return (
-    <React.Fragment>
-      <div className="App">
-        {isAuthenticated ? (
-          <Dashboard />
-        ) : (
-          <Container>
-            {loading ? (
-              <Spin size="large" />
-            ) : (
-              <>
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
+      {isAuthenticated ? (
+        <Dashboard />
+      ) : (
+        <Container>
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="h-12 w-12 rounded-full border-4 border-border border-t-primary animate-spin" />
+            </div>
+          ) : (
+            <Card className="ticket-perf w-full rounded-[4px] border-border/70 shadow-xl">
+              <CardHeader className="space-y-3">
                 <Header title="Expense Tracker" />
-                <p>
-                  Track your monthly expenditure, set your income and a budget
-                  for yourself. Do not be stupid.
-                </p>
-                <Button type="primary" onClick={login}>
+                <CardTitle className="text-base font-medium text-muted-foreground">
+                  Track your monthly expenditure, set your income and a budget for yourself.
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button type="button" onClick={login} className="w-full" size="lg">
                   Login with Google
                 </Button>
-              </>
-            )}
-          </Container>
-        )}
-      </div>
-    </React.Fragment>
+              </CardContent>
+            </Card>
+          )}
+        </Container>
+      )}
+    </div>
   );
 }
 

@@ -1,26 +1,17 @@
 import React from "react";
-import { Card, Typography } from "antd";
-import { getMonthYear, formatNumber, formatCentsToString } from "../../helpers/common";
-const { Title } = Typography;
+import Ticket from "./Ticket";
+import { getMonthYear, formatCentsToString } from "../../lib/common";
 
 const MonthSum = ({ loading, totalAmountInCents, title }) => (
-  <Card
-    loading={loading}
-    bordered={false}
-    bodyStyle={{
-      paddingBottom: 0,
-      paddingLeft: 0,
-      paddingRight: 0,
-      backgroundColor: "rgba(240, 240, 240, 0.7)",
-    }}
-  >
-    <p>
-      {title} - {getMonthYear()}
+  <Ticket className="p-5">
+    <p className="mb-2 font-mono text-[0.6875rem] font-bold uppercase tracking-wide text-muted-foreground">
+      {title} — {getMonthYear()}
     </p>
-    <Title style={{ fontSize: 50, margin: 0 }}>
-      S$ {formatCentsToString(totalAmountInCents)}
-    </Title>
-  </Card>
+    <p className="font-mono text-4xl font-bold leading-none tracking-tight">
+      <span className="mr-1 text-lg font-semibold text-ink-soft">S$</span>
+      {loading ? "…" : formatCentsToString(totalAmountInCents)}
+    </p>
+  </Ticket>
 );
 
 export default MonthSum;

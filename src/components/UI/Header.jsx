@@ -1,12 +1,9 @@
 import React from "react";
-import { Typography } from "antd";
-
-const { Title } = Typography;
 
 const Header = ({ title }) => (
-  <Title level={2} style={{ marginTop: 30 }}>
+  <h2 className="text-3xl font-semibold text-foreground mt-8 mb-4">
     {title}
-  </Title>
+  </h2>
 );
 
 export default Header;

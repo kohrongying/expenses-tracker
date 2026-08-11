@@ -1,137 +1,135 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, List, Slider, Button } from "antd";
-import { UserOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
-import Container from "../../components/ui/Container";
-import Header from "../../components/ui/Header";
-// import ExpensesSummary from "./ExpensesSummary";
-// import MonthBreakdown from "./MonthBreakdown";
+import Container, { CONTAINER_WIDTH } from "../../components/ui/Container";
+import Ticket from "../../components/ui/Ticket";
+import { Button } from "../../components/ui/button";
 import ExpenseItem from "../expense/ExpenseItem";
-import { subscribeToRecentExpenses } from "../expense/expenseApi";
-import { formatCentsToString } from "../../helpers/common";
+import CategoryBreakdown from "./CategoryBreakdown";
+import MonthlyTrend from "./MonthlyTrend";
+import useDashboardData from "./useDashboardData";
+import { formatCentsToString, getMonthYear } from "../../lib/common";
 
-const NAVBAR = [
-  {
-    url: "/expenses/new",
-    label: "Add Expense",
-    icon: <PlusCircleOutlined />,
-    color: "#ff85c0",
-  },
-];
+const Eyebrow = ({ children, className = "" }) => (
+  <p className={`font-mono text-[0.6875rem] font-bold uppercase tracking-wide text-muted-foreground ${className}`}>
+    {children}
+  </p>
+);
+
+const SectionTitle = ({ children, action }) => (
+  <div className="mb-2.5 mt-7 flex items-baseline justify-between">
+    <h3 className="font-mono text-[0.6875rem] font-bold uppercase tracking-wide text-ink-soft">{children}</h3>
+    {action}
+  </div>
+);
+
+const Panel = ({ children, className = "" }) => (
+  <div className={`rounded-[4px] border border-border/70 bg-card shadow-sm ${className}`}>{children}</div>
+);
 
 function Dashboard() {
   const uid = useAuthStore((state) => state.user?.uid || "");
   const history = useHistory();
-  const [expenses, setExpenses] = useState([]);
-  const [totalExpenseInCents, setTotalExpenseInCents] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [expenseBudget, setExpenseBudget] = useState(500);
+  const {
+    loading,
+    totalInCents,
+    categoryBreakdown,
+    monthlyTrend,
+    recentItems,
+    topCategory,
+    averageDailyCents,
+    percentChange,
+  } = useDashboardData(uid);
 
-  useEffect(() => {
-    if (!uid) {
-      setExpenses([]);
-      setTotalExpenseInCents(0);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
-    const unsubscribe = subscribeToRecentExpenses(
-      uid,
-      3,
-      (items) => {
-        const totalInCents = items.reduce((sum, item) => sum + item.amountInCents, 0);
-        setExpenses(items);
-        setTotalExpenseInCents(totalInCents);
-        setLoading(false);
-      },
-      (error) => {
-        console.error(error);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [uid]);
-
-  const linkTo = (url) => () => {
-    history.push(url);
-  };
-
-  const marks = {
-    [expenseBudget]: `$${expenseBudget}`,
-  };
+  const goToAddExpense = () => history.push("/expenses/new");
+  const goToAllExpenses = () => history.push("/expenses");
 
   return (
-    <React.Fragment>
-      <Container>
-        <Header title="Dashboard" />
+    <Container className="pb-32">
+      <Eyebrow className="mb-4">{getMonthYear()}</Eyebrow>
 
-        <Row
-          gutter={16}
-          style={{
-            padding: 10,
-            borderRadius: 10,
-            boxShadow: "0px 3px 16px 0px rgba(0,0,0,0.16)",
-          }}
-        >
-          {NAVBAR.map((nav) => (
-            <Col xs={12} key={nav.label}>
-              <div onClick={linkTo(nav.url)} style={{ cursor: "pointer" }}>
-                {nav.icon}
-                <div style={{ fontSize: 14 }}>{nav.label}</div>
-              </div>
-            </Col>
-          ))}
-        </Row>
+      <Ticket className="p-5">
+        <Eyebrow className="mb-2">Total spent</Eyebrow>
+        <p className="font-mono text-4xl font-bold leading-none tracking-tight">
+          <span className="mr-1 text-lg font-semibold text-ink-soft">S$</span>
+          {formatCentsToString(totalInCents)}
+        </p>
 
-        <h6 style={{ marginTop: 20 }}>Expenses</h6>
-        <Row type="flex" align="middle">
-          <Col xs={9}>
-            <h4>S$ {formatCentsToString(totalExpenseInCents)}</h4>
-          </Col>
-        </Row>
+        <hr className="my-4 border-dashed border-border" />
 
-        {/* <h6 style={{ marginTop: 20, marginBottom: 15 }}>
-          This month's breakdown
-        </h6>
-        <MonthBreakdown />
-
-        <h6 style={{ marginTop: 20, marginBottom: 15 }}>
-          The last 6 months
-        </h6>
-        <ExpensesSummary /> */}
-
-        <div
-          style={{
-            marginTop: 20,
-            marginBottom: 15,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <h6>Expenses</h6>
-          <Button
-            type="link"
-            style={{ marginBottom: 8, color: "rgba(0, 0, 0, 0.65)" }}
-            onClick={linkTo("/expenses")}
-          >
-            View All
-          </Button>
-        </div>
-        <List
-          loading={loading}
-          dataSource={expenses}
-          renderItem={(item) => (
-            <ExpenseItem dashboard key={item.id} item={item} />
+        <div className="flex gap-6">
+          <div>
+            <Eyebrow className="mb-1">Avg / day</Eyebrow>
+            <p className="font-mono text-[0.9375rem] font-bold">S$ {formatCentsToString(averageDailyCents)}</p>
+          </div>
+          {percentChange !== null && (
+            <div>
+              <Eyebrow className="mb-1">Vs. last month</Eyebrow>
+              <p className={`font-mono text-[0.9375rem] font-bold ${percentChange <= 0 ? "text-primary" : "text-foreground"}`}>
+                {percentChange > 0 ? "+" : ""}
+                {percentChange.toFixed(0)}%
+              </p>
+            </div>
           )}
-        />
-      </Container>
-    </React.Fragment>
+          {topCategory && (
+            <div>
+              <Eyebrow className="mb-1">Top category</Eyebrow>
+              <p className="font-mono text-[0.9375rem] font-bold">{topCategory.label}</p>
+            </div>
+          )}
+        </div>
+      </Ticket>
+
+      <div className="md:grid md:grid-cols-2 md:gap-5">
+        <div>
+          <SectionTitle>By category</SectionTitle>
+          <Panel className="p-4">
+            <CategoryBreakdown breakdown={categoryBreakdown} loading={loading} />
+          </Panel>
+        </div>
+
+        <div>
+          <SectionTitle>Last 6 months</SectionTitle>
+          <Panel className="p-4">
+            <MonthlyTrend trend={monthlyTrend} loading={loading} />
+          </Panel>
+        </div>
+      </div>
+
+      <SectionTitle
+        action={
+          <button
+            type="button"
+            onClick={goToAllExpenses}
+            className="font-mono text-[0.6875rem] font-bold uppercase tracking-wide text-primary"
+          >
+            View all
+          </button>
+        }
+      >
+        Recent
+      </SectionTitle>
+      <Panel className="px-4">
+        {loading ? (
+          <p className="py-4 text-sm text-muted-foreground">Loading…</p>
+        ) : recentItems.length === 0 ? (
+          <p className="py-4 text-sm text-muted-foreground">No expenses logged this month yet.</p>
+        ) : (
+          recentItems.map((item) => <ExpenseItem dashboard key={item.id} item={item} />)
+        )}
+      </Panel>
+
+      <div className={`fixed inset-x-0 bottom-0 mx-auto w-full ${CONTAINER_WIDTH} bg-background px-5 pb-6 pt-4 sm:px-6 md:px-8`}>
+        <hr className="mb-3.5 border-dashed border-border" />
+        <Button
+          type="button"
+          onClick={goToAddExpense}
+          className="tear-notch w-full rounded-[6px] py-6 font-mono text-sm font-bold uppercase tracking-wide"
+        >
+          + Add expense
+        </Button>
+      </div>
+    </Container>
   );
 }
 
