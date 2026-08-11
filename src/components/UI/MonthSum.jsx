@@ -1,6 +1,6 @@
 import React from "react";
 import Ticket from "./Ticket";
-import { getMonthYear, formatCentsToString } from "../../lib/common";
+import { getMonthYear, formatCentsToString } from "../../lib/utils";
 
 const MonthSum = ({ loading, totalAmountInCents, title }) => (
   <Ticket className="p-5">

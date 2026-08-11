@@ -1,5 +1,5 @@
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { formatCentsToString } from "../../lib/common";
+import { formatCentsToString } from "../../lib/utils";
 
 const axisTick = { fontSize: 10, fontWeight: 600, letterSpacing: 0.5, fill: "var(--muted-foreground)" };
 

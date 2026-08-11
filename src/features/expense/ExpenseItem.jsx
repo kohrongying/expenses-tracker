@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import CategoryStamp from "../../components/ui/CategoryStamp";
 import { categories, findCategory } from "../../constants/ExpenseCategories";
-import { formatCentsToString } from "../../lib/common";
+import { formatCentsToString } from "../../lib/utils";
 
 const ExpenseItem = ({ dashboard, item, removeItem }) => {
   const category = findCategory(item.category) || categories[0];

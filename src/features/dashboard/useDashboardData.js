@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { subscribeToExpensesSince } from "../expense/expenseApi";
-import { startOfMonth, startOfMonthsAgo } from "../../lib/common";
+import { startOfMonth, startOfMonthsAgo } from "../../lib/utils";
 import {
   sumAmountInCents,
   buildCategoryBreakdown,

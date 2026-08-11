@@ -1,5 +1,5 @@
 import React from "react";
-import { formatCentsToString } from "../../lib/common";
+import { formatCentsToString } from "../../lib/utils";
 
 const GeneralItem = ({ item, removeItem }) => (
   <div className="flex items-center justify-between gap-4 p-4 mb-3 rounded-3xl shadow-md bg-white">
