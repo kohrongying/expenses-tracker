@@ -6,6 +6,7 @@ import Dashboard from "./features/dashboard/DashboardPage";
 import Container from "./components/ui/Container";
 import Navbar from "./components/ui/Navbar";
 import PageShell from "./components/ui/PageShell";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
 import Header from "./components/ui/Header";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
@@ -22,6 +23,7 @@ function Home() {
     signInWithPopup(auth, provider)
       .then((result) => {
         authLogin(result.user);
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
@@ -32,10 +34,10 @@ function Home() {
   return (
     <PageShell>
       {isAuthenticated ? (
-        <>
+        <ErrorBoundary>
           <Navbar />
           <Dashboard />
-        </>
+        </ErrorBoundary>
       ) : (
         <Container>
           {loading ? (
