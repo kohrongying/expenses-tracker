@@ -21,12 +21,6 @@ function useDashboardData(uid) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!uid) {
-      setItems([]);
-      setLoading(false);
-      return undefined;
-    }
-
     setLoading(true);
 
     const unsubscribe = subscribeToExpensesSince(

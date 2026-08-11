@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import useAuthStore from "../../store/authStore";
+import useAuthedUser from "../auth/useAuthedUser";
 import Container from "../../components/ui/Container";
 import Navbar from "../../components/ui/Navbar";
 import { Button } from "../../components/ui/button";
@@ -11,7 +11,7 @@ import { addExpense } from "./expenseApi";
 import { cn } from "../../lib/utils";
 
 function AddExpensePage() {
-  const uid = useAuthStore((state) => state.user?.uid || "");
+  const { uid } = useAuthedUser();
   const history = useHistory();
   const [amount, setAmount] = useState("");
   const [remarks, setRemarks] = useState("");

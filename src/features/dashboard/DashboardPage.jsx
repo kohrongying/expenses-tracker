@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import useAuthStore from "../../store/authStore";
+import useAuthedUser from "../auth/useAuthedUser";
 import Container, { CONTAINER_WIDTH } from "../../components/ui/Container";
 import Navbar from "../../components/ui/Navbar";
 import Ticket from "../../components/ui/Ticket";
@@ -29,7 +29,7 @@ const Panel = ({ children, className = "" }) => (
 );
 
 function Dashboard() {
-  const uid = useAuthStore((state) => state.user?.uid || "");
+  const { uid } = useAuthedUser();
   const history = useHistory();
   const {
     loading,
