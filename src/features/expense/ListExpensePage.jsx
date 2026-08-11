@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import useAuthedUser from "../auth/useAuthedUser";
 import Container from "../../components/ui/Container";
 import Navbar from "../../components/ui/Navbar";
+import PageShell from "../../components/ui/PageShell";
 import MonthSum from "../../components/ui/MonthSum";
 import { Button } from "../../components/ui/button";
 import ExpenseItem from "./ExpenseItem";
@@ -57,7 +58,7 @@ function ListExpensePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageShell>
       <Navbar />
       <Container>
         <div className="mb-6 flex items-center gap-3">
@@ -102,7 +103,7 @@ function ListExpensePage() {
           )}
         </div>
       </Container>
-    </div>
+    </PageShell>
   );
 }
 

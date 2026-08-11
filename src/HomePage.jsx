@@ -4,6 +4,8 @@ import { auth } from "./firebase";
 import useAuthStore from "./store/authStore";
 import Dashboard from "./features/dashboard/DashboardPage";
 import Container from "./components/ui/Container";
+import Navbar from "./components/ui/Navbar";
+import PageShell from "./components/ui/PageShell";
 import Header from "./components/ui/Header";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
@@ -28,9 +30,12 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
+    <PageShell>
       {isAuthenticated ? (
-        <Dashboard />
+        <>
+          <Navbar />
+          <Dashboard />
+        </>
       ) : (
         <Container>
           {loading ? (
@@ -54,7 +59,7 @@ function Home() {
           )}
         </Container>
       )}
-    </div>
+    </PageShell>
   );
 }
 
