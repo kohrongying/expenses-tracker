@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import Container from "../../components/ui/Container";
+import Navbar from "../../components/ui/Navbar";
 import MonthSum from "../../components/ui/MonthSum";
 import { Button } from "../../components/ui/button";
 import ExpenseItem from "./ExpenseItem";
@@ -64,6 +65,7 @@ function ListExpensePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
       {uid ? (
         <Container>
           <div className="mb-6 flex items-center gap-3">
