@@ -23,3 +23,9 @@ README2.md
 
 .env
 dist
+
+# AI AGENTS
+.claude
+
+# admin sdk keys
+*adminsdk*.json

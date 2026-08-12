@@ -1,22 +1,29 @@
 [Expense Tracker Site](http://imma-save-more-money.netlify.app/) is live! You can track your expenses, income and investments here.
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) and utilizes [Ant Design](https://ant.design/) UI Framework.
-
-
 ### Project Architecture
-- ReactJS Frontend and Backend
-- Firebase Real Time Database
+
+- ReactJS Framework
+- Firebase Firestore
 - Deployment, CI/CD: Netlify (Commit to push will trigger build on netlify)
 
-### Updates to UI 
+### Updates to UI
+
+#### v3
+AI collab (like 10% me 90% claude)
+
+![v3](docs/ui-v3-2026.png)
+
+#### v2
+I made this WITHOUT AI (omg proud?)
+
+![new](docs/ui-new.png)
+
+#### v1
 Changed from Google's Material UI theme to Ant Design, with a focus on mobile first. [Read more here.](https://blog.rongying.co/babble/2019/08/23/Revisiting-Expense-Tracker/)
 
-![old](ui-old.png)
-###### Old design was a bit tacky but I put up with it cos it was still functional xD
+![old](docs/ui-old.png)
 
-
-![new](ui-new.png)
-###### New design! Hopefully it will last longer.
+Old design was a bit tacky but I put up with it cos it was still functional xD
 
 ## Contributing
 
@@ -42,9 +49,7 @@ Expenses Tracker currently only supports logging in with Google, so your project
 Google sign-in provider enabled. You can enable it from the Firebase console under Develop ->
 Authentication -> Sign-in method.
 
-Firebase Realtime Database needs to be enabled. You need to set the database rules under Develop ->
-Database -> Realtime Database -> Rules. The following set of rules will allow users to access only
-their own data:
+Firebase Firestore needs to be enabled. You need to set the database rules:
 
 ```json
 {
@@ -60,3 +65,6 @@ their own data:
 ```
 
 After everything is set up, you can run Expenses Tracker locally using `npm run dev`.
+
+TODO
+- [ ] more charts
