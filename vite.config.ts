@@ -5,6 +5,9 @@ import { VitePWA } from "vite-plugin-pwa";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_NETLIFY_CONTEXT': JSON.stringify(process.env.CONTEXT || 'production')
+  },
   plugins: [
     react(),
     tailwindcss(),

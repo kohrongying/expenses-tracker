@@ -23,7 +23,9 @@ const devConfig = {
   appId: env.VITE_STAGING_APP_ID,
 };
 
-const config = import.meta.env.PROD ? prodConfig : devConfig;
+// process.env.CONTEXT is set by Netlify to indicate the context of the build (production, deploy-preview, branch-deploy)
+const shouldDeployProd = import.meta.env.PROD && import.meta.env.VITE_NETLIFY_CONTEXT === 'production';
+const config = shouldDeployProd ? prodConfig : devConfig;
 
 const app = initializeApp(config);
 
