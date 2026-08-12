@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "./firebase";
 import useAuthStore from "./store/authStore";
-import Dashboard from "./features/dashboard/DashboardPage";
 import Container from "./components/ui/Container";
 import Navbar from "./components/ui/Navbar";
 import PageShell from "./components/ui/PageShell";
@@ -10,6 +9,8 @@ import ErrorBoundary from "./components/ui/ErrorBoundary";
 import Header from "./components/ui/Header";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+
+const Dashboard = lazy(() => import("./features/dashboard/DashboardPage"));
 
 const provider = new GoogleAuthProvider();
 
@@ -36,7 +37,9 @@ function Home() {
       {isAuthenticated ? (
         <ErrorBoundary>
           <Navbar />
-          <Dashboard />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Dashboard />
+          </Suspense>
         </ErrorBoundary>
       ) : (
         <Container>
