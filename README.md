@@ -1,21 +1,21 @@
 [Expense Tracker Site](http://imma-save-more-money.netlify.app/) is live! You can track your expenses, income and investments here.
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) and utilizes [Ant Design](https://ant.design/) UI Framework.
-
-
 ### Project Architecture
-- ReactJS Frontend and Backend
-- Firebase Real Time Database
+
+- ReactJS Framework
+- Firebase Firestore
 - Deployment, CI/CD: Netlify (Commit to push will trigger build on netlify)
 
-### Updates to UI 
+### Updates to UI
+
 Changed from Google's Material UI theme to Ant Design, with a focus on mobile first. [Read more here.](https://blog.rongying.co/babble/2019/08/23/Revisiting-Expense-Tracker/)
 
-![old](ui-old.png)
+![old](docs/ui-old.png)
+
 ###### Old design was a bit tacky but I put up with it cos it was still functional xD
 
+![new](docs/ui-new.png)
 
-![new](ui-new.png)
 ###### New design! Hopefully it will last longer.
 
 ## Contributing
@@ -60,15 +60,3 @@ their own data:
 ```
 
 After everything is set up, you can run Expenses Tracker locally using `npm run dev`.
-
-
-TODO
-- [ ] Use tailwind instead of antd
-- [x] Replace store/redux?  -> use zustand
-- [x] Change to functional components
-- [ ] Improve UI/UX
-- [ ] Add more charts
-- [ ] Update data to be from firestore instead? 
-- [ ] Make into working PWA
-- [ ] Reorg
-- [ ] Linting not working
