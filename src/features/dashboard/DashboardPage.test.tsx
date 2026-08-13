@@ -134,4 +134,14 @@ describe("DashboardPage", () => {
 
     expect(history.location.pathname).toBe("/expenses");
   });
+
+  it("navigates to analytics from the 'Last 6 months' panel", async () => {
+    const user = userEvent.setup();
+    useDashboardData.mockReturnValue(emptyData);
+    const { history } = renderPage();
+
+    await user.click(screen.getByRole("button", { name: "View analytics" }));
+
+    expect(history.location.pathname).toBe("/analytics");
+  });
 });
