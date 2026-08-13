@@ -87,7 +87,7 @@ describe("AddExpensePage", () => {
     await waitFor(() => expect(amountInput).toHaveValue(null));
   });
 
-  it("shows an error and keeps the form filled when saving fails", async () => {
+  it("clears the form instantly and shows an error toast when saving fails", async () => {
     const user = userEvent.setup();
     addExpense.mockRejectedValue(new Error("network error"));
     renderPage();
@@ -96,12 +96,12 @@ describe("AddExpensePage", () => {
     await user.type(amountInput, "5");
     await user.click(screen.getByRole("button", { name: "Save expense" }));
 
+    expect(amountInput).toHaveValue(null);
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
         "Something went wrong, add S$5 again"
       )
     );
-    expect(amountInput).toHaveValue(5);
   });
 
   it("navigates home when the back button is clicked", async () => {

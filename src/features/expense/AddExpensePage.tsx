@@ -18,29 +18,26 @@ function AddExpensePage() {
   const [amount, setAmount] = useState("");
   const [remarks, setRemarks] = useState("");
   const [category, setCategory] = useState(categories[0].value);
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const amountLabel = amount;
-    setSubmitting(true);
-    toast.success(`Added S$${amountLabel}`);
+    const savedAmount = amount;
+    const savedRemarks = remarks;
+    const savedCategory = category;
 
-    try {
-      await addExpense(uid, {
-        amount: Number(amount),
-        remarks,
-        category,
-      });
-      setAmount("");
-      setRemarks("");
-      setCategory(categories[0].value);
-    } catch (err) {
+    toast.success(`Added S$${savedAmount}`);
+    setAmount("");
+    setRemarks("");
+    setCategory(categories[0].value);
+
+    addExpense(uid, {
+      amount: Number(savedAmount),
+      remarks: savedRemarks,
+      category: savedCategory,
+    }).catch((err) => {
       console.error(err);
-      toast.error(`Something went wrong, add S$${amountLabel} again`);
-    } finally {
-      setSubmitting(false);
-    }
+      toast.error(`Something went wrong, add S$${savedAmount} again`);
+    });
   };
 
   const navigateHome = () => {
@@ -125,10 +122,9 @@ function AddExpensePage() {
           <hr className="mb-3.5 border-dashed border-border" />
           <Button
             type="submit"
-            disabled={submitting}
             className="tear-notch w-full rounded-[6px] py-6 font-mono text-sm font-bold uppercase tracking-wide"
           >
-            {submitting ? "Saving…" : "Save expense"}
+            Save expense
           </Button>
         </form>
       </Container>
