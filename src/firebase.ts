@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { browserLocalPersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 const env = import.meta.env;
 
@@ -29,7 +29,12 @@ const config = shouldDeployProd ? prodConfig : devConfig;
 
 const app = initializeApp(config);
 
-export const auth = getAuth(app);
+// Default indexedDBLocalPersistence throws "Database is closing/hidden" when
+// signInWithPopup blurs the tab mid-write (firebase-js-sdk#6935); localStorage
+// persistence doesn't have that race.
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+});
 export const db = getFirestore(app);
 
 export default app;
