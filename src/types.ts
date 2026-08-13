@@ -32,3 +32,24 @@ export interface MonthlyTrendBucket {
   amountInCents: number;
   isCurrent: boolean;
 }
+
+export interface CategoryTrendRow {
+  key: string;
+  label: string;
+  [category: string]: number | string;
+}
+
+export interface DayOfWeekBucket {
+  day: number;
+  label: string;
+  averageCents: number;
+  isWeekend: boolean;
+}
+
+export interface CategoryChangeEntry {
+  category: string;
+  label: string;
+  currentCents: number;
+  previousCents: number;
+  percentChange: number;
+}

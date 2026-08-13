@@ -125,9 +125,16 @@ function Dashboard() {
 
         <div>
           <SectionTitle>Last 6 months</SectionTitle>
-          <Panel className="p-4">
-            <MonthlyTrend trend={monthlyTrend} loading={loading} />
-          </Panel>
+          <button
+            type="button"
+            onClick={() => history.push("/analytics")}
+            aria-label="View analytics"
+            className="block w-full text-left"
+          >
+            <Panel className="p-4 transition-colors hover:bg-accent/40">
+              <MonthlyTrend trend={monthlyTrend} loading={loading} />
+            </Panel>
+          </button>
         </div>
       </div>
 
