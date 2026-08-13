@@ -38,6 +38,11 @@ export const formatCentsToString = (amountInCents: number | null) => {
   return result;
 };
 
+// Compact whole-dollar figure for on-chart bar labels, where space is tight
+// (full cents precision stays available via the tooltip).
+export const formatCentsCompact = (amountInCents: number) =>
+  `S$${Math.round(amountInCents / 100)}`;
+
 export const getMonthYear = () => {
   return `${monthNames[getMonth()]["full"]} ${new Date().getFullYear()}`;
 };

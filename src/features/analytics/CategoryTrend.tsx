@@ -1,14 +1,22 @@
 import {
   Bar,
   BarChart,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   type TooltipContentProps,
 } from "recharts";
 import { categories } from "@/constants/ExpenseCategories";
-import { formatCentsToString } from "@/lib/utils";
+import { formatCentsCompact, formatCentsToString } from "@/lib/utils";
 import type { CategoryTrendRow } from "@/types";
+
+function rowTotal(row: CategoryTrendRow) {
+  return categories.reduce(
+    (sum, category) => sum + (Number(row[category.value]) || 0),
+    0
+  );
+}
 
 const axisTick = {
   fontSize: 10,
@@ -63,10 +71,10 @@ function CategoryTrend({ trend, loading }: CategoryTrendProps) {
 
   return (
     <div>
-      <ResponsiveContainer width="100%" height={160}>
+      <ResponsiveContainer width="100%" height={176}>
         <BarChart
           data={trend}
-          margin={{ top: 4, right: 0, bottom: 0, left: 0 }}
+          margin={{ top: 18, right: 0, bottom: 0, left: 0 }}
         >
           <Tooltip
             content={CategoryTrendTooltip}
@@ -79,17 +87,32 @@ function CategoryTrend({ trend, loading }: CategoryTrendProps) {
             tick={axisTick}
             interval={0}
           />
-          {categories.map((category, index) => (
-            <Bar
-              key={category.value}
-              dataKey={category.value}
-              name={category.label}
-              stackId="total"
-              fill={category.color}
-              radius={index === categories.length - 1 ? [2, 2, 0, 0] : 0}
-              isAnimationActive={false}
-            />
-          ))}
+          {categories.map((category, index) => {
+            const isTopSegment = index === categories.length - 1;
+            return (
+              <Bar
+                key={category.value}
+                dataKey={category.value}
+                name={category.label}
+                stackId="total"
+                fill={category.color}
+                radius={isTopSegment ? [2, 2, 0, 0] : 0}
+                isAnimationActive={false}
+              >
+                {isTopSegment && (
+                  <LabelList
+                    dataKey={rowTotal}
+                    position="top"
+                    offset={6}
+                    fontSize={9}
+                    fontWeight={700}
+                    fill="var(--muted-foreground)"
+                    formatter={(value) => formatCentsCompact(Number(value))}
+                  />
+                )}
+              </Bar>
+            );
+          })}
         </BarChart>
       </ResponsiveContainer>
 

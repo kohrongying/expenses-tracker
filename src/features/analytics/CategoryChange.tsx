@@ -7,6 +7,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type LabelProps,
   type TooltipContentProps,
 } from "recharts";
 import type { CategoryChangeEntry } from "@/types";
@@ -17,6 +18,32 @@ const axisTick = {
   letterSpacing: 0.5,
   fill: "var(--muted-foreground)",
 };
+
+function renderChangeLabel(props: LabelProps) {
+  const { x, y, width, height, value } = props;
+  if (typeof value !== "number") return <></>;
+
+  const isPositive = value >= 0;
+  const barX = Number(x) || 0;
+  const barWidth = Number(width) || 0;
+  const labelX = isPositive ? barX + barWidth + 4 : barX - 4;
+
+  return (
+    <text
+      x={labelX}
+      y={Number(y) + Number(height) / 2}
+      dy={3}
+      textAnchor={isPositive ? "start" : "end"}
+      className="font-mono"
+      fontSize={9}
+      fontWeight={700}
+      fill="var(--muted-foreground)"
+    >
+      {value > 0 ? "+" : ""}
+      {value.toFixed(0)}%
+    </text>
+  );
+}
 
 function CategoryChangeTooltip({ active, payload }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
@@ -58,7 +85,7 @@ function CategoryChange({ data, loading }: CategoryChangeProps) {
       <BarChart
         data={data}
         layout="vertical"
-        margin={{ top: 4, right: 12, bottom: 0, left: 0 }}
+        margin={{ top: 4, right: 28, bottom: 0, left: 4 }}
       >
         <Tooltip
           content={CategoryChangeTooltip}
@@ -79,6 +106,7 @@ function CategoryChange({ data, loading }: CategoryChangeProps) {
           radius={2}
           maxBarSize={18}
           isAnimationActive={false}
+          label={renderChangeLabel}
         >
           {data.map((entry) => (
             <Cell

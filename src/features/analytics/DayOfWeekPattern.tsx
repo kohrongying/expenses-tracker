@@ -2,12 +2,13 @@ import {
   Bar,
   BarChart,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   type TooltipContentProps,
 } from "recharts";
-import { formatCentsToString } from "@/lib/utils";
+import { formatCentsCompact, formatCentsToString } from "@/lib/utils";
 import type { DayOfWeekBucket } from "@/types";
 
 const axisTick = {
@@ -44,8 +45,8 @@ function DayOfWeekPattern({ data, loading }: DayOfWeekPatternProps) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={110}>
-      <BarChart data={data} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
+    <ResponsiveContainer width="100%" height={125}>
+      <BarChart data={data} margin={{ top: 18, right: 0, bottom: 0, left: 0 }}>
         <Tooltip
           content={DayOfWeekTooltip}
           cursor={{ fill: "var(--accent)" }}
@@ -64,6 +65,15 @@ function DayOfWeekPattern({ data, loading }: DayOfWeekPatternProps) {
               fill={day.isWeekend ? "var(--primary)" : "var(--secondary)"}
             />
           ))}
+          <LabelList
+            dataKey="averageCents"
+            position="top"
+            offset={6}
+            fontSize={9}
+            fontWeight={700}
+            fill="var(--muted-foreground)"
+            formatter={(value) => formatCentsCompact(Number(value))}
+          />
         </Bar>
       </BarChart>
     </ResponsiveContainer>
