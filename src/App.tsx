@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import PrivateRoute from "./features/auth/PrivateRoute";
 import Home from "./HomePage";
+import SplashScreen from "./components/ui/SplashScreen";
 import useAuthStore from "./store/authStore";
 
 const Expense = lazy(() => import("./features/expense/ListExpensePage"));
@@ -13,10 +14,15 @@ import "./firebase";
 
 function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const isAuthLoading = useAuthStore((state) => state.isLoading);
 
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
+
+  if (isAuthLoading) {
+    return <SplashScreen />;
+  }
 
   return (
     <React.Fragment>
