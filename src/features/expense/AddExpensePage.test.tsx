@@ -15,6 +15,11 @@ vi.mock("@/firebase", () => ({ auth: {}, db: {} }));
 const { addExpense } = vi.hoisted(() => ({ addExpense: vi.fn() }));
 vi.mock("./expenseApi", () => ({ addExpense }));
 
+const { toast } = vi.hoisted(() => ({
+  toast: { success: vi.fn(), error: vi.fn() },
+}));
+vi.mock("sonner", () => ({ toast, Toaster: () => null }));
+
 const { default: useAuthStore } = await import("@/store/authStore");
 const { default: AddExpensePage } = await import("./AddExpensePage");
 
@@ -35,6 +40,8 @@ describe("AddExpensePage", () => {
       isLoading: false,
     });
     addExpense.mockReset();
+    toast.success.mockReset();
+    toast.error.mockReset();
   });
 
   it("renders the amount input with Food selected by default", () => {
@@ -65,9 +72,7 @@ describe("AddExpensePage", () => {
     );
     // jsdom normalizes the typed number input value, dropping the trailing
     // zero ("12.50" -> "12.5").
-    expect(
-      await screen.findByText("Added S$12.5 successfully")
-    ).toBeInTheDocument();
+    expect(toast.success).toHaveBeenCalledWith("Added S$12.5");
   });
 
   it("clears the form after a successful submit", async () => {
@@ -91,9 +96,11 @@ describe("AddExpensePage", () => {
     await user.type(amountInput, "5");
     await user.click(screen.getByRole("button", { name: "Save expense" }));
 
-    expect(
-      await screen.findByText("Something went wrong. Please try again.")
-    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith(
+        "Something went wrong, add S$5 again"
+      )
+    );
     expect(amountInput).toHaveValue(5);
   });
 
