@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { toast } from "sonner";
 import useAuthedUser from "@/features/auth/useAuthedUser";
 import Container from "@/components/ui/Container";
 import Navbar from "@/components/ui/Navbar";
@@ -17,14 +18,13 @@ function AddExpensePage() {
   const [amount, setAmount] = useState("");
   const [remarks, setRemarks] = useState("");
   const [category, setCategory] = useState(categories[0].value);
-  const [statusMessage, setStatusMessage] = useState("");
-  const [statusType, setStatusType] = useState<"success" | "error">("success");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatusMessage("");
+    const amountLabel = amount;
     setSubmitting(true);
+    toast.success(`Added S$${amountLabel}`);
 
     try {
       await addExpense(uid, {
@@ -32,15 +32,12 @@ function AddExpensePage() {
         remarks,
         category,
       });
-      setStatusMessage(`Added S$${amount} successfully`);
-      setStatusType("success");
       setAmount("");
       setRemarks("");
       setCategory(categories[0].value);
     } catch (err) {
       console.error(err);
-      setStatusMessage("Something went wrong. Please try again.");
-      setStatusType("error");
+      toast.error(`Something went wrong, add S$${amountLabel} again`);
     } finally {
       setSubmitting(false);
     }
@@ -65,18 +62,6 @@ function AddExpensePage() {
           </button>
           <h2 className="text-[0.9375rem] font-extrabold">New expense</h2>
         </div>
-
-        {statusMessage && (
-          <div
-            className={`mt-5 rounded-[4px] px-4 py-3 text-sm ${
-              statusType === "success"
-                ? "bg-primary/10 text-primary"
-                : "bg-destructive/10 text-destructive"
-            }`}
-          >
-            {statusMessage}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}>
           <div className="flex items-baseline justify-center gap-1 border-y border-dashed border-border py-7 my-6">
