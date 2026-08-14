@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { browserLocalPersistence, initializeAuth } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
+  initializeAuth,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 const env = import.meta.env;
 
@@ -31,9 +35,12 @@ const app = initializeApp(config);
 
 // Default indexedDBLocalPersistence throws "Database is closing/hidden" when
 // signInWithPopup blurs the tab mid-write (firebase-js-sdk#6935); localStorage
-// persistence doesn't have that race.
+// persistence doesn't have that race. initializeAuth (unlike getAuth) doesn't
+// wire up a popupRedirectResolver by default, so it must be passed explicitly
+// or signInWithPopup throws auth/argument-error.
 export const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
+  popupRedirectResolver: browserPopupRedirectResolver,
 });
 export const db = getFirestore(app);
 
